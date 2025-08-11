@@ -12,6 +12,14 @@ The system is tested to be working with:
 
 ## Development
 
+The below command runs the whole system.
+
 ```sh
 docker compose up --build --watch
 ```
+
+Once the system is started, the following urls can be used to access the services.
+
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Backend: [http://localhost:2000](http://localhost:2000)
+- Database: Exposed on port 5433
