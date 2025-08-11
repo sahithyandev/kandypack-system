@@ -8,7 +8,9 @@
 		"format": "biome check --write"
 	},
 	"dependencies": {
-		"elysia": "latest"
+		"@types/pg": "^8.15.5",
+		"elysia": "latest",
+		"pg": "^8.16.3"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.1.4",
