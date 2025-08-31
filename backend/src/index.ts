@@ -1,5 +1,5 @@
 import { swagger } from "@elysiajs/swagger";
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import { client } from "./utils/db";
 
 await client.connect().catch((error) => {
@@ -7,15 +7,34 @@ await client.connect().catch((error) => {
 });
 
 const app = new Elysia()
-	.use(swagger())
-	.get("/", async () => {
-		const response = await client.query("SELECT NOW()");
+	.use(
+		swagger({
+			autoDarkMode: true,
+			documentation: {
+				info: {
+					title: "Kandypack",
+					version: "1.0.0",
+				},
+			},
+		}),
+	)
+	.get(
+		"/",
+		async () => {
+			const response = await client.query("SELECT NOW()");
 
-		return {
-			message: "Hello, Elysia and Postgres!",
-			time: response.rows[0].now,
-		};
-	})
+			return {
+				message: "Hello, Elysia and Postgres!",
+				time: response.rows[0].now.toString(),
+			};
+		},
+		{
+			response: t.Object({
+				message: t.String(),
+				time: t.String(),
+			}),
+		},
+	)
 	.listen(2000);
 
 console.log(
