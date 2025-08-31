@@ -1,6 +1,6 @@
 # SCDS for Kandypack
 
-A group project for the Database Systems project.
+A group project for the Database Systems module.
 
 ## Project setup
 
@@ -15,7 +15,7 @@ The system is tested to be working with:
 The below command runs the whole system.
 
 ```sh
-docker compose up --build --watch
+docker compose up --build
 ```
 
 Once the system is started, the following urls can be used to access the services.
