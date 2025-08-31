@@ -1,3 +1,4 @@
+import { swagger } from "@elysiajs/swagger";
 import { Elysia } from "elysia";
 import { client } from "./utils/db";
 
@@ -6,6 +7,7 @@ await client.connect().catch((error) => {
 });
 
 const app = new Elysia()
+	.use(swagger())
 	.get("/", async () => {
 		const response = await client.query("SELECT NOW()");
 
