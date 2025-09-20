@@ -6,12 +6,18 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/app
       - /app/node_modules
     environment:
       - NODE_ENV=development
     depends_on:
       - backend
+    develop:
+      watch:
+        - path: ./frontend
+          target: /app
+          action: sync
+        - path: ./frontend/package.json
+          action: rebuild
 
   backend:
     build:
@@ -19,7 +25,6 @@ services:
     ports:
       - "2000:2000"
     volumes:
-      - ./backend:/app
       - /app/node_modules
     environment:
       - DATABASE_URL=postgres://postgres:postgres@db:5432/kandypack
@@ -28,7 +33,13 @@ services:
       db:
         condition: service_healthy
         restart: true
-
+    develop:
+      watch:
+        - path: ./backend
+          target: /app
+          action: sync
+        - path: ./backend/package.json
+          action: rebuild
   db:
     image: postgres:17
     restart: always

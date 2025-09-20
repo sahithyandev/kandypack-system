@@ -19,16 +19,16 @@ If you do have Bun installed, run `bun install` from both frontend and backend d
 
 ## Development
 
-The below command runs the whole system.
+The below command runs the whole system in watch mode.
 
 ```sh
-docker compose up --build
+docker compose up --build --watch
 ```
 
 Once the system is started, the following urls can be used to access the services.
 
 - Frontend: [http://localhost:3000](http://localhost:3000)
 - Backend: [http://localhost:2000](http://localhost:2000)
-- Database: Exposed on port 5433
+- Database: Exposed on port **5433**
 
 We are using orval to generate the API client automatically from the backend code. Use `bun run generate:api` from the frontend to do so.  
