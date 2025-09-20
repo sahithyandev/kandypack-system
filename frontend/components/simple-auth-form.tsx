@@ -1,14 +1,35 @@
+/**
+ * Simple Authentication Form Component
+ * 
+ * A dual-purpose form component that handles both user login and registration
+ * with clean Tailwind CSS styling and form validation.
+ */
+
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthService } from "@/lib/auth";
 
+/**
+ * Props for the SimpleAuthForm component
+ */
 interface SimpleAuthFormProps {
+	/** Form mode - determines if this is login or registration form */
 	mode: "login" | "register";
 }
 
+/**
+ * SimpleAuthForm Component
+ * 
+ * Renders a responsive authentication form with error handling and loading states.
+ * Supports both login and registration flows based on the mode prop.
+ * 
+ * @param props - Component props
+ * @returns JSX element containing the authentication form
+ */
 export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
+	// Form state management
 	const [formData, setFormData] = useState({
 		name: "",
 		email: "",
@@ -19,6 +40,11 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
 
+	/**
+	 * Handle form submission for both login and registration
+	 * 
+	 * @param e - Form submission event
+	 */
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsLoading(true);
@@ -27,6 +53,7 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 		try {
 			let result;
 			
+			// Call appropriate authentication method based on form mode
 			if (mode === "login") {
 				result = AuthService.login(formData.username, formData.password);
 			} else {
@@ -38,7 +65,9 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 				);
 			}
 
+			// Handle authentication result
 			if (result.success) {
+				// Redirect to dashboard on successful authentication
 				router.push("/dashboard");
 			} else {
 				setError(result.error || "Authentication failed");
@@ -50,6 +79,11 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 		}
 	};
 
+	/**
+	 * Handle input field changes and update form state
+	 * 
+	 * @param e - Input change event
+	 */
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setFormData(prev => ({
 			...prev,
@@ -60,6 +94,7 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 	return (
 		<div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
 			<div className="p-6">
+				{/* Form header with dynamic content based on mode */}
 				<div className="text-center mb-6">
 					<h1 className="text-2xl font-bold text-gray-900 mb-2">
 						{mode === "login" ? "Welcome back" : "Create Account"}
@@ -72,6 +107,7 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 					</p>
 				</div>
 
+				{/* Error message display */}
 				{error && (
 					<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
 						{error}
@@ -79,6 +115,7 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 				)}
 
 				<form onSubmit={handleSubmit} className="space-y-4">
+					{/* Name field - only shown in registration mode */}
 					{mode === "register" && (
 						<div>
 							<label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -97,6 +134,7 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 						</div>
 					)}
 
+					{/* Email field - only shown in registration mode */}
 					{mode === "register" && (
 						<div>
 							<label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -115,6 +153,7 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 						</div>
 					)}
 
+					{/* Username field - shown in both modes */}
 					<div>
 						<label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
 							Username
@@ -131,6 +170,7 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 						/>
 					</div>
 
+					{/* Password field - shown in both modes */}
 					<div>
 						<label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
 							Password
@@ -146,6 +186,7 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 						/>
 					</div>
 
+					{/* Submit button with loading state */}
 					<button
 						type="submit"
 						disabled={isLoading}
@@ -155,6 +196,7 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 					</button>
 				</form>
 
+				{/* Toggle between login and registration */}
 				<div className="mt-6 text-center text-sm text-gray-600">
 					{mode === "login" ? (
 						<>

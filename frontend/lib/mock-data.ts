@@ -1,59 +1,127 @@
+/**
+ * Mock Data Structures for Kandypack Logistics System
+ * 
+ * This file contains TypeScript interfaces and mock data for the customer portal.
+ * Used for demonstration purposes without requiring backend integration.
+ */
+
+/**
+ * Product interface representing FMCG items available for order
+ */
 export interface Product {
+  /** Unique product identifier */
   id: number;
+  /** Product display name */
   name: string;
+  /** Price in Sri Lankan Rupees (LKR) */
   price: number;
+  /** Product category for filtering and organization */
   category: string;
+  /** Available stock quantity */
   stock: number;
+  /** Optional product image URL */
   image?: string;
 }
 
+/**
+ * Delivery route interface representing available shipping destinations
+ */
 export interface Route {
+  /** Unique route identifier */
   id: number;
+  /** Route display name */
   name: string;
+  /** Destination city */
   city: string;
+  /** Maximum delivery time estimate */
   maxDeliveryTime: string;
 }
 
+/**
+ * Individual item within an order
+ */
 export interface OrderItem {
+  /** Reference to product ID */
   productId: number;
+  /** Product name at time of order (for historical accuracy) */
   productName: string;
+  /** Quantity ordered */
   quantity: number;
+  /** Price per unit at time of order */
   unitPrice: number;
+  /** Total price for this item (quantity × unitPrice) */
   totalPrice: number;
 }
 
+/**
+ * Complete order information with tracking status
+ */
 export interface Order {
+  /** Unique order identifier (format: ORD###) */
   id: string;
+  /** Customer who placed the order */
   customerId: number;
+  /** List of ordered items */
   items: OrderItem[];
+  /** Current order status in the 5-stage delivery process */
   status: 'placed' | 'train_scheduled' | 'in_transit' | 'out_for_delivery' | 'delivered';
+  /** Date order was placed (ISO format) */
   orderDate: string;
+  /** Expected/actual delivery date (ISO format) */
   deliveryDate: string;
+  /** Delivery route ID */
   routeId: number;
+  /** Delivery route name (cached for display) */
   routeName: string;
+  /** Total order amount in LKR */
   totalAmount: number;
+  /** Customer's delivery address */
   deliveryAddress: string;
 }
 
+/**
+ * Notification for order updates and system messages
+ */
 export interface Notification {
+  /** Unique notification identifier */
   id: string;
+  /** Notification title/subject */
   title: string;
+  /** Detailed notification message */
   message: string;
+  /** Notification category for styling and filtering */
   type: 'order_update' | 'delivery' | 'system';
+  /** Notification timestamp (ISO format) */
   date: string;
+  /** Whether notification has been read by user */
   read: boolean;
+  /** Optional associated order ID for order-related notifications */
   orderId?: string;
 }
 
+/**
+ * Customer account information
+ */
 export interface Customer {
+  /** Unique customer identifier */
   id: number;
+  /** Customer's full name */
   name: string;
+  /** Customer's email address */
   email: string;
+  /** Customer's phone number */
   phone: string;
+  /** Customer's primary address */
   address: string;
 }
 
-// Mock Products (15 FMCG items)
+/**
+ * Mock Products Data
+ * 
+ * 15 Fast-Moving Consumer Goods (FMCG) items representing typical Sri Lankan products.
+ * Categories: cleaning, personal_care, snacks, beverages, dairy, food
+ * Prices are in Sri Lankan Rupees (LKR)
+ */
 export const mockProducts: Product[] = [
   { id: 1, name: "Sunlight Detergent 1kg", price: 450, category: "cleaning", stock: 50 },
   { id: 2, name: "Lifebuoy Soap Bar", price: 85, category: "personal_care", stock: 100 },
@@ -72,7 +140,12 @@ export const mockProducts: Product[] = [
   { id: 15, name: "Ratthi Coconut Oil 375ml", price: 380, category: "food", stock: 40 }
 ];
 
-// Mock Routes (10 Sri Lankan cities)
+/**
+ * Mock Delivery Routes Data
+ * 
+ * 10 major Sri Lankan cities with estimated delivery times.
+ * Delivery times are calculated based on distance and train schedules.
+ */
 export const mockRoutes: Route[] = [
   { id: 1, name: "Colombo Central", city: "Colombo", maxDeliveryTime: "2 days" },
   { id: 2, name: "Galle Road South", city: "Galle", maxDeliveryTime: "3 days" },
@@ -86,7 +159,16 @@ export const mockRoutes: Route[] = [
   { id: 10, name: "Trincomalee Harbor", city: "Trincomalee", maxDeliveryTime: "5 days" }
 ];
 
-// Mock Orders (40+ orders with various statuses)
+/**
+ * Mock Orders Data
+ * 
+ * Sample orders demonstrating the 5-stage delivery process:
+ * 1. placed - Order confirmed, awaiting processing
+ * 2. train_scheduled - Scheduled for train transport
+ * 3. in_transit - Currently being transported
+ * 4. out_for_delivery - Final delivery in progress
+ * 5. delivered - Successfully delivered to customer
+ */
 export const mockOrders: Order[] = [
   {
     id: "ORD001",
@@ -165,7 +247,12 @@ export const mockOrders: Order[] = [
   }
 ];
 
-// Mock Notifications
+/**
+ * Mock Notifications Data
+ * 
+ * System notifications for order updates, delivery status, and general announcements.
+ * Types: order_update, delivery, system
+ */
 export const mockNotifications: Notification[] = [
   {
     id: "NOT001",
@@ -222,7 +309,11 @@ export const mockNotifications: Notification[] = [
   }
 ];
 
-// Mock Customer
+/**
+ * Mock Customer Data
+ * 
+ * Default customer account for demo authentication system.
+ */
 export const mockCustomer: Customer = {
   id: 1,
   name: "John Perera",
@@ -231,23 +322,54 @@ export const mockCustomer: Customer = {
   address: "No. 123, Galle Road, Colombo 03"
 };
 
-// Helper functions
+/**
+ * Helper Functions for Data Access
+ * 
+ * Utility functions to retrieve specific data items by ID or filter by customer.
+ * In a real application, these would be API calls to the backend.
+ */
+
+/**
+ * Find a product by its unique ID
+ * @param id - Product ID to search for
+ * @returns Product object or undefined if not found
+ */
 export const getProductById = (id: number): Product | undefined => {
   return mockProducts.find(product => product.id === id);
 };
 
+/**
+ * Find a delivery route by its unique ID
+ * @param id - Route ID to search for
+ * @returns Route object or undefined if not found
+ */
 export const getRouteById = (id: number): Route | undefined => {
   return mockRoutes.find(route => route.id === id);
 };
 
+/**
+ * Find an order by its unique ID
+ * @param id - Order ID to search for (format: ORD###)
+ * @returns Order object or undefined if not found
+ */
 export const getOrderById = (id: string): Order | undefined => {
   return mockOrders.find(order => order.id === id);
 };
 
+/**
+ * Get all notifications for a customer
+ * @param customerId - Customer ID to filter notifications
+ * @returns Array of notifications (currently returns all mock notifications)
+ */
 export const getNotificationsByCustomer = (customerId: number): Notification[] => {
   return mockNotifications;
 };
 
+/**
+ * Get all orders for a specific customer
+ * @param customerId - Customer ID to filter orders
+ * @returns Array of orders belonging to the customer
+ */
 export const getOrdersByCustomer = (customerId: number): Order[] => {
   return mockOrders.filter(order => order.customerId === customerId);
 };

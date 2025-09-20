@@ -1,14 +1,30 @@
+/**
+ * Simple Dashboard Page Component
+ * 
+ * Main dashboard interface for the Kandypack customer portal.
+ * Displays order statistics, quick actions, and recent orders with clean styling.
+ */
+
 "use client";
 
 import Link from "next/link";
 
+/**
+ * SimpleDashboardPage Component
+ * 
+ * Renders the main dashboard with navigation, statistics cards, and recent orders.
+ * Uses static data for demonstration purposes with emoji icons for reliability.
+ * 
+ * @returns JSX element containing the complete dashboard interface
+ */
 export default function SimpleDashboardPage() {
 	return (
 		<div className="min-h-screen bg-gray-50">
-			{/* Header */}
+			{/* Navigation Header */}
 			<header className="bg-white shadow border-b border-gray-200">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex justify-between items-center h-16">
+						{/* Logo section */}
 						<div className="flex items-center">
 							<Link href="/dashboard" className="flex items-center space-x-2">
 								<div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
@@ -17,6 +33,7 @@ export default function SimpleDashboardPage() {
 								<span className="text-xl font-bold text-gray-900">Kandypack</span>
 							</Link>
 						</div>
+						{/* Navigation menu */}
 						<nav className="flex space-x-8">
 							<Link href="/dashboard" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
 								Dashboard
@@ -38,7 +55,7 @@ export default function SimpleDashboardPage() {
 				</div>
 			</header>
 
-			{/* Main Content */}
+			{/* Main Dashboard Content */}
 			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				<div className="space-y-8">
 					{/* Welcome Section */}
@@ -47,7 +64,7 @@ export default function SimpleDashboardPage() {
 						<p className="text-gray-600">Welcome to your Kandypack customer portal</p>
 					</div>
 
-					{/* Quick Actions */}
+					{/* Quick Action Cards */}
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 						<Link href="/dashboard/orders/new" className="block">
 							<div className="bg-white p-6 rounded-lg shadow border border-gray-200 hover:shadow-md transition-shadow">
