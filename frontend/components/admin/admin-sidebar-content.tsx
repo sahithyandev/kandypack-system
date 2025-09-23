@@ -1,6 +1,6 @@
 "use client";
 
-import { NotebookText, SquareKanban } from "lucide-react";
+import { Cog, NotebookText, SquareKanban } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -31,6 +31,11 @@ const linkGroups: Array<LinkGroup> = [
 				href: "/admin/reports",
 				label: "Reports",
 				icon: <NotebookText />,
+			},
+			{
+				href: "/admin/system-config",
+				label: "System Config",
+				icon: <Cog />,
 			},
 		],
 	},
