@@ -13,7 +13,7 @@ export default async function Layout({
 	return (
 		<SidebarProvider defaultOpen={defaultOpen}>
 			<AdminSidebar />
-			<main className="px-3 py-2">
+			<main className="px-3 py-2 w-full">
 				<SidebarTrigger className="cursor-pointer" />
 				{children}
 			</main>
