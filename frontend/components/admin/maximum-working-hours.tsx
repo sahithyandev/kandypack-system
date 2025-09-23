@@ -8,7 +8,7 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { Pen } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { Button } from "@/components/ui/button";
@@ -131,6 +131,10 @@ function Edit({ isOpen, selectedItem, onClose, onFinished }: EditProps) {
 		console.log(values);
 	}
 
+	useEffect(() => {
+		form.reset({ weeklyMax: selectedItem?.weeklyMax || 40 });
+	}, [selectedItem, form.reset]);
+
 	return (
 		<Dialog
 			open={isOpen}
@@ -165,7 +169,7 @@ function Edit({ isOpen, selectedItem, onClose, onFinished }: EditProps) {
 										/>
 									</FormControl>
 									<FormDescription>
-										Only approved members can login.
+										Must be between 1 and 100 hours.
 									</FormDescription>
 									<FormMessage />
 								</FormItem>
