@@ -120,8 +120,8 @@ const editSchema = z.object({
 		.max(100, "Cannot exceed 100 hours"),
 });
 
-function Edit({ isOpen, selectedItem, onClose, onFinished }: EditProps) {
-	const [isLoading, setIsLoading] = useState(false);
+function Edit({ isOpen, selectedItem, onClose }: EditProps) {
+	const [isLoading, _setIsLoading] = useState(false);
 	const form = useForm<z.infer<typeof editSchema>>({
 		resolver: zodResolver(editSchema),
 		defaultValues: { weeklyMax: selectedItem?.weeklyMax || 40 },
