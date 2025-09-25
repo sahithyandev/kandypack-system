@@ -133,7 +133,7 @@ function Edit({ isOpen, selectedItem, onClose }: EditProps) {
 
 	useEffect(() => {
 		form.reset({ weeklyMax: selectedItem?.weeklyMax || 40 });
-	}, [selectedItem, form.reset]);
+	}, [selectedItem]);
 
 	return (
 		<Dialog
