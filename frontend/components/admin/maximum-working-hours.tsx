@@ -131,6 +131,7 @@ function Edit({ isOpen, selectedItem, onClose }: EditProps) {
 		console.log(values);
 	}
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: it's not required
 	useEffect(() => {
 		form.reset({ weeklyMax: selectedItem?.weeklyMax || 40 });
 	}, [selectedItem]);
