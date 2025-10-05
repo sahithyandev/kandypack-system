@@ -1,21 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { 
-	Bell, 
+import {
+	AlertTriangle,
+	Bell,
 	BellRing,
-	Package, 
-	Truck, 
 	CheckCircle2,
 	Info,
-	AlertTriangle,
+	MarkAsRead,
+	Package,
+	Truck,
 	X,
-	MarkAsRead
 } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import { mockNotifications, type Notification } from "@/lib/mock-data";
 
 export default function NotificationsPage() {
@@ -36,77 +42,94 @@ export default function NotificationsPage() {
 	];
 
 	// Filter notifications
-	const filteredNotifications = notifications.filter(notification => {
+	const filteredNotifications = notifications.filter((notification) => {
 		if (filter === "all") return true;
 		if (filter === "unread") return !notification.read;
 		return notification.type === filter;
 	});
 
-	const unreadCount = notifications.filter(n => !n.read).length;
+	const unreadCount = notifications.filter((n) => !n.read).length;
 
 	const getNotificationIcon = (type: string) => {
 		switch (type) {
-			case 'order_update': return <Package className="h-5 w-5 text-blue-600" />;
-			case 'delivery': return <Truck className="h-5 w-5 text-green-600" />;
-			case 'system': return <Info className="h-5 w-5 text-orange-600" />;
-			default: return <Bell className="h-5 w-5 text-gray-600" />;
+			case "order_update":
+				return <Package className="h-5 w-5 text-blue-600" />;
+			case "delivery":
+				return <Truck className="h-5 w-5 text-green-600" />;
+			case "system":
+				return <Info className="h-5 w-5 text-orange-600" />;
+			default:
+				return <Bell className="h-5 w-5 text-gray-600" />;
 		}
 	};
 
 	const getTypeColor = (type: string) => {
 		switch (type) {
-			case 'order_update': return 'bg-blue-100 text-blue-800 border-blue-200';
-			case 'delivery': return 'bg-green-100 text-green-800 border-green-200';
-			case 'system': return 'bg-orange-100 text-orange-800 border-orange-200';
-			default: return 'bg-gray-100 text-gray-800 border-gray-200';
+			case "order_update":
+				return "bg-blue-100 text-blue-800 border-blue-200";
+			case "delivery":
+				return "bg-green-100 text-green-800 border-green-200";
+			case "system":
+				return "bg-orange-100 text-orange-800 border-orange-200";
+			default:
+				return "bg-gray-100 text-gray-800 border-gray-200";
 		}
 	};
 
 	const formatType = (type: string) => {
-		return type.split('_').map(word => 
-			word.charAt(0).toUpperCase() + word.slice(1)
-		).join(' ');
+		return type
+			.split("_")
+			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(" ");
 	};
 
 	const formatDate = (dateString: string) => {
 		const date = new Date(dateString);
 		const now = new Date();
-		const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-		
+		const diffInHours = Math.floor(
+			(now.getTime() - date.getTime()) / (1000 * 60 * 60),
+		);
+
 		if (diffInHours < 1) {
 			return "Just now";
 		} else if (diffInHours < 24) {
 			return `${diffInHours}h ago`;
-		} else if (diffInHours < 168) { // 7 days
+		} else if (diffInHours < 168) {
+			// 7 days
 			return `${Math.floor(diffInHours / 24)}d ago`;
 		} else {
-			return date.toLocaleDateString('en-US', {
-				year: 'numeric',
-				month: 'short',
-				day: 'numeric'
+			return date.toLocaleDateString("en-US", {
+				year: "numeric",
+				month: "short",
+				day: "numeric",
 			});
 		}
 	};
 
 	const markAsRead = (notificationId: string) => {
-		setNotifications(prevNotifications =>
-			prevNotifications.map(notification =>
+		setNotifications((prevNotifications) =>
+			prevNotifications.map((notification) =>
 				notification.id === notificationId
 					? { ...notification, read: true }
-					: notification
-			)
+					: notification,
+			),
 		);
 	};
 
 	const markAllAsRead = () => {
-		setNotifications(prevNotifications =>
-			prevNotifications.map(notification => ({ ...notification, read: true }))
+		setNotifications((prevNotifications) =>
+			prevNotifications.map((notification) => ({
+				...notification,
+				read: true,
+			})),
 		);
 	};
 
 	const deleteNotification = (notificationId: string) => {
-		setNotifications(prevNotifications =>
-			prevNotifications.filter(notification => notification.id !== notificationId)
+		setNotifications((prevNotifications) =>
+			prevNotifications.filter(
+				(notification) => notification.id !== notificationId,
+			),
 		);
 	};
 
@@ -119,12 +142,17 @@ export default function NotificationsPage() {
 						<Bell className="h-8 w-8" />
 						<span>Notifications</span>
 						{unreadCount > 0 && (
-							<Badge variant="destructive" className="h-6 w-6 flex items-center justify-center p-0 text-sm">
+							<Badge
+								variant="destructive"
+								className="h-6 w-6 flex items-center justify-center p-0 text-sm"
+							>
 								{unreadCount}
 							</Badge>
 						)}
 					</h1>
-					<p className="text-gray-600">Stay updated with your order status and system messages</p>
+					<p className="text-gray-600">
+						Stay updated with your order status and system messages
+					</p>
 				</div>
 				{unreadCount > 0 && (
 					<Button onClick={markAllAsRead} variant="outline">
@@ -151,7 +179,10 @@ export default function NotificationsPage() {
 							>
 								<span>{option.label}</span>
 								{option.value === "unread" && unreadCount > 0 && (
-									<Badge variant="destructive" className="h-4 w-4 flex items-center justify-center p-0 text-xs ml-1">
+									<Badge
+										variant="destructive"
+										className="h-4 w-4 flex items-center justify-center p-0 text-xs ml-1"
+									>
 										{unreadCount}
 									</Badge>
 								)}
@@ -167,21 +198,24 @@ export default function NotificationsPage() {
 					<Card>
 						<CardContent className="py-12 text-center">
 							<BellRing className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-							<h3 className="text-lg font-medium text-gray-900 mb-2">No notifications found</h3>
+							<h3 className="text-lg font-medium text-gray-900 mb-2">
+								No notifications found
+							</h3>
 							<p className="text-gray-600">
-								{filter === "unread" 
+								{filter === "unread"
 									? "You're all caught up! No unread notifications."
-									: "No notifications match your current filter."
-								}
+									: "No notifications match your current filter."}
 							</p>
 						</CardContent>
 					</Card>
 				) : (
 					filteredNotifications.map((notification) => (
-						<Card 
-							key={notification.id} 
+						<Card
+							key={notification.id}
 							className={`hover:shadow-md transition-all cursor-pointer ${
-								!notification.read ? 'border-l-4 border-l-blue-500 bg-blue-50/30' : ''
+								!notification.read
+									? "border-l-4 border-l-blue-500 bg-blue-50/30"
+									: ""
 							}`}
 						>
 							<CardContent className="p-4">
@@ -191,29 +225,37 @@ export default function NotificationsPage() {
 										<div className="flex-shrink-0 mt-1">
 											{getNotificationIcon(notification.type)}
 										</div>
-										
+
 										{/* Content */}
 										<div className="flex-1 min-w-0">
 											<div className="flex items-center space-x-2 mb-1">
-												<h4 className={`font-medium ${!notification.read ? 'text-gray-900' : 'text-gray-700'}`}>
+												<h4
+													className={`font-medium ${!notification.read ? "text-gray-900" : "text-gray-700"}`}
+												>
 													{notification.title}
 												</h4>
-												<Badge className={getTypeColor(notification.type) + " border text-xs"}>
+												<Badge
+													className={
+														getTypeColor(notification.type) + " border text-xs"
+													}
+												>
 													{formatType(notification.type)}
 												</Badge>
 												{!notification.read && (
 													<div className="w-2 h-2 bg-blue-600 rounded-full"></div>
 												)}
 											</div>
-											
-											<p className={`text-sm ${!notification.read ? 'text-gray-700' : 'text-gray-600'} mb-2`}>
+
+											<p
+												className={`text-sm ${!notification.read ? "text-gray-700" : "text-gray-600"} mb-2`}
+											>
 												{notification.message}
 											</p>
-											
+
 											<div className="flex items-center space-x-4 text-xs text-gray-500">
 												<span>{formatDate(notification.date)}</span>
 												{notification.orderId && (
-													<Link 
+													<Link
 														href={`/dashboard/orders?search=${notification.orderId}`}
 														className="text-blue-600 hover:text-blue-800 underline"
 													>
@@ -267,22 +309,29 @@ export default function NotificationsPage() {
 					<CardContent>
 						<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 							<div className="text-center">
-								<div className="text-2xl font-bold text-gray-900">{notifications.length}</div>
+								<div className="text-2xl font-bold text-gray-900">
+									{notifications.length}
+								</div>
 								<div className="text-sm text-gray-600">Total</div>
 							</div>
 							<div className="text-center">
-								<div className="text-2xl font-bold text-blue-600">{unreadCount}</div>
+								<div className="text-2xl font-bold text-blue-600">
+									{unreadCount}
+								</div>
 								<div className="text-sm text-gray-600">Unread</div>
 							</div>
 							<div className="text-center">
 								<div className="text-2xl font-bold text-green-600">
-									{notifications.filter(n => n.type === 'order_update').length}
+									{
+										notifications.filter((n) => n.type === "order_update")
+											.length
+									}
 								</div>
 								<div className="text-sm text-gray-600">Order Updates</div>
 							</div>
 							<div className="text-center">
 								<div className="text-2xl font-bold text-orange-600">
-									{notifications.filter(n => n.type === 'delivery').length}
+									{notifications.filter((n) => n.type === "delivery").length}
 								</div>
 								<div className="text-sm text-gray-600">Deliveries</div>
 							</div>

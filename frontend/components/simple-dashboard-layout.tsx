@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { AuthService, type AuthUser } from "@/lib/auth";
 import { mockNotifications } from "@/lib/mock-data";
 
@@ -29,15 +29,15 @@ export default function SimpleDashboardLayout({
 		router.push("/login");
 	};
 
-	const unreadNotifications = mockNotifications.filter(n => !n.read).length;
+	const unreadNotifications = mockNotifications.filter((n) => !n.read).length;
 
 	const navigation = [
 		{ name: "Dashboard", href: "/dashboard" },
 		{ name: "Place Order", href: "/dashboard/orders/new" },
 		{ name: "Track Orders", href: "/dashboard/orders" },
-		{ 
-			name: `Notifications ${unreadNotifications > 0 ? `(${unreadNotifications})` : ''}`, 
-			href: "/dashboard/notifications" 
+		{
+			name: `Notifications ${unreadNotifications > 0 ? `(${unreadNotifications})` : ""}`,
+			href: "/dashboard/notifications",
 		},
 	];
 
@@ -64,7 +64,9 @@ export default function SimpleDashboardLayout({
 								<div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
 									<span className="text-white font-bold text-sm">K</span>
 								</div>
-								<span className="text-xl font-bold text-gray-900">Kandypack</span>
+								<span className="text-xl font-bold text-gray-900">
+									Kandypack
+								</span>
 							</Link>
 						</div>
 
@@ -92,17 +94,32 @@ export default function SimpleDashboardLayout({
 							>
 								Logout
 							</button>
-							
+
 							{/* Mobile menu button */}
 							<button
 								className="md:hidden p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100"
 								onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
 							>
-								<svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<svg
+									className="h-6 w-6"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
 									{isMobileMenuOpen ? (
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M6 18L18 6M6 6l12 12"
+										/>
 									) : (
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M4 6h16M4 12h16M4 18h16"
+										/>
 									)}
 								</svg>
 							</button>

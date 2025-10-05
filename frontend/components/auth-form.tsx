@@ -1,9 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -40,9 +40,10 @@ export default function AuthForm({ mode }: AuthFormProps) {
 	const router = useRouter();
 
 	const schema = mode === "login" ? loginSchema : registerSchema;
-	const defaultValues = mode === "login" 
-		? { username: "", password: "" }
-		: { name: "", email: "", username: "", password: "" };
+	const defaultValues =
+		mode === "login"
+			? { username: "", password: "" }
+			: { name: "", email: "", username: "", password: "" };
 
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
@@ -55,7 +56,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
 		try {
 			let result;
-			
+
 			if (mode === "login") {
 				const loginData = data as z.infer<typeof loginSchema>;
 				result = AuthService.login(loginData.username, loginData.password);
@@ -65,7 +66,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
 					registerData.name,
 					registerData.email,
 					registerData.username,
-					registerData.password
+					registerData.password,
 				);
 			}
 
@@ -92,10 +93,9 @@ export default function AuthForm({ mode }: AuthFormProps) {
 									{mode === "login" ? "Welcome back" : "Create Account"}
 								</h1>
 								<p className="text-muted-foreground text-balance">
-									{mode === "login" 
+									{mode === "login"
 										? "Login to your Kandypack account"
-										: "Join Kandypack logistics system"
-									}
+										: "Join Kandypack logistics system"}
 								</p>
 							</div>
 
@@ -129,7 +129,11 @@ export default function AuthForm({ mode }: AuthFormProps) {
 										<FormItem>
 											<FormLabel>Email</FormLabel>
 											<FormControl>
-												<Input type="email" placeholder="john@example.com" {...field} />
+												<Input
+													type="email"
+													placeholder="john@example.com"
+													{...field}
+												/>
 											</FormControl>
 											<FormMessage />
 										</FormItem>
@@ -166,14 +170,21 @@ export default function AuthForm({ mode }: AuthFormProps) {
 							/>
 
 							<Button type="submit" className="w-full" disabled={isLoading}>
-								{isLoading ? "Processing..." : (mode === "login" ? "Login" : "Create Account")}
+								{isLoading
+									? "Processing..."
+									: mode === "login"
+										? "Login"
+										: "Create Account"}
 							</Button>
 
 							<div className="text-center text-sm">
 								{mode === "login" ? (
 									<>
 										Don&apos;t have an account?{" "}
-										<a href="/register" className="underline underline-offset-2">
+										<a
+											href="/register"
+											className="underline underline-offset-2"
+										>
 											Sign up
 										</a>
 									</>

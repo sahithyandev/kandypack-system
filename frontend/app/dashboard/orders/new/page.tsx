@@ -1,14 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+	Calendar,
+	MapPin,
+	Minus,
+	Package,
+	Plus,
+	ShoppingCart,
+	X,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import {
 	Form,
 	FormControl,
@@ -17,18 +31,15 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { 
-	ShoppingCart, 
-	Plus, 
-	Minus, 
-	X,
-	Calendar,
-	MapPin,
-	Package
-} from "lucide-react";
-import { mockProducts, mockRoutes, type Product, type Route } from "@/lib/mock-data";
-import { CartService, type CartState } from "@/lib/cart";
+import { Input } from "@/components/ui/input";
 import { AuthService } from "@/lib/auth";
+import { CartService, type CartState } from "@/lib/cart";
+import {
+	mockProducts,
+	mockRoutes,
+	type Product,
+	type Route,
+} from "@/lib/mock-data";
 
 const orderSchema = z.object({
 	deliveryAddress: z.string().min(10, "Address must be at least 10 characters"),
@@ -57,17 +68,21 @@ export default function PlaceOrderPage() {
 	}, []);
 
 	// Get unique categories
-	const categories = ["all", ...Array.from(new Set(mockProducts.map(p => p.category)))];
+	const categories = [
+		"all",
+		...Array.from(new Set(mockProducts.map((p) => p.category))),
+	];
 
 	// Filter products by category
-	const filteredProducts = selectedCategory === "all" 
-		? mockProducts 
-		: mockProducts.filter(p => p.category === selectedCategory);
+	const filteredProducts =
+		selectedCategory === "all"
+			? mockProducts
+			: mockProducts.filter((p) => p.category === selectedCategory);
 
 	// Calculate minimum delivery date (7 days from now)
 	const minDeliveryDate = new Date();
 	minDeliveryDate.setDate(minDeliveryDate.getDate() + 7);
-	const minDateString = minDeliveryDate.toISOString().split('T')[0];
+	const minDateString = minDeliveryDate.toISOString().split("T")[0];
 
 	const addToCart = (productId: number) => {
 		const newCart = CartService.addToCart(productId, 1);
@@ -85,7 +100,7 @@ export default function PlaceOrderPage() {
 	};
 
 	const getCartItemQuantity = (productId: number): number => {
-		const item = cart.items.find(item => item.productId === productId);
+		const item = cart.items.find((item) => item.productId === productId);
 		return item ? item.quantity : 0;
 	};
 
@@ -99,11 +114,11 @@ export default function PlaceOrderPage() {
 
 		try {
 			// Simulate API call
-			await new Promise(resolve => setTimeout(resolve, 1000));
+			await new Promise((resolve) => setTimeout(resolve, 1000));
 
 			// Generate order ID
 			const orderId = `ORD${String(Date.now()).slice(-6)}`;
-			
+
 			// Clear cart
 			CartService.clearCart();
 			setCart({ items: [], total: 0 });
@@ -122,9 +137,10 @@ export default function PlaceOrderPage() {
 	};
 
 	const formatCategory = (category: string) => {
-		return category.split('_').map(word => 
-			word.charAt(0).toUpperCase() + word.slice(1)
-		).join(' ');
+		return category
+			.split("_")
+			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(" ");
 	};
 
 	return (
@@ -133,16 +149,18 @@ export default function PlaceOrderPage() {
 			<div className="flex items-center justify-between">
 				<div>
 					<h1 className="text-3xl font-bold text-gray-900">Place New Order</h1>
-					<p className="text-gray-600">Browse products and add them to your cart</p>
+					<p className="text-gray-600">
+						Browse products and add them to your cart
+					</p>
 				</div>
-				<Button 
-					onClick={() => setIsCartOpen(!isCartOpen)}
-					className="relative"
-				>
+				<Button onClick={() => setIsCartOpen(!isCartOpen)} className="relative">
 					<ShoppingCart className="h-4 w-4 mr-2" />
 					Cart ({cart.items.length})
 					{cart.items.length > 0 && (
-						<Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+						<Badge
+							variant="destructive"
+							className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
+						>
 							{cart.items.reduce((sum, item) => sum + item.quantity, 0)}
 						</Badge>
 					)}
@@ -162,7 +180,9 @@ export default function PlaceOrderPage() {
 								{categories.map((category) => (
 									<Button
 										key={category}
-										variant={selectedCategory === category ? "default" : "outline"}
+										variant={
+											selectedCategory === category ? "default" : "outline"
+										}
 										size="sm"
 										onClick={() => setSelectedCategory(category)}
 									>
@@ -177,19 +197,28 @@ export default function PlaceOrderPage() {
 					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
 						{filteredProducts.map((product) => {
 							const cartQuantity = getCartItemQuantity(product.id);
-							
+
 							return (
-								<Card key={product.id} className="hover:shadow-md transition-shadow">
+								<Card
+									key={product.id}
+									className="hover:shadow-md transition-shadow"
+								>
 									<CardHeader>
 										<div className="flex items-start justify-between">
 											<div className="flex-1">
-												<CardTitle className="text-lg">{product.name}</CardTitle>
+												<CardTitle className="text-lg">
+													{product.name}
+												</CardTitle>
 												<CardDescription className="capitalize">
 													{formatCategory(product.category)}
 												</CardDescription>
 											</div>
-											<Badge variant={product.stock > 10 ? "default" : "destructive"}>
-												{product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
+											<Badge
+												variant={product.stock > 10 ? "default" : "destructive"}
+											>
+												{product.stock > 0
+													? `${product.stock} in stock`
+													: "Out of stock"}
 											</Badge>
 										</div>
 									</CardHeader>
@@ -200,22 +229,28 @@ export default function PlaceOrderPage() {
 													{formatCurrency(product.price)}
 												</span>
 											</div>
-											
+
 											{cartQuantity > 0 ? (
 												<div className="flex items-center justify-between">
 													<div className="flex items-center space-x-2">
 														<Button
 															size="sm"
 															variant="outline"
-															onClick={() => updateQuantity(product.id, cartQuantity - 1)}
+															onClick={() =>
+																updateQuantity(product.id, cartQuantity - 1)
+															}
 														>
 															<Minus className="h-3 w-3" />
 														</Button>
-														<span className="font-medium w-8 text-center">{cartQuantity}</span>
+														<span className="font-medium w-8 text-center">
+															{cartQuantity}
+														</span>
 														<Button
 															size="sm"
 															variant="outline"
-															onClick={() => updateQuantity(product.id, cartQuantity + 1)}
+															onClick={() =>
+																updateQuantity(product.id, cartQuantity + 1)
+															}
 															disabled={cartQuantity >= product.stock}
 														>
 															<Plus className="h-3 w-3" />
@@ -230,7 +265,7 @@ export default function PlaceOrderPage() {
 													</Button>
 												</div>
 											) : (
-												<Button 
+												<Button
 													className="w-full"
 													onClick={() => addToCart(product.id)}
 													disabled={product.stock === 0}
@@ -248,7 +283,9 @@ export default function PlaceOrderPage() {
 				</div>
 
 				{/* Cart Sidebar */}
-				<div className={`lg:col-span-1 ${isCartOpen ? 'block' : 'hidden lg:block'}`}>
+				<div
+					className={`lg:col-span-1 ${isCartOpen ? "block" : "hidden lg:block"}`}
+				>
 					<Card className="sticky top-6">
 						<CardHeader>
 							<div className="flex items-center justify-between">
@@ -268,17 +305,25 @@ export default function PlaceOrderPage() {
 						</CardHeader>
 						<CardContent className="space-y-4">
 							{cart.items.length === 0 ? (
-								<p className="text-center text-gray-500 py-8">Your cart is empty</p>
+								<p className="text-center text-gray-500 py-8">
+									Your cart is empty
+								</p>
 							) : (
 								<>
 									{/* Cart Items */}
 									<div className="space-y-3 max-h-60 overflow-y-auto">
 										{cart.items.map((item) => (
-											<div key={item.productId} className="flex items-center justify-between p-2 border rounded">
+											<div
+												key={item.productId}
+												className="flex items-center justify-between p-2 border rounded"
+											>
 												<div className="flex-1 min-w-0">
-													<p className="text-sm font-medium truncate">{item.product.name}</p>
+													<p className="text-sm font-medium truncate">
+														{item.product.name}
+													</p>
 													<p className="text-xs text-gray-500">
-														{formatCurrency(item.product.price)} × {item.quantity}
+														{formatCurrency(item.product.price)} ×{" "}
+														{item.quantity}
 													</p>
 												</div>
 												<div className="flex items-center space-x-1">
@@ -309,7 +354,10 @@ export default function PlaceOrderPage() {
 
 									{/* Order Form */}
 									<Form {...form}>
-										<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+										<form
+											onSubmit={form.handleSubmit(onSubmit)}
+											className="space-y-4"
+										>
 											<FormField
 												control={form.control}
 												name="deliveryAddress"
@@ -345,7 +393,8 @@ export default function PlaceOrderPage() {
 																<option value="">Select route</option>
 																{mockRoutes.map((route) => (
 																	<option key={route.id} value={route.id}>
-																		{route.name} ({route.city}) - {route.maxDeliveryTime}
+																		{route.name} ({route.city}) -{" "}
+																		{route.maxDeliveryTime}
 																	</option>
 																))}
 															</select>
@@ -379,12 +428,14 @@ export default function PlaceOrderPage() {
 												)}
 											/>
 
-											<Button 
-												type="submit" 
+											<Button
+												type="submit"
 												className="w-full"
 												disabled={isSubmitting || cart.items.length === 0}
 											>
-												{isSubmitting ? "Placing Order..." : (
+												{isSubmitting ? (
+													"Placing Order..."
+												) : (
 													<>
 														<Package className="h-4 w-4 mr-2" />
 														Place Order ({formatCurrency(cart.total)})

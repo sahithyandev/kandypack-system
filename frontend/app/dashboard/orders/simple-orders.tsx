@@ -4,28 +4,70 @@ import Link from "next/link";
 
 export default function SimpleOrdersPage() {
 	const orders = [
-		{ id: "ORD001", items: 2, route: "Colombo Central", amount: 1325, date: "2024-01-15", status: "delivered" },
-		{ id: "ORD002", items: 3, route: "Galle Road South", amount: 2900, date: "2024-09-15", status: "out_for_delivery" },
-		{ id: "ORD003", items: 4, route: "Kandy Hills", amount: 1440, date: "2024-09-18", status: "in_transit" },
-		{ id: "ORD004", items: 2, route: "Negombo Beach", amount: 710, date: "2024-09-20", status: "train_scheduled" },
-		{ id: "ORD005", items: 3, route: "Matara Express", amount: 555, date: "2024-09-22", status: "placed" },
+		{
+			id: "ORD001",
+			items: 2,
+			route: "Colombo Central",
+			amount: 1325,
+			date: "2024-01-15",
+			status: "delivered",
+		},
+		{
+			id: "ORD002",
+			items: 3,
+			route: "Galle Road South",
+			amount: 2900,
+			date: "2024-09-15",
+			status: "out_for_delivery",
+		},
+		{
+			id: "ORD003",
+			items: 4,
+			route: "Kandy Hills",
+			amount: 1440,
+			date: "2024-09-18",
+			status: "in_transit",
+		},
+		{
+			id: "ORD004",
+			items: 2,
+			route: "Negombo Beach",
+			amount: 710,
+			date: "2024-09-20",
+			status: "train_scheduled",
+		},
+		{
+			id: "ORD005",
+			items: 3,
+			route: "Matara Express",
+			amount: 555,
+			date: "2024-09-22",
+			status: "placed",
+		},
 	];
 
 	const getStatusColor = (status: string) => {
 		switch (status) {
-			case 'placed': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-			case 'train_scheduled': return 'bg-blue-100 text-blue-800 border-blue-200';
-			case 'in_transit': return 'bg-purple-100 text-purple-800 border-purple-200';
-			case 'out_for_delivery': return 'bg-orange-100 text-orange-800 border-orange-200';
-			case 'delivered': return 'bg-green-100 text-green-800 border-green-200';
-			default: return 'bg-gray-100 text-gray-800 border-gray-200';
+			case "placed":
+				return "bg-yellow-100 text-yellow-800 border-yellow-200";
+			case "train_scheduled":
+				return "bg-blue-100 text-blue-800 border-blue-200";
+			case "in_transit":
+				return "bg-purple-100 text-purple-800 border-purple-200";
+			case "out_for_delivery":
+				return "bg-orange-100 text-orange-800 border-orange-200";
+			case "delivered":
+				return "bg-green-100 text-green-800 border-green-200";
+			default:
+				return "bg-gray-100 text-gray-800 border-gray-200";
 		}
 	};
 
 	const formatStatus = (status: string) => {
-		return status.split('_').map(word => 
-			word.charAt(0).toUpperCase() + word.slice(1)
-		).join(' ');
+		return status
+			.split("_")
+			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(" ");
 	};
 
 	return (
@@ -39,23 +81,40 @@ export default function SimpleOrdersPage() {
 								<div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
 									<span className="text-white font-bold text-sm">K</span>
 								</div>
-								<span className="text-xl font-bold text-gray-900">Kandypack</span>
+								<span className="text-xl font-bold text-gray-900">
+									Kandypack
+								</span>
 							</Link>
 						</div>
 						<nav className="flex space-x-8">
-							<Link href="/dashboard" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+							<Link
+								href="/dashboard"
+								className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
+							>
 								Dashboard
 							</Link>
-							<Link href="/dashboard/orders/new" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+							<Link
+								href="/dashboard/orders/new"
+								className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
+							>
 								Place Order
 							</Link>
-							<Link href="/dashboard/orders" className="text-blue-600 px-3 py-2 text-sm font-medium border-b-2 border-blue-600">
+							<Link
+								href="/dashboard/orders"
+								className="text-blue-600 px-3 py-2 text-sm font-medium border-b-2 border-blue-600"
+							>
 								Track Orders
 							</Link>
-							<Link href="/dashboard/notifications" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+							<Link
+								href="/dashboard/notifications"
+								className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
+							>
 								Notifications
 							</Link>
-							<Link href="/login" className="bg-red-500 text-white px-3 py-2 rounded text-sm font-medium hover:bg-red-600">
+							<Link
+								href="/login"
+								className="bg-red-500 text-white px-3 py-2 rounded text-sm font-medium hover:bg-red-600"
+							>
 								Logout
 							</Link>
 						</nav>
@@ -69,7 +128,9 @@ export default function SimpleOrdersPage() {
 					{/* Header */}
 					<div>
 						<h1 className="text-3xl font-bold text-gray-900">Track Orders</h1>
-						<p className="text-gray-600">Monitor the status of your orders and delivery progress</p>
+						<p className="text-gray-600">
+							Monitor the status of your orders and delivery progress
+						</p>
 					</div>
 
 					{/* Search and Filter */}
@@ -98,14 +159,21 @@ export default function SimpleOrdersPage() {
 					{/* Orders List */}
 					<div className="space-y-4">
 						{orders.map((order) => (
-							<div key={order.id} className="bg-white rounded-lg shadow border border-gray-200 hover:shadow-md transition-shadow">
+							<div
+								key={order.id}
+								className="bg-white rounded-lg shadow border border-gray-200 hover:shadow-md transition-shadow"
+							>
 								<div className="p-6">
 									<div className="flex items-center justify-between">
 										<div className="flex items-center space-x-4">
 											<div>
 												<div className="flex items-center space-x-2">
-													<h3 className="text-lg font-semibold text-gray-900">{order.id}</h3>
-													<span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(order.status)}`}>
+													<h3 className="text-lg font-semibold text-gray-900">
+														{order.id}
+													</h3>
+													<span
+														className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(order.status)}`}
+													>
 														{formatStatus(order.status)}
 													</span>
 												</div>
@@ -117,7 +185,9 @@ export default function SimpleOrdersPage() {
 											</div>
 										</div>
 										<div className="text-right">
-											<p className="text-lg font-bold text-gray-900">Rs. {order.amount.toLocaleString()}</p>
+											<p className="text-lg font-bold text-gray-900">
+												Rs. {order.amount.toLocaleString()}
+											</p>
 											<p className="text-sm text-gray-600">Total Amount</p>
 										</div>
 									</div>
@@ -129,14 +199,21 @@ export default function SimpleOrdersPage() {
 											<span>{formatStatus(order.status)}</span>
 										</div>
 										<div className="w-full bg-gray-200 rounded-full h-2">
-											<div 
+											<div
 												className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-												style={{ 
-													width: order.status === 'placed' ? '20%' :
-														   order.status === 'train_scheduled' ? '40%' :
-														   order.status === 'in_transit' ? '60%' :
-														   order.status === 'out_for_delivery' ? '80%' :
-														   order.status === 'delivered' ? '100%' : '0%'
+												style={{
+													width:
+														order.status === "placed"
+															? "20%"
+															: order.status === "train_scheduled"
+																? "40%"
+																: order.status === "in_transit"
+																	? "60%"
+																	: order.status === "out_for_delivery"
+																		? "80%"
+																		: order.status === "delivered"
+																			? "100%"
+																			: "0%",
 												}}
 											></div>
 										</div>

@@ -1,14 +1,14 @@
 /**
  * Simple Authentication Form Component
- * 
+ *
  * A dual-purpose form component that handles both user login and registration
  * with clean Tailwind CSS styling and form validation.
  */
 
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { AuthService } from "@/lib/auth";
 
 /**
@@ -21,10 +21,10 @@ interface SimpleAuthFormProps {
 
 /**
  * SimpleAuthForm Component
- * 
+ *
  * Renders a responsive authentication form with error handling and loading states.
  * Supports both login and registration flows based on the mode prop.
- * 
+ *
  * @param props - Component props
  * @returns JSX element containing the authentication form
  */
@@ -42,7 +42,7 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 
 	/**
 	 * Handle form submission for both login and registration
-	 * 
+	 *
 	 * @param e - Form submission event
 	 */
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -52,7 +52,7 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 
 		try {
 			let result;
-			
+
 			// Call appropriate authentication method based on form mode
 			if (mode === "login") {
 				result = AuthService.login(formData.username, formData.password);
@@ -61,7 +61,7 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 					formData.name,
 					formData.email,
 					formData.username,
-					formData.password
+					formData.password,
 				);
 			}
 
@@ -81,13 +81,13 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 
 	/**
 	 * Handle input field changes and update form state
-	 * 
+	 *
 	 * @param e - Input change event
 	 */
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setFormData(prev => ({
+		setFormData((prev) => ({
 			...prev,
-			[e.target.name]: e.target.value
+			[e.target.name]: e.target.value,
 		}));
 	};
 
@@ -100,10 +100,9 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 						{mode === "login" ? "Welcome back" : "Create Account"}
 					</h1>
 					<p className="text-gray-600">
-						{mode === "login" 
+						{mode === "login"
 							? "Login to your Kandypack account"
-							: "Join Kandypack logistics system"
-						}
+							: "Join Kandypack logistics system"}
 					</p>
 				</div>
 
@@ -118,7 +117,10 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 					{/* Name field - only shown in registration mode */}
 					{mode === "register" && (
 						<div>
-							<label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+							<label
+								htmlFor="name"
+								className="block text-sm font-medium text-gray-700 mb-1"
+							>
 								Full Name
 							</label>
 							<input
@@ -137,7 +139,10 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 					{/* Email field - only shown in registration mode */}
 					{mode === "register" && (
 						<div>
-							<label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+							<label
+								htmlFor="email"
+								className="block text-sm font-medium text-gray-700 mb-1"
+							>
 								Email
 							</label>
 							<input
@@ -155,7 +160,10 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 
 					{/* Username field - shown in both modes */}
 					<div>
-						<label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+						<label
+							htmlFor="username"
+							className="block text-sm font-medium text-gray-700 mb-1"
+						>
 							Username
 						</label>
 						<input
@@ -172,7 +180,10 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 
 					{/* Password field - shown in both modes */}
 					<div>
-						<label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+						<label
+							htmlFor="password"
+							className="block text-sm font-medium text-gray-700 mb-1"
+						>
 							Password
 						</label>
 						<input
@@ -192,7 +203,11 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 						disabled={isLoading}
 						className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
 					>
-						{isLoading ? "Processing..." : (mode === "login" ? "Login" : "Create Account")}
+						{isLoading
+							? "Processing..."
+							: mode === "login"
+								? "Login"
+								: "Create Account"}
 					</button>
 				</form>
 
@@ -201,14 +216,20 @@ export default function SimpleAuthForm({ mode }: SimpleAuthFormProps) {
 					{mode === "login" ? (
 						<>
 							Don't have an account?{" "}
-							<a href="/register" className="text-blue-600 hover:text-blue-500 underline">
+							<a
+								href="/register"
+								className="text-blue-600 hover:text-blue-500 underline"
+							>
 								Sign up
 							</a>
 						</>
 					) : (
 						<>
 							Already have an account?{" "}
-							<a href="/login" className="text-blue-600 hover:text-blue-500 underline">
+							<a
+								href="/login"
+								className="text-blue-600 hover:text-blue-500 underline"
+							>
 								Login
 							</a>
 						</>

@@ -1,6 +1,6 @@
 /**
  * Simple Dashboard Page Component
- * 
+ *
  * Main dashboard interface for the Kandypack customer portal.
  * Displays order statistics, quick actions, and recent orders with clean styling.
  */
@@ -11,10 +11,10 @@ import Link from "next/link";
 
 /**
  * SimpleDashboardPage Component
- * 
+ *
  * Renders the main dashboard with navigation, statistics cards, and recent orders.
  * Uses static data for demonstration purposes with emoji icons for reliability.
- * 
+ *
  * @returns JSX element containing the complete dashboard interface
  */
 export default function SimpleDashboardPage() {
@@ -30,24 +30,41 @@ export default function SimpleDashboardPage() {
 								<div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
 									<span className="text-white font-bold text-sm">K</span>
 								</div>
-								<span className="text-xl font-bold text-gray-900">Kandypack</span>
+								<span className="text-xl font-bold text-gray-900">
+									Kandypack
+								</span>
 							</Link>
 						</div>
 						{/* Navigation menu */}
 						<nav className="flex space-x-8">
-							<Link href="/dashboard" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+							<Link
+								href="/dashboard"
+								className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
+							>
 								Dashboard
 							</Link>
-							<Link href="/dashboard/orders/new" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+							<Link
+								href="/dashboard/orders/new"
+								className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
+							>
 								Place Order
 							</Link>
-							<Link href="/dashboard/orders" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+							<Link
+								href="/dashboard/orders"
+								className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
+							>
 								Track Orders
 							</Link>
-							<Link href="/dashboard/notifications" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+							<Link
+								href="/dashboard/notifications"
+								className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
+							>
 								Notifications
 							</Link>
-							<Link href="/login" className="bg-red-500 text-white px-3 py-2 rounded text-sm font-medium hover:bg-red-600">
+							<Link
+								href="/login"
+								className="bg-red-500 text-white px-3 py-2 rounded text-sm font-medium hover:bg-red-600"
+							>
 								Logout
 							</Link>
 						</nav>
@@ -61,15 +78,21 @@ export default function SimpleDashboardPage() {
 					{/* Welcome Section */}
 					<div>
 						<h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-						<p className="text-gray-600">Welcome to your Kandypack customer portal</p>
+						<p className="text-gray-600">
+							Welcome to your Kandypack customer portal
+						</p>
 					</div>
 
 					{/* Quick Action Cards */}
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 						<Link href="/dashboard/orders/new" className="block">
 							<div className="bg-white p-6 rounded-lg shadow border border-gray-200 hover:shadow-md transition-shadow">
-								<h3 className="text-lg font-semibold text-gray-900 mb-2">Place New Order</h3>
-								<p className="text-gray-600 mb-4">Browse products and create a new order</p>
+								<h3 className="text-lg font-semibold text-gray-900 mb-2">
+									Place New Order
+								</h3>
+								<p className="text-gray-600 mb-4">
+									Browse products and create a new order
+								</p>
 								<span className="inline-block bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium">
 									Start Shopping
 								</span>
@@ -78,8 +101,12 @@ export default function SimpleDashboardPage() {
 
 						<Link href="/dashboard/orders" className="block">
 							<div className="bg-white p-6 rounded-lg shadow border border-gray-200 hover:shadow-md transition-shadow">
-								<h3 className="text-lg font-semibold text-gray-900 mb-2">Track Orders</h3>
-								<p className="text-gray-600 mb-4">View status and track your orders</p>
+								<h3 className="text-lg font-semibold text-gray-900 mb-2">
+									Track Orders
+								</h3>
+								<p className="text-gray-600 mb-4">
+									View status and track your orders
+								</p>
 								<span className="inline-block bg-green-600 text-white px-4 py-2 rounded text-sm font-medium">
 									View Orders
 								</span>
@@ -88,8 +115,12 @@ export default function SimpleDashboardPage() {
 
 						<Link href="/dashboard/notifications" className="block">
 							<div className="bg-white p-6 rounded-lg shadow border border-gray-200 hover:shadow-md transition-shadow">
-								<h3 className="text-lg font-semibold text-gray-900 mb-2">Notifications</h3>
-								<p className="text-gray-600 mb-4">Check updates and delivery notifications</p>
+								<h3 className="text-lg font-semibold text-gray-900 mb-2">
+									Notifications
+								</h3>
+								<p className="text-gray-600 mb-4">
+									Check updates and delivery notifications
+								</p>
 								<span className="inline-block bg-orange-600 text-white px-4 py-2 rounded text-sm font-medium">
 									View Updates
 								</span>
@@ -120,14 +151,18 @@ export default function SimpleDashboardPage() {
 					{/* Recent Orders */}
 					<div className="bg-white rounded-lg shadow border border-gray-200">
 						<div className="px-6 py-4 border-b border-gray-200">
-							<h3 className="text-lg font-semibold text-gray-900">Recent Orders</h3>
+							<h3 className="text-lg font-semibold text-gray-900">
+								Recent Orders
+							</h3>
 						</div>
 						<div className="p-6">
 							<div className="space-y-4">
 								<div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
 									<div>
 										<p className="font-medium text-gray-900">ORD001</p>
-										<p className="text-sm text-gray-600">2 items • Colombo Central</p>
+										<p className="text-sm text-gray-600">
+											2 items • Colombo Central
+										</p>
 									</div>
 									<div className="text-right">
 										<p className="font-medium text-gray-900">Rs. 1,325</p>
@@ -136,11 +171,13 @@ export default function SimpleDashboardPage() {
 										</span>
 									</div>
 								</div>
-								
+
 								<div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
 									<div>
 										<p className="font-medium text-gray-900">ORD002</p>
-										<p className="text-sm text-gray-600">3 items • Galle Road South</p>
+										<p className="text-sm text-gray-600">
+											3 items • Galle Road South
+										</p>
 									</div>
 									<div className="text-right">
 										<p className="font-medium text-gray-900">Rs. 2,900</p>
@@ -149,11 +186,13 @@ export default function SimpleDashboardPage() {
 										</span>
 									</div>
 								</div>
-								
+
 								<div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
 									<div>
 										<p className="font-medium text-gray-900">ORD003</p>
-										<p className="text-sm text-gray-600">4 items • Kandy Hills</p>
+										<p className="text-sm text-gray-600">
+											4 items • Kandy Hills
+										</p>
 									</div>
 									<div className="text-right">
 										<p className="font-medium text-gray-900">Rs. 1,440</p>
