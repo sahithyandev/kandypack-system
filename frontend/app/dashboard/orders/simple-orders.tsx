@@ -1,6 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 export default function SimpleOrdersPage() {
 	const orders = [
@@ -71,9 +78,9 @@ export default function SimpleOrdersPage() {
 	};
 
 	return (
-		<div className="min-h-screen bg-gray-50">
+		<div className="min-h-screen">
 			{/* Header */}
-			<header className="bg-white shadow border-b border-gray-200">
+			<header className="shadow border-b border-border">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex justify-between items-center h-16">
 						<div className="flex items-center">
@@ -81,33 +88,31 @@ export default function SimpleOrdersPage() {
 								<div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
 									<span className="text-white font-bold text-sm">K</span>
 								</div>
-								<span className="text-xl font-bold text-gray-900">
-									Kandypack
-								</span>
+								<span className="text-xl font-bold">Kandypack</span>
 							</Link>
 						</div>
 						<nav className="flex space-x-8">
 							<Link
 								href="/dashboard"
-								className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
+								className="hover:text-blue-600 px-3 py-2 text-sm font-medium"
 							>
 								Dashboard
 							</Link>
 							<Link
 								href="/dashboard/orders/new"
-								className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
+								className="hover:text-blue-600 px-3 py-2 text-sm font-medium"
 							>
 								Place Order
 							</Link>
 							<Link
 								href="/dashboard/orders"
-								className="text-blue-600 px-3 py-2 text-sm font-medium border-b-2 border-blue-600"
+								className="text-blue-700 px-3 py-2 text-sm font-medium border-b-2 border-blue-600"
 							>
 								Track Orders
 							</Link>
 							<Link
 								href="/dashboard/notifications"
-								className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
+								className="hover:text-blue-600 px-3 py-2 text-sm font-medium"
 							>
 								Notifications
 							</Link>
@@ -127,33 +132,34 @@ export default function SimpleOrdersPage() {
 				<div className="space-y-6">
 					{/* Header */}
 					<div>
-						<h1 className="text-3xl font-bold text-gray-900">Track Orders</h1>
-						<p className="text-gray-600">
+						<h1 className="text-3xl font-bold">Track Orders</h1>
+						<p className="">
 							Monitor the status of your orders and delivery progress
 						</p>
 					</div>
 
 					{/* Search and Filter */}
-					<div className="bg-white p-6 rounded-lg shadow border border-gray-200">
-						<div className="flex flex-col sm:flex-row gap-4">
-							<div className="flex-1">
-								<input
-									type="text"
-									placeholder="Search by order ID or route..."
-									className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-								/>
-							</div>
-							<div className="sm:w-48">
-								<select className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-									<option value="">All Orders</option>
-									<option value="placed">Placed</option>
-									<option value="train_scheduled">Train Scheduled</option>
-									<option value="in_transit">In Transit</option>
-									<option value="out_for_delivery">Out for Delivery</option>
-									<option value="delivered">Delivered</option>
-								</select>
-							</div>
-						</div>
+					<div className="flex flex-col sm:flex-row gap-4 h-10">
+						<input
+							type="text"
+							placeholder="Search by order ID or route..."
+							className="w-full px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-full"
+						/>
+						<Select>
+							<SelectTrigger className="w-full sm:w-48 px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 !h-full">
+								<SelectValue placeholder="All Orders" />
+							</SelectTrigger>
+							<SelectContent className="">
+								<SelectItem value="all">All Orders</SelectItem>
+								<SelectItem value="placed">Placed</SelectItem>
+								<SelectItem value="train_scheduled">Train Scheduled</SelectItem>
+								<SelectItem value="in_transit">In Transit</SelectItem>
+								<SelectItem value="out_for_delivery">
+									Out for Delivery
+								</SelectItem>
+								<SelectItem value="delivered">Delivered</SelectItem>
+							</SelectContent>
+						</Select>
 					</div>
 
 					{/* Orders List */}
@@ -161,23 +167,21 @@ export default function SimpleOrdersPage() {
 						{orders.map((order) => (
 							<div
 								key={order.id}
-								className="bg-white rounded-lg shadow border border-gray-200 hover:shadow-md transition-shadow"
+								className="rounded-lg shadow border border-border hover:shadow-md transition-shadow"
 							>
 								<div className="p-6">
 									<div className="flex items-center justify-between">
 										<div className="flex items-center space-x-4">
 											<div>
 												<div className="flex items-center space-x-2">
-													<h3 className="text-lg font-semibold text-gray-900">
-														{order.id}
-													</h3>
+													<h3 className="text-lg font-semibold">{order.id}</h3>
 													<span
 														className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(order.status)}`}
 													>
 														{formatStatus(order.status)}
 													</span>
 												</div>
-												<div className="mt-1 text-sm text-gray-600 space-x-4">
+												<div className="mt-1 text-sm text-muted-foreground space-x-4">
 													<span>📅 {order.date}</span>
 													<span>📦 {order.items} item(s)</span>
 													<span>🚛 {order.route}</span>
@@ -185,20 +189,22 @@ export default function SimpleOrdersPage() {
 											</div>
 										</div>
 										<div className="text-right">
-											<p className="text-lg font-bold text-gray-900">
+											<p className="text-lg font-bold">
 												Rs. {order.amount.toLocaleString()}
 											</p>
-											<p className="text-sm text-gray-600">Total Amount</p>
+											<p className="text-sm text-muted-foreground">
+												Total Amount
+											</p>
 										</div>
 									</div>
 
 									{/* Progress Bar */}
 									<div className="mt-6">
-										<div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+										<div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
 											<span>Order Progress</span>
 											<span>{formatStatus(order.status)}</span>
 										</div>
-										<div className="w-full bg-gray-200 rounded-full h-2">
+										<div className="w-full bg-foreground/10 rounded-full h-2">
 											<div
 												className="bg-blue-600 h-2 rounded-full transition-all duration-300"
 												style={{
@@ -217,7 +223,7 @@ export default function SimpleOrdersPage() {
 												}}
 											></div>
 										</div>
-										<div className="flex justify-between text-xs text-gray-500 mt-1">
+										<div className="flex justify-between text-xs text-muted-foreground mt-1">
 											<span>Placed</span>
 											<span>Scheduled</span>
 											<span>In Transit</span>

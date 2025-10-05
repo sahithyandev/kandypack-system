@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 interface CardDataStatsProps extends React.HTMLAttributes<HTMLDivElement> {
 	title: string;
-	total: number | string;
+	value: number | string;
 	description?: string;
 	link?: string;
 	variant?: "small" | "big";
@@ -20,7 +20,7 @@ interface CardDataStatsProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export default function StatsCard({
 	title,
-	total,
+	value,
 	link,
 	description,
 	variant = "small",
@@ -47,7 +47,7 @@ export default function StatsCard({
 				</CardHeader>
 				<CardContent className="px-4">
 					<div className="text-3xl font-semibold tabular-nums @[250px]/card:text-4xl">
-						{total}
+						{value}
 					</div>
 				</CardContent>
 				<CardFooter className="px-4">
@@ -76,7 +76,7 @@ export default function StatsCard({
 				</CardHeader>
 				<CardContent className="px-4">
 					<div className="text-5xl font-semibold tabular-nums @[250px]/card:text-6xl">
-						{total}
+						{value}
 					</div>
 				</CardContent>
 				{description === undefined ? null : (

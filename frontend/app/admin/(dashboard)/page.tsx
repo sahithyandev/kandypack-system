@@ -16,18 +16,18 @@ export default function AdminDashboard() {
 				<StatsCard
 					variant="big"
 					title="Current Month's Revenue"
-					total={"LKR 42,420"}
+					value={"LKR 42,420"}
 					className="col-span-3"
 				/>
 				<StatsCard
 					title="Total Customers"
-					total={1234}
+					value={1234}
 					link="/admin/customers"
 				/>
-				<StatsCard title="Total Trucks" total={34} link="/admin/trucks" />
+				<StatsCard title="Total Trucks" value={34} link="/admin/trucks" />
 				<StatsCard
 					title="Pending Orders"
-					total={142}
+					value={142}
 					link="/admin/pending-orders"
 				/>
 			</section>

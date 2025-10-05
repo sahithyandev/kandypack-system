@@ -1,12 +1,10 @@
 "use client";
 
 import {
-	AlertTriangle,
 	Bell,
 	BellRing,
 	CheckCircle2,
 	Info,
-	MarkAsRead,
 	Package,
 	Truck,
 	X,
@@ -15,13 +13,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { mockNotifications, type Notification } from "@/lib/mock-data";
 
 export default function NotificationsPage() {
@@ -134,11 +126,11 @@ export default function NotificationsPage() {
 	};
 
 	return (
-		<div className="space-y-6">
+		<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 			{/* Header */}
-			<div className="flex items-center justify-between">
+			<div className="flex items-center justify-between mt-2 mb-10">
 				<div>
-					<h1 className="text-3xl font-bold text-gray-900 flex items-center space-x-2">
+					<h1 className="text-3xl font-bold flex items-center space-x-2">
 						<Bell className="h-8 w-8" />
 						<span>Notifications</span>
 						{unreadCount > 0 && (
@@ -150,9 +142,7 @@ export default function NotificationsPage() {
 							</Badge>
 						)}
 					</h1>
-					<p className="text-gray-600">
-						Stay updated with your order status and system messages
-					</p>
+					<p>Stay updated with your order status and system messages</p>
 				</div>
 				{unreadCount > 0 && (
 					<Button onClick={markAllAsRead} variant="outline">
@@ -163,7 +153,7 @@ export default function NotificationsPage() {
 			</div>
 
 			{/* Filter Tabs */}
-			<Card>
+			<Card className="mb-6">
 				<CardHeader>
 					<CardTitle>Filter Notifications</CardTitle>
 				</CardHeader>
@@ -193,11 +183,11 @@ export default function NotificationsPage() {
 			</Card>
 
 			{/* Notifications List */}
-			<div className="space-y-3">
+			<div className="space-y-3 mb-6">
 				{filteredNotifications.length === 0 ? (
 					<Card>
 						<CardContent className="py-12 text-center">
-							<BellRing className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+							<BellRing className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
 							<h3 className="text-lg font-medium text-gray-900 mb-2">
 								No notifications found
 							</h3>
@@ -214,8 +204,8 @@ export default function NotificationsPage() {
 							key={notification.id}
 							className={`hover:shadow-md transition-all cursor-pointer ${
 								!notification.read
-									? "border-l-4 border-l-blue-500 bg-blue-50/30"
-									: ""
+									? "border-l-4 bg-blue-100/20"
+									: "border-l-blue-500"
 							}`}
 						>
 							<CardContent className="p-4">
@@ -230,14 +220,12 @@ export default function NotificationsPage() {
 										<div className="flex-1 min-w-0">
 											<div className="flex items-center space-x-2 mb-1">
 												<h4
-													className={`font-medium ${!notification.read ? "text-gray-900" : "text-gray-700"}`}
+													className={`font-medium ${!notification.read ? "text-muted-foreground" : ""}`}
 												>
 													{notification.title}
 												</h4>
 												<Badge
-													className={
-														getTypeColor(notification.type) + " border text-xs"
-													}
+													className={`${getTypeColor(notification.type)} border text-xs`}
 												>
 													{formatType(notification.type)}
 												</Badge>
@@ -247,12 +235,12 @@ export default function NotificationsPage() {
 											</div>
 
 											<p
-												className={`text-sm ${!notification.read ? "text-gray-700" : "text-gray-600"} mb-2`}
+												className={`text-sm ${!notification.read ? "text-muted-foreground" : ""} mb-2`}
 											>
 												{notification.message}
 											</p>
 
-											<div className="flex items-center space-x-4 text-xs text-gray-500">
+											<div className="flex items-center space-x-4 text-xs">
 												<span>{formatDate(notification.date)}</span>
 												{notification.orderId && (
 													<Link
@@ -309,10 +297,8 @@ export default function NotificationsPage() {
 					<CardContent>
 						<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 							<div className="text-center">
-								<div className="text-2xl font-bold text-gray-900">
-									{notifications.length}
-								</div>
-								<div className="text-sm text-gray-600">Total</div>
+								<div className="text-2xl font-bold">{notifications.length}</div>
+								<div className="text-sm">Total</div>
 							</div>
 							<div className="text-center">
 								<div className="text-2xl font-bold text-blue-600">
@@ -327,7 +313,7 @@ export default function NotificationsPage() {
 											.length
 									}
 								</div>
-								<div className="text-sm text-gray-600">Order Updates</div>
+								<div className="text-sm ">Order Updates</div>
 							</div>
 							<div className="text-center">
 								<div className="text-2xl font-bold text-orange-600">
