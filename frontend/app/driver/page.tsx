@@ -1,10 +1,11 @@
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import AssignedTrips from "@/components/driver/assigned-trips";
-import VehicleInfo from "../../components/driver/vehicle-info";
-import Performance from "../../components/driver/performance";
-import Documents from "../../components/driver/documents";
-import Support from "../../components/driver/support";
+import DashboardStats from "@/components/driver/dashboard-stats";
+import CurrentTrip from "@/components/driver/current-trip";
+import MapPlaceholder from "@/components/driver/map-placeholder";
+import Schedule from "@/components/driver/schedule";
+import Calendar from "@/components/driver/calendar";
+import VehicleInfo from "@/components/driver/vehicle-info";
 
 export default function DriverHome() {
   return (
@@ -12,21 +13,39 @@ export default function DriverHome() {
       <section className="lg:col-span-2 flex flex-col gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Assigned Trips</CardTitle>
+            <CardTitle>Overview</CardTitle>
           </CardHeader>
           <CardContent>
-            <AssignedTrips />
+            <DashboardStats />
           </CardContent>
         </Card>
 
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Current Trip</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CurrentTrip />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Map</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <MapPlaceholder />
+            </CardContent>
+          </Card>
+        </div>
+
         <Card>
           <CardHeader>
-            <CardTitle>Map & Navigation</CardTitle>
+            <CardTitle>Schedule</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64 bg-muted/40 rounded-md flex items-center justify-center">
-              Map placeholder
-            </div>
+            <Schedule />
           </CardContent>
         </Card>
       </section>
@@ -34,37 +53,19 @@ export default function DriverHome() {
       <aside className="flex flex-col gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Vehicle</CardTitle>
+            <CardTitle>Calendar</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Calendar />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Current Vehicle</CardTitle>
           </CardHeader>
           <CardContent>
             <VehicleInfo />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Performance</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Performance />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Documents</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Documents />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Support</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Support />
           </CardContent>
         </Card>
       </aside>

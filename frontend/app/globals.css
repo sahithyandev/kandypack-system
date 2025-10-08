@@ -118,5 +118,8 @@
 	}
 	body {
 		@apply bg-background text-foreground;
+		/* Apply the font variables provided by next/font to ensure preloaded fonts are used */
+		font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto,
+			"Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
 	}
 }
