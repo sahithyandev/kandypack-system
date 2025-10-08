@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import React from "react";
+import DriverSidebar from "@/components/driver/driver-sidebar";
 
 export const metadata: Metadata = {
   title: "Driver Dashboard",
@@ -12,7 +13,10 @@ export default function DriverLayout({ children }: { children: React.ReactNode }
       <header className="mb-6">
         <h1 className="text-2xl font-semibold">Driver Dashboard</h1>
       </header>
-      <main>{children}</main>
+      <div className="flex gap-6">
+        <DriverSidebar />
+        <main className="flex-1">{children}</main>
+      </div>
     </div>
   );
 }

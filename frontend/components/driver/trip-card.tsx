@@ -8,7 +8,7 @@ export default function TripCard({ trip }: { trip: any }) {
       <div>
         <div className="font-medium">{trip.id} — {trip.cargo}</div>
         <div className="text-sm text-muted-foreground">{trip.origin} → {trip.destination}</div>
-        <div className="text-xs text-muted-foreground">ETA: {new Date(trip.eta).toLocaleString()}</div>
+  <div className="text-xs text-muted-foreground">ETA: {new Date(trip.eta).toISOString()}</div>
       </div>
       <div className="flex items-center gap-2">
         <Button variant={trip.status === 'enroute' ? 'destructive' : 'secondary'} size="sm">{trip.status}</Button>
