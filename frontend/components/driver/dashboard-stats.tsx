@@ -16,7 +16,7 @@ export default function DashboardStats({ data }: { data?: any }) {
       </div>
       <div className="rounded-md border p-3">
         <div className="text-sm text-muted-foreground">Distance driven (km)</div>
-        <div className="text-2xl font-semibold">{stats.distanceKm.toLocaleString()}</div>
+        <div className="text-2xl font-semibold">{new Intl.NumberFormat("en-US").format(stats.distanceKm)}</div>
       </div>
       <div className="rounded-md border p-3">
         <div className="text-sm text-muted-foreground">Driving hours</div>

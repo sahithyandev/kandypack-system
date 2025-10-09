@@ -25,7 +25,7 @@ const items = [
 
 export default function DriverSidebar() {
   return (
-    <nav aria-label="Driver navigation" className="w-64 pr-4">
+    <nav aria-label="Driver navigation" className="w-64 pr-4 sidebar-gradient p-4 rounded-lg shadow-sm">
       <ul className="space-y-1">
         {items.map(({ href, label, Icon }) => (
           <li key={href}>
