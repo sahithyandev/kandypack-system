@@ -5,6 +5,93 @@
  * Development documentation
  * OpenAPI spec version: 1.0.0
  */
+export type PostAuthSignUpBodyOne = {
+	name: string;
+	username: string;
+	password: string;
+};
+
+export type PostAuthSignUpBodyTwo = {
+	name: string;
+	username: string;
+	password: string;
+};
+
+export type PostAuthSignUpBodyThree = {
+	name: string;
+	username: string;
+	password: string;
+};
+
+export type PostAuthSignUp200One = {
+	username: string;
+	token: string;
+};
+
+export type PostAuthSignUp200Two = {
+	username: string;
+	token: string;
+};
+
+export type PostAuthSignUp200Three = {
+	username: string;
+	token: string;
+};
+
+export type PostAuthSignUp400One = {
+	message: string;
+};
+
+export type PostAuthSignUp400Two = {
+	message: string;
+};
+
+export type PostAuthSignUp400Three = {
+	message: string;
+};
+
+export type PostAuthSignUp500One = {
+	message: string;
+};
+
+export type PostAuthSignUp500Two = {
+	message: string;
+};
+
+export type PostAuthSignUp500Three = {
+	message: string;
+};
+
+export type PostAuthSignInBodyOne = {
+	username: string;
+	password: string;
+};
+
+export type PostAuthSignInBodyTwo = {
+	username: string;
+	password: string;
+};
+
+export type PostAuthSignInBodyThree = {
+	username: string;
+	password: string;
+};
+
+export type PostAuthSignIn200One = {
+	username: string;
+	token: string;
+};
+
+export type PostAuthSignIn200Two = {
+	username: string;
+	token: string;
+};
+
+export type PostAuthSignIn200Three = {
+	username: string;
+	token: string;
+};
+
 export type GetIndex200One = {
 	message: string;
 	time: string;
@@ -18,6 +105,150 @@ export type GetIndex200Two = {
 export type GetIndex200Three = {
 	message: string;
 	time: string;
+};
+
+export type postAuthSignUpResponse200ApplicationJson = {
+	data: PostAuthSignUp200One;
+	status: 200;
+};
+
+export type postAuthSignUpResponse200MultipartFormData = {
+	data: PostAuthSignUp200Two;
+	status: 200;
+};
+
+export type postAuthSignUpResponse200TextPlain = {
+	data: PostAuthSignUp200Three;
+	status: 200;
+};
+
+export type postAuthSignUpResponse400ApplicationJson = {
+	data: PostAuthSignUp400One;
+	status: 400;
+};
+
+export type postAuthSignUpResponse400MultipartFormData = {
+	data: PostAuthSignUp400Two;
+	status: 400;
+};
+
+export type postAuthSignUpResponse400TextPlain = {
+	data: PostAuthSignUp400Three;
+	status: 400;
+};
+
+export type postAuthSignUpResponse500ApplicationJson = {
+	data: PostAuthSignUp500One;
+	status: 500;
+};
+
+export type postAuthSignUpResponse500MultipartFormData = {
+	data: PostAuthSignUp500Two;
+	status: 500;
+};
+
+export type postAuthSignUpResponse500TextPlain = {
+	data: PostAuthSignUp500Three;
+	status: 500;
+};
+
+export type postAuthSignUpResponseComposite =
+	| postAuthSignUpResponse200ApplicationJson
+	| postAuthSignUpResponse200MultipartFormData
+	| postAuthSignUpResponse200TextPlain
+	| postAuthSignUpResponse400ApplicationJson
+	| postAuthSignUpResponse400MultipartFormData
+	| postAuthSignUpResponse400TextPlain
+	| postAuthSignUpResponse500ApplicationJson
+	| postAuthSignUpResponse500MultipartFormData
+	| postAuthSignUpResponse500TextPlain;
+
+export type postAuthSignUpResponse = postAuthSignUpResponseComposite & {
+	headers: Headers;
+};
+
+export const getPostAuthSignUpUrl = () => {
+	return `http://backend:2000/auth/sign-up`;
+};
+
+export const postAuthSignUp = async (
+	postAuthSignUpBody:
+		| PostAuthSignUpBodyOne
+		| PostAuthSignUpBodyTwo
+		| PostAuthSignUpBodyThree,
+	options?: RequestInit,
+): Promise<postAuthSignUpResponse> => {
+	const res = await fetch(getPostAuthSignUpUrl(), {
+		...options,
+		method: "POST",
+		body: JSON.stringify(postAuthSignUpBody),
+	});
+
+	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+	const data: postAuthSignUpResponse["data"] = body ? JSON.parse(body) : {};
+
+	return {
+		data,
+		status: res.status,
+		headers: res.headers,
+	} as postAuthSignUpResponse;
+};
+
+export type postAuthSignInResponse200ApplicationJson = {
+	data: PostAuthSignIn200One;
+	status: 200;
+};
+
+export type postAuthSignInResponse200MultipartFormData = {
+	data: PostAuthSignIn200Two;
+	status: 200;
+};
+
+export type postAuthSignInResponse200TextPlain = {
+	data: PostAuthSignIn200Three;
+	status: 200;
+};
+
+export type postAuthSignInResponse400 = {
+	data: "Invalid username or password";
+	status: 400;
+};
+
+export type postAuthSignInResponseComposite =
+	| postAuthSignInResponse200ApplicationJson
+	| postAuthSignInResponse200MultipartFormData
+	| postAuthSignInResponse200TextPlain
+	| postAuthSignInResponse400;
+
+export type postAuthSignInResponse = postAuthSignInResponseComposite & {
+	headers: Headers;
+};
+
+export const getPostAuthSignInUrl = () => {
+	return `http://backend:2000/auth/sign-in`;
+};
+
+export const postAuthSignIn = async (
+	postAuthSignInBody:
+		| PostAuthSignInBodyOne
+		| PostAuthSignInBodyTwo
+		| PostAuthSignInBodyThree,
+	options?: RequestInit,
+): Promise<postAuthSignInResponse> => {
+	const res = await fetch(getPostAuthSignInUrl(), {
+		...options,
+		method: "POST",
+		body: JSON.stringify(postAuthSignInBody),
+	});
+
+	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+	const data: postAuthSignInResponse["data"] = body ? JSON.parse(body) : {};
+
+	return {
+		data,
+		status: res.status,
+		headers: res.headers,
+	} as postAuthSignInResponse;
 };
 
 export type getIndexResponse200ApplicationJson = {
