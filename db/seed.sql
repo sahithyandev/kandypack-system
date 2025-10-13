@@ -12,5 +12,5 @@ RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 -- Then, add the trigger to your table
-CREATE TRIGGER set_updated_at BEFORE
+CREATE TRIGGER set_updated_at BEFORE	
 UPDATE ON "user" FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
