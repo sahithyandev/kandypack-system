@@ -4,6 +4,8 @@ A group project for the Database Systems module.
 
 ## Project setup
 
+After the cloning the repository, you have to create the `.env` file at the project root. Use the `.env.example` file as an example.
+
 Docker and Docker Compose are required to run the whole system. All other dependencies are setup using docker.
 
 The system is tested to be working with:
@@ -16,6 +18,7 @@ Even though the system can be run by using Docker and Docker Compose alone, it's
 - Bun v1.2 (or higher)
 
 If you do have Bun installed, run `bun install` from both frontend and backend directories. It will enable autocompletition and other intellisense on your IDE.
+
 
 ## Development
 
