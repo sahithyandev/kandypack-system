@@ -5,6 +5,9 @@
  * Development documentation
  * OpenAPI spec version: 1.0.0
  */
+
+import type { BodyType } from "./mutator";
+import { customInstance } from "./mutator";
 export type PostAuthSignUpBodyOne = {
 	name: string;
 	username: string;
@@ -107,188 +110,57 @@ export type GetIndex200Three = {
 	time: string;
 };
 
-export type postAuthSignUpResponse200ApplicationJson = {
-	data: PostAuthSignUp200One;
-	status: 200;
-};
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export type postAuthSignUpResponse200MultipartFormData = {
-	data: PostAuthSignUp200Two;
-	status: 200;
-};
-
-export type postAuthSignUpResponse200TextPlain = {
-	data: PostAuthSignUp200Three;
-	status: 200;
-};
-
-export type postAuthSignUpResponse400ApplicationJson = {
-	data: PostAuthSignUp400One;
-	status: 400;
-};
-
-export type postAuthSignUpResponse400MultipartFormData = {
-	data: PostAuthSignUp400Two;
-	status: 400;
-};
-
-export type postAuthSignUpResponse400TextPlain = {
-	data: PostAuthSignUp400Three;
-	status: 400;
-};
-
-export type postAuthSignUpResponse500ApplicationJson = {
-	data: PostAuthSignUp500One;
-	status: 500;
-};
-
-export type postAuthSignUpResponse500MultipartFormData = {
-	data: PostAuthSignUp500Two;
-	status: 500;
-};
-
-export type postAuthSignUpResponse500TextPlain = {
-	data: PostAuthSignUp500Three;
-	status: 500;
-};
-
-export type postAuthSignUpResponseComposite =
-	| postAuthSignUpResponse200ApplicationJson
-	| postAuthSignUpResponse200MultipartFormData
-	| postAuthSignUpResponse200TextPlain
-	| postAuthSignUpResponse400ApplicationJson
-	| postAuthSignUpResponse400MultipartFormData
-	| postAuthSignUpResponse400TextPlain
-	| postAuthSignUpResponse500ApplicationJson
-	| postAuthSignUpResponse500MultipartFormData
-	| postAuthSignUpResponse500TextPlain;
-
-export type postAuthSignUpResponse = postAuthSignUpResponseComposite & {
-	headers: Headers;
-};
-
-export const getPostAuthSignUpUrl = () => {
-	return `http://backend:2000/auth/sign-up`;
-};
-
-export const postAuthSignUp = async (
+export const postAuthSignUp = (
 	postAuthSignUpBody:
-		| PostAuthSignUpBodyOne
+		| BodyType<
+				PostAuthSignUpBodyOne | PostAuthSignUpBodyTwo | PostAuthSignUpBodyThree
+		  >
 		| PostAuthSignUpBodyTwo
 		| PostAuthSignUpBodyThree,
-	options?: RequestInit,
-): Promise<postAuthSignUpResponse> => {
-	const res = await fetch(getPostAuthSignUpUrl(), {
-		...options,
-		method: "POST",
-		body: JSON.stringify(postAuthSignUpBody),
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: postAuthSignUpResponse["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as postAuthSignUpResponse;
+	options?: SecondParameter<typeof customInstance>,
+) => {
+	return customInstance<PostAuthSignUp200One | Blob | PostAuthSignUp200Three>(
+		{
+			url: `http://localhost:2000/auth/sign-up`,
+			method: "POST",
+			data: postAuthSignUpBody,
+		},
+		options,
+	);
 };
 
-export type postAuthSignInResponse200ApplicationJson = {
-	data: PostAuthSignIn200One;
-	status: 200;
-};
-
-export type postAuthSignInResponse200MultipartFormData = {
-	data: PostAuthSignIn200Two;
-	status: 200;
-};
-
-export type postAuthSignInResponse200TextPlain = {
-	data: PostAuthSignIn200Three;
-	status: 200;
-};
-
-export type postAuthSignInResponse400 = {
-	data: "Invalid username or password";
-	status: 400;
-};
-
-export type postAuthSignInResponseComposite =
-	| postAuthSignInResponse200ApplicationJson
-	| postAuthSignInResponse200MultipartFormData
-	| postAuthSignInResponse200TextPlain
-	| postAuthSignInResponse400;
-
-export type postAuthSignInResponse = postAuthSignInResponseComposite & {
-	headers: Headers;
-};
-
-export const getPostAuthSignInUrl = () => {
-	return `http://backend:2000/auth/sign-in`;
-};
-
-export const postAuthSignIn = async (
+export const postAuthSignIn = (
 	postAuthSignInBody:
-		| PostAuthSignInBodyOne
+		| BodyType<
+				PostAuthSignInBodyOne | PostAuthSignInBodyTwo | PostAuthSignInBodyThree
+		  >
 		| PostAuthSignInBodyTwo
 		| PostAuthSignInBodyThree,
-	options?: RequestInit,
-): Promise<postAuthSignInResponse> => {
-	const res = await fetch(getPostAuthSignInUrl(), {
-		...options,
-		method: "POST",
-		body: JSON.stringify(postAuthSignInBody),
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: postAuthSignInResponse["data"] = body ? JSON.parse(body) : {};
-
-	return {
-		data,
-		status: res.status,
-		headers: res.headers,
-	} as postAuthSignInResponse;
+	options?: SecondParameter<typeof customInstance>,
+) => {
+	return customInstance<PostAuthSignIn200One | Blob | PostAuthSignIn200Three>(
+		{
+			url: `http://localhost:2000/auth/sign-in`,
+			method: "POST",
+			data: postAuthSignInBody,
+		},
+		options,
+	);
 };
 
-export type getIndexResponse200ApplicationJson = {
-	data: GetIndex200One;
-	status: 200;
+export const getIndex = (options?: SecondParameter<typeof customInstance>) => {
+	return customInstance<GetIndex200One | Blob | GetIndex200Three>(
+		{ url: `http://localhost:2000/`, method: "GET" },
+		options,
+	);
 };
 
-export type getIndexResponse200MultipartFormData = {
-	data: GetIndex200Two;
-	status: 200;
-};
-
-export type getIndexResponse200TextPlain = {
-	data: GetIndex200Three;
-	status: 200;
-};
-
-export type getIndexResponseComposite =
-	| getIndexResponse200ApplicationJson
-	| getIndexResponse200MultipartFormData
-	| getIndexResponse200TextPlain;
-
-export type getIndexResponse = getIndexResponseComposite & {
-	headers: Headers;
-};
-
-export const getGetIndexUrl = () => {
-	return `http://backend:2000/`;
-};
-
-export const getIndex = async (
-	options?: RequestInit,
-): Promise<getIndexResponse> => {
-	const res = await fetch(getGetIndexUrl(), {
-		...options,
-		method: "GET",
-	});
-
-	const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-	const data: getIndexResponse["data"] = body ? JSON.parse(body) : {};
-
-	return { data, status: res.status, headers: res.headers } as getIndexResponse;
-};
+export type PostAuthSignUpResult = NonNullable<
+	Awaited<ReturnType<typeof postAuthSignUp>>
+>;
+export type PostAuthSignInResult = NonNullable<
+	Awaited<ReturnType<typeof postAuthSignIn>>
+>;
+export type GetIndexResult = NonNullable<Awaited<ReturnType<typeof getIndex>>>;

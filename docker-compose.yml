@@ -9,8 +9,11 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL_CLIENT=http://localhost:2000
     depends_on:
       - backend
+    networks:
+      - devnet
     develop:
       watch:
         - path: ./frontend
@@ -35,6 +38,10 @@ services:
       db:
         condition: service_healthy
         restart: true
+    networks:
+      devnet:
+        aliases:
+          - localhost
     develop:
       watch:
         - path: ./backend
@@ -54,6 +61,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./db/init-scripts/:/docker-entrypoint-initdb.d/
+    networks:
+      - devnet
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d kandypack"]
       interval: 10s
@@ -62,3 +71,7 @@ services:
 
 volumes:
   postgres_data:
+  
+networks:
+  devnet:
+    driver: bridge
