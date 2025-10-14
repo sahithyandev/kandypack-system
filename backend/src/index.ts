@@ -1,4 +1,5 @@
 import { swagger } from "@elysiajs/swagger";
+import { logger } from "@grotto/logysia";
 import { Elysia, t } from "elysia";
 import { auth } from "./modules/auth";
 import { client } from "./utils/db";
@@ -15,6 +16,16 @@ export const app = new Elysia()
 				info: {
 					title: "Kandypack",
 					version: "1.0.0",
+				},
+			},
+		}),
+	)
+	.use(
+		logger({
+			logIP: false,
+			writer: {
+				write(msg: string) {
+					console.log(msg);
 				},
 			},
 		}),
