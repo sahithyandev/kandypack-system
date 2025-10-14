@@ -21,7 +21,9 @@ export namespace AuthModel {
 	});
 	export type signInResponse = typeof signInResponse.static;
 
-	export const signUpResponse = signInResponse;
+	export const signUpResponse = t.Object({
+		username: t.String(),
+	});
 	export type signUpResponse = typeof signUpResponse.static;
 
 	export const signInInvalid = t.Literal("Invalid username or password");

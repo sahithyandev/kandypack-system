@@ -13,8 +13,6 @@ export abstract class Auth {
 			LIMIT 1`,
 			[body.username],
 		);
-		console.log(exists);
-		console.log(exists.rowCount);
 		if (exists === null)
 			throw status(500, {
 				message: "Database error",

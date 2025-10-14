@@ -25,7 +25,7 @@ export const auth = new Elysia({ prefix: "/auth" })
 		{
 			body: AuthModel.signUpBody,
 			response: {
-				200: AuthModel.signInResponse,
+				200: AuthModel.signUpResponse,
 				400: AuthModel.signUpFailed,
 				500: AuthModel.signUpFailed,
 			},
