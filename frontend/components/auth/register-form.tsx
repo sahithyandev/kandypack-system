@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -16,7 +15,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { AuthService } from "@/lib/auth";
+import { postAuthSignUp } from "@/lib/api-client";
 
 const registerSchema = z.object({
 	name: z.string().min(2, "Name must be at least 2 characters").max(50),
@@ -28,9 +27,13 @@ const registerSchema = z.object({
 export default function RegisterForm() {
 	const [error, setError] = useState<string>("");
 	const [isLoading, setIsLoading] = useState(false);
-	const router = useRouter();
 
-	const defaultValues = { name: "", email: "", username: "", password: "" };
+	const defaultValues = {
+		name: "Sahithyan",
+		email: "sahithyank@gmail.com",
+		username: "sahithyank.23",
+		password: "sahithyan",
+	};
 
 	const form = useForm<z.infer<typeof registerSchema>>({
 		resolver: zodResolver(registerSchema),
@@ -42,19 +45,12 @@ export default function RegisterForm() {
 		setError("");
 
 		try {
-			const registerData = data as z.infer<typeof registerSchema>;
-			const result = AuthService.register(
-				registerData.name,
-				registerData.email,
-				registerData.username,
-				registerData.password,
-			);
-
-			if (result.success) {
-				router.push("/dashboard");
-			} else {
-				setError(result.error || "Authentication failed");
-			}
+			const r = await postAuthSignUp({
+				name: data.name,
+				username: data.username,
+				password: data.password,
+			});
+			console.log(r);
 		} catch {
 			setError("An unexpected error occurred");
 		} finally {
