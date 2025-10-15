@@ -1,4 +1,5 @@
 import Axios, { type AxiosError, type AxiosRequestConfig } from "axios";
+import { getToken } from "./auth";
 
 export const AXIOS_INSTANCE = Axios.create({
 	baseURL: process.env.NEXT_PUBLIC_API_URL_CLIENT || "http://localhost:2000",
@@ -7,7 +8,15 @@ export const AXIOS_INSTANCE = Axios.create({
 	},
 });
 
-// add a second `options` argument here if you want to pass extra options to each generated query
+AXIOS_INSTANCE.interceptors.request.use((config) => {
+	const token = getToken();
+	if (token) {
+		config.headers.Authorization = `Bearer ${token}`;
+	}
+
+	return config;
+});
+
 export const customInstance = <T>(
 	config: AxiosRequestConfig,
 	options?: AxiosRequestConfig,
@@ -27,7 +36,6 @@ export const customInstance = <T>(
 	return promise;
 };
 
-// In some case with react-query and swr you want to be able to override the return error type so you can also do it here like this
 export type ErrorType<Error> = AxiosError<Error>;
 
 export type BodyType<BodyData> = BodyData;

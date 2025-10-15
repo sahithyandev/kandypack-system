@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { postAuthSignIn } from "@/lib/api-client";
+import { saveToken } from "@/lib/auth";
 
 const loginSchema = z.object({
 	username: z.string().min(2, "Username must be at least 2 characters").max(50),
@@ -23,10 +25,9 @@ const loginSchema = z.object({
 });
 
 export default function LoginForm() {
-	const [error, setError] = useState<string>("");
 	const [isLoading, setIsLoading] = useState(false);
 
-	const defaultValues = { username: "sahithyank.23", password: "sahithyan" };
+	const defaultValues = { username: "sahithyan", password: "sahithyan" };
 
 	const form = useForm<z.infer<typeof loginSchema>>({
 		resolver: zodResolver(loginSchema),
@@ -35,16 +36,21 @@ export default function LoginForm() {
 
 	async function onSubmit(data: z.infer<typeof loginSchema>) {
 		setIsLoading(true);
-		setError("");
 
 		try {
-			const r = postAuthSignIn({
+			const r = await postAuthSignIn({
 				username: data.username,
 				password: data.password,
 			});
-			console.log(r);
+			if (!("token" in r)) {
+				toast.error("Login failed. Please check your credentials.");
+				return;
+			}
+
+			saveToken(r.token);
 		} catch {
-			setError("An unexpected error occurred");
+			toast.error("An unknown error occurred.");
+			return;
 		} finally {
 			setIsLoading(false);
 		}
@@ -62,12 +68,6 @@ export default function LoginForm() {
 									Login to your Kandypack account
 								</p>
 							</div>
-
-							{error && (
-								<div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md">
-									{error}
-								</div>
-							)}
 
 							<FormField
 								control={form.control}
