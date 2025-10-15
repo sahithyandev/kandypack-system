@@ -1,30 +1,23 @@
 // Controller handle HTTP related eg. routing, request validation
 
-import jwt from "@elysiajs/jwt";
 import { Elysia } from "elysia";
+import jwtInstance from "../../utils/jwt";
+import authMiddleware from "./middleware";
 import { AuthModel } from "./model";
 import { Auth } from "./service";
 
-if (!process.env.JWT_SECRET) {
-	throw new Error("JWT_SECRET is not defined in environment variables");
-}
-
 export const auth = new Elysia({ prefix: "/auth" })
-	.use(
-		jwt({
-			name: "jwt",
-			secret: process.env.JWT_SECRET,
-		}),
-	)
+	.use(jwtInstance)
+	.use(authMiddleware)
 	.get(
 		"/validate",
-		async ({ headers }) => {
-			if (!headers.authorization) {
-				return { valid: false };
-			}
-			return { valid: true };
+		async ({ currentUser }) => {
+			return {
+				valid: currentUser !== null,
+			};
 		},
 		{
+			currentUser: true,
 			type: "application/json",
 			response: {
 				200: AuthModel.validateResponse,
@@ -33,11 +26,17 @@ export const auth = new Elysia({ prefix: "/auth" })
 	)
 	.post(
 		"/sign-up",
-		async ({ body }) => {
+		async ({ body, currentUser, status }) => {
+			if (currentUser) {
+				return status(400, {
+					message: "You are already signed in",
+				});
+			}
 			const response = await Auth.signUp(body);
 			return response;
 		},
 		{
+			currentUser: true,
 			body: AuthModel.signUpBody,
 			response: {
 				200: AuthModel.signUpResponse,
@@ -48,7 +47,13 @@ export const auth = new Elysia({ prefix: "/auth" })
 	)
 	.post(
 		"/sign-in",
-		async ({ body, jwt, cookie: { logged_in } }) => {
+		async ({ body, jwt, cookie: { logged_in }, currentUser, status }) => {
+			if (currentUser) {
+				console.log(currentUser);
+				return status(400, {
+					message: "You are already signed in",
+				});
+			}
 			const response = await Auth.signIn(body);
 			const token = await jwt.sign({ username: response.username });
 			response.token = token;
@@ -63,6 +68,7 @@ export const auth = new Elysia({ prefix: "/auth" })
 			return response;
 		},
 		{
+			currentUser: true,
 			body: AuthModel.signInBody,
 			response: {
 				200: AuthModel.signInResponse,

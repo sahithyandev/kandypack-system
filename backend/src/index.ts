@@ -3,6 +3,7 @@ import { swagger } from "@elysiajs/swagger";
 import { logger } from "@grotto/logysia";
 import { Elysia, t } from "elysia";
 import { auth } from "./modules/auth";
+import authMiddleware from "./modules/auth/middleware";
 import { client } from "./utils/db";
 import jwtInstance from "./utils/jwt";
 
@@ -39,9 +40,16 @@ export const app = new Elysia()
 	)
 	.use(jwtInstance)
 	.use(auth)
+	.use(authMiddleware)
 	.get(
 		"/",
-		async () => {
+		async ({ currentUser }) => {
+			if (currentUser) {
+				return {
+					message: `Hello, ${currentUser.username}! You are signed in.`,
+					time: new Date().toISOString(),
+				};
+			}
 			const response = await client.query("SELECT NOW()");
 
 			return {
@@ -50,6 +58,7 @@ export const app = new Elysia()
 			};
 		},
 		{
+			currentUser: true,
 			response: t.Object({
 				message: t.String(),
 				time: t.String(),

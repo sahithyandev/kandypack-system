@@ -2,6 +2,10 @@
 import { t } from "elysia";
 
 export namespace AuthModel {
+	export type JWTData = {
+		username: string;
+	};
+
 	export const signInBody = t.Object({
 		username: t.String(),
 		password: t.String(),
@@ -26,7 +30,9 @@ export namespace AuthModel {
 	});
 	export type signUpResponse = typeof signUpResponse.static;
 
-	export const signInInvalid = t.Literal("Invalid username or password");
+	export const signInInvalid = t.Object({
+		message: t.String(),
+	});
 	export type signInInvalid = typeof signInInvalid.static;
 
 	export const signUpFailed = t.Object({
@@ -38,4 +44,13 @@ export namespace AuthModel {
 		valid: t.Boolean(),
 	});
 	export type validateResponse = typeof validateResponse.static;
+
+	export function isJwtData(obj: unknown): obj is AuthModel.JWTData {
+		return (
+			obj !== null &&
+			typeof obj === "object" &&
+			"username" in obj &&
+			typeof obj.username === "string"
+		);
+	}
 }
