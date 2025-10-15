@@ -4,6 +4,7 @@ import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDriverProfile, type DriverProfile } from "@/lib/driver-api";
 import { Badge } from "@/components/ui/badge";
+import { User } from "lucide-react";
 
 function initials(name: string) {
   const parts = name.trim().split(/\s+/);
@@ -34,7 +35,11 @@ export default function DriverProfilePage() {
             {error && <div className="text-destructive mb-2">{error}</div>}
             <div className="flex items-center gap-4">
               <div className="size-16 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-bold">
-                {profile?.name ? initials(profile.name) : ""}
+                {profile?.name ? (
+                  initials(profile.name)
+                ) : (
+                  <User className="size-7" />
+                )}
               </div>
               <div>
                 <div className="text-xl font-semibold">{profile?.name ?? "Driver"}</div>

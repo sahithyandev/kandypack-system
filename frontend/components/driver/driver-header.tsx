@@ -3,6 +3,7 @@
 import * as React from "react";
 import { getDriverProfile } from "@/lib/driver-api";
 import { Badge } from "@/components/ui/badge";
+import { User } from "lucide-react";
 
 function initials(name: string) {
   const parts = name.trim().split(/\s+/);
@@ -25,7 +26,11 @@ export default function DriverHeader() {
   return (
     <div className="flex items-center gap-3">
       <div className="size-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-semibold">
-        {name ? initials(name) : ""}
+        {name ? (
+          initials(name)
+        ) : (
+          <User className="size-5" />
+        )}
       </div>
       <div className="flex flex-col">
         <span className="text-sm text-muted-foreground">Welcome</span>

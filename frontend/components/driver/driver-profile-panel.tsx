@@ -5,6 +5,7 @@ import { getDriverProfile, type DriverProfile } from "@/lib/driver-api";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { SidebarHeader, SidebarSeparator } from "@/components/ui/sidebar";
+import { User } from "lucide-react";
 
 function initials(name: string) {
   const parts = name.trim().split(/\s+/);
@@ -27,7 +28,11 @@ export default function DriverProfilePanel() {
       <SidebarHeader>
         <div className="flex items-center gap-3">
           <div className="size-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-semibold">
-            {profile?.name ? initials(profile.name) : ""}
+            {profile?.name ? (
+              initials(profile.name)
+            ) : (
+              <User className="size-5" />
+            )}
           </div>
           <div className="min-w-0">
             <div className="font-medium truncate">{profile?.name ?? "Driver"}</div>
