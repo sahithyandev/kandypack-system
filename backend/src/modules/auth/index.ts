@@ -24,6 +24,13 @@ export const auth = new Elysia({ prefix: "/auth" })
 			},
 		},
 	)
+	.post("/sign-out", async ({ cookie: { logged_in }, status }) => {
+		logged_in.value = "";
+		logged_in.maxAge = 0;
+		return status(200, {
+			message: "Successfully signed out",
+		});
+	})
 	.post(
 		"/sign-up",
 		async ({ body, currentUser, status }) => {

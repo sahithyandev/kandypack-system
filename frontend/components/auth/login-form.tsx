@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { postAuthSignIn } from "@/lib/api-client";
 import { saveToken } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
 	username: z.string().min(2, "Username must be at least 2 characters").max(50),
@@ -26,6 +27,7 @@ const loginSchema = z.object({
 
 export default function LoginForm() {
 	const [isLoading, setIsLoading] = useState(false);
+	const router = useRouter();
 
 	const defaultValues = { username: "sahithyan", password: "sahithyan" };
 
@@ -48,6 +50,7 @@ export default function LoginForm() {
 			}
 
 			saveToken(r.token);
+			router.push("/dashboard");
 		} catch {
 			toast.error("An unknown error occurred.");
 			return;

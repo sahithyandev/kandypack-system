@@ -104,6 +104,18 @@ export type PostAuthSignIn200Three = {
 	token: string;
 };
 
+export type PostAuthSignIn400One = {
+	message: string;
+};
+
+export type PostAuthSignIn400Two = {
+	message: string;
+};
+
+export type PostAuthSignIn400Three = {
+	message: string;
+};
+
 export type GetIndex200One = {
 	message: string;
 	time: string;
@@ -126,6 +138,15 @@ export const getAuthValidate = (
 ) => {
 	return customInstance<GetAuthValidate200One | Blob | GetAuthValidate200Three>(
 		{ url: `http://localhost:2000/auth/validate`, method: "GET" },
+		options,
+	);
+};
+
+export const postAuthSignOut = (
+	options?: SecondParameter<typeof customInstance>,
+) => {
+	return customInstance<null>(
+		{ url: `http://localhost:2000/auth/sign-out`, method: "POST" },
 		options,
 	);
 };
@@ -177,6 +198,9 @@ export const getIndex = (options?: SecondParameter<typeof customInstance>) => {
 
 export type GetAuthValidateResult = NonNullable<
 	Awaited<ReturnType<typeof getAuthValidate>>
+>;
+export type PostAuthSignOutResult = NonNullable<
+	Awaited<ReturnType<typeof postAuthSignOut>>
 >;
 export type PostAuthSignUpResult = NonNullable<
 	Awaited<ReturnType<typeof postAuthSignUp>>
