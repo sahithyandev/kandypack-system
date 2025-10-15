@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import LoginForm from "@/components/auth/login-form";
 import { getAuthValidate } from "@/lib/api-client";
 
@@ -19,7 +20,8 @@ export default async function LoginPage() {
 		return <div>Failed to validate login status. Please try again later.</div>;
 	}
 	if (response.valid) {
-		return <div>You are already logged in.</div>;
+		redirect("/dashboard");
+		return;
 	}
 
 	return <LoginForm />;
