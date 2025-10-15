@@ -12,13 +12,17 @@ export abstract class DriverService {
 			worker_id: string;
 			status: "Busy" | "Free" | "On_Leave";
 			consecutive_deliveries: number;
+				hourly_pay: number;
+				weekly_hours: number;
 		}>(
 			`SELECT u.id,
 							u.username,
 							u.name,
 							w.id AS worker_id,
 							w.status,
-							d.consecutive_deliveries
+								d.consecutive_deliveries,
+								w.hourly_pay,
+								w.weekly_hours
 				 FROM "User" u
 				 JOIN Worker w ON w.id = u.id
 				 JOIN Driver d ON d.id = w.id

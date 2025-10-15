@@ -38,6 +38,8 @@ export namespace DriverModel {
 		worker_id: t.String(),
 		status: t.Union([t.Literal("Busy"), t.Literal("Free"), t.Literal("On_Leave")]),
 		consecutive_deliveries: t.Number(),
+		hourly_pay: t.Number(),
+		weekly_hours: t.Number(),
 	});
 	export type profileResponse = typeof profileResponse.static;
 }
