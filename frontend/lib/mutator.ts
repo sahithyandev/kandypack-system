@@ -10,6 +10,8 @@ export const AXIOS_INSTANCE = Axios.create({
 });
 
 AXIOS_INSTANCE.interceptors.request.use((config) => {
+	if (config.headers.Authorization) return config;
+
 	const token = getToken();
 	if (token) {
 		config.headers.Authorization = `Bearer ${token}`;
