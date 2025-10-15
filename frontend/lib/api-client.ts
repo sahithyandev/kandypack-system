@@ -8,6 +8,18 @@
 
 import type { BodyType } from "./mutator";
 import { customInstance } from "./mutator";
+export type GetAuthValidate200One = {
+	valid: boolean;
+};
+
+export type GetAuthValidate200Two = {
+	valid: boolean;
+};
+
+export type GetAuthValidate200Three = {
+	valid: boolean;
+};
+
 export type PostAuthSignUpBodyOne = {
 	name: string;
 	username: string;
@@ -28,17 +40,14 @@ export type PostAuthSignUpBodyThree = {
 
 export type PostAuthSignUp200One = {
 	username: string;
-	token: string;
 };
 
 export type PostAuthSignUp200Two = {
 	username: string;
-	token: string;
 };
 
 export type PostAuthSignUp200Three = {
 	username: string;
-	token: string;
 };
 
 export type PostAuthSignUp400One = {
@@ -112,6 +121,15 @@ export type GetIndex200Three = {
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
+export const getAuthValidate = (
+	options?: SecondParameter<typeof customInstance>,
+) => {
+	return customInstance<GetAuthValidate200One | Blob | GetAuthValidate200Three>(
+		{ url: `http://localhost:2000/auth/validate`, method: "GET" },
+		options,
+	);
+};
+
 export const postAuthSignUp = (
 	postAuthSignUpBody:
 		| BodyType<
@@ -157,6 +175,9 @@ export const getIndex = (options?: SecondParameter<typeof customInstance>) => {
 	);
 };
 
+export type GetAuthValidateResult = NonNullable<
+	Awaited<ReturnType<typeof getAuthValidate>>
+>;
 export type PostAuthSignUpResult = NonNullable<
 	Awaited<ReturnType<typeof postAuthSignUp>>
 >;

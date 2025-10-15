@@ -16,6 +16,21 @@ export const auth = new Elysia({ prefix: "/auth" })
 			secret: process.env.JWT_SECRET,
 		}),
 	)
+	.get(
+		"/validate",
+		async ({ headers }) => {
+			if (!headers.authorization) {
+				return { valid: false };
+			}
+			return { valid: true };
+		},
+		{
+			type: "application/json",
+			response: {
+				200: AuthModel.validateResponse,
+			},
+		},
+	)
 	.post(
 		"/sign-up",
 		async ({ body }) => {

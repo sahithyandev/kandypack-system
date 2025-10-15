@@ -33,4 +33,9 @@ export namespace AuthModel {
 		message: t.String(),
 	});
 	export type signUpFailed = typeof signUpFailed.static;
+
+	export const validateResponse = t.Object({
+		valid: t.Boolean(),
+	});
+	export type validateResponse = typeof validateResponse.static;
 }
