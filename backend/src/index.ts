@@ -1,6 +1,7 @@
 import { swagger } from "@elysiajs/swagger";
 import { Elysia, t } from "elysia";
 import { auth } from "./modules/auth";
+import { driver } from "./modules/driver";
 import { client } from "./utils/db";
 
 await client.connect().catch((error) => {
@@ -20,6 +21,7 @@ export const app = new Elysia()
 		}),
 	)
 	.use(auth)
+	.use(driver)
 	.get(
 		"/",
 		async () => {
