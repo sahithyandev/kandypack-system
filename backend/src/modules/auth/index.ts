@@ -48,11 +48,18 @@ export const auth = new Elysia({ prefix: "/auth" })
 	)
 	.post(
 		"/sign-in",
-		async ({ body, jwt, cookie: { session } }) => {
+		async ({ body, jwt, cookie: { logged_in } }) => {
 			const response = await Auth.signIn(body);
 			const token = await jwt.sign({ username: response.username });
-			session.value = token;
 			response.token = token;
+
+			logged_in.domain = "localhost";
+			logged_in.value = token;
+			logged_in.maxAge = 60 * 60 * 24 * 7;
+			logged_in.sameSite = "lax";
+			logged_in.path = "/";
+			logged_in.httpOnly = true;
+
 			return response;
 		},
 		{

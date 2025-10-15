@@ -1,16 +1,20 @@
+import cors from "@elysiajs/cors";
 import { swagger } from "@elysiajs/swagger";
 import { logger } from "@grotto/logysia";
 import { Elysia, t } from "elysia";
 import { auth } from "./modules/auth";
 import { client } from "./utils/db";
-import cors from "@elysiajs/cors";
 
 await client.connect().catch((error) => {
 	console.error("Failed to connect to the database:", error);
 });
 
 export const app = new Elysia()
-	.use(cors())
+	.use(
+		cors({
+			credentials: true,
+		}),
+	)
 	.use(
 		swagger({
 			autoDarkMode: true,

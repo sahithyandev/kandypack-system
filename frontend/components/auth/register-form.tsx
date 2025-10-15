@@ -31,7 +31,7 @@ export default function RegisterForm() {
 	const defaultValues = {
 		name: "Sahithyan",
 		email: "sahithyank@gmail.com",
-		username: "sahithyank.23",
+		username: "sahithyan",
 		password: "sahithyan",
 	};
 
