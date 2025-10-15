@@ -4,6 +4,7 @@ import { t } from "elysia";
 export namespace AuthModel {
 	export type JWTData = {
 		username: string;
+		role: string;
 	};
 
 	export const signInBody = t.Object({
@@ -21,6 +22,7 @@ export namespace AuthModel {
 
 	export const signInResponse = t.Object({
 		username: t.String(),
+		role: t.String(),
 		token: t.String(),
 	});
 	export type signInResponse = typeof signInResponse.static;
@@ -50,6 +52,8 @@ export namespace AuthModel {
 			obj !== null &&
 			typeof obj === "object" &&
 			"username" in obj &&
+			"role" in obj &&
+			typeof obj.role === "string" &&
 			typeof obj.username === "string"
 		);
 	}

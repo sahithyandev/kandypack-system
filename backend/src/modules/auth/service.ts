@@ -40,8 +40,9 @@ export abstract class Auth {
 	static async signIn({ username, password }: AuthModel.signInBody) {
 		const result = await client.query<{
 			password: string;
+			role: string;
 		}>(
-			`SELECT password
+			`SELECT password, role
 			FROM "User"
 			WHERE username = $1
 			LIMIT 1`,
@@ -57,13 +58,13 @@ export abstract class Auth {
 		const isPasswordValid = await Bun.password.verify(password, user.password);
 
 		if (!isPasswordValid)
-			throw status(
-				400,
-				"Invalid username or password" satisfies AuthModel.signInInvalid,
-			);
+			throw status(400, {
+				message: "Invalid username or password",
+			});
 
 		return {
 			username,
+			role: user.role,
 			token: "",
 		} satisfies AuthModel.signInResponse;
 	}

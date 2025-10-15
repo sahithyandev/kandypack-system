@@ -62,7 +62,10 @@ export const auth = new Elysia({ prefix: "/auth" })
 				});
 			}
 			const response = await Auth.signIn(body);
-			const token = await jwt.sign({ username: response.username });
+			const token = await jwt.sign({
+				username: response.username,
+				role: response.role,
+			} satisfies AuthModel.JWTData);
 			response.token = token;
 
 			logged_in.domain = "localhost";

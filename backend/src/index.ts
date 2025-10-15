@@ -46,7 +46,7 @@ export const app = new Elysia()
 		async ({ currentUser }) => {
 			if (currentUser) {
 				return {
-					message: `Hello, ${currentUser.username}! You are signed in.`,
+					message: `Hello, ${currentUser.username} (${currentUser.role})! You are signed in.`,
 					time: new Date().toISOString(),
 				};
 			}
