@@ -40,14 +40,20 @@ export type PostAuthSignUpBodyThree = {
 
 export type PostAuthSignUp200One = {
 	username: string;
+	role: string;
+	token: string;
 };
 
 export type PostAuthSignUp200Two = {
 	username: string;
+	role: string;
+	token: string;
 };
 
 export type PostAuthSignUp200Three = {
 	username: string;
+	role: string;
+	token: string;
 };
 
 export type PostAuthSignUp400One = {
@@ -91,16 +97,19 @@ export type PostAuthSignInBodyThree = {
 
 export type PostAuthSignIn200One = {
 	username: string;
+	role: string;
 	token: string;
 };
 
 export type PostAuthSignIn200Two = {
 	username: string;
+	role: string;
 	token: string;
 };
 
 export type PostAuthSignIn200Three = {
 	username: string;
+	role: string;
 	token: string;
 };
 

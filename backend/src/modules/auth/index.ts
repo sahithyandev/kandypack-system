@@ -33,14 +33,40 @@ export const auth = new Elysia({ prefix: "/auth" })
 	})
 	.post(
 		"/sign-up",
-		async ({ body, currentUser, status }) => {
+		async ({ body, jwt, cookie: { logged_in }, currentUser, status }) => {
 			if (currentUser) {
 				return status(400, {
 					message: "You are already signed in",
 				});
 			}
+
 			const response = await Auth.signUp(body);
-			return response;
+
+			if (!response || !("username" in response)) {
+				return status(500, {
+					message: "Failed to sign up",
+				});
+			}
+
+			const signInResponse = await Auth.signIn({
+				username: response.username,
+				password: body.password,
+			});
+
+			const token = await jwt.sign({
+				username: signInResponse.username,
+				role: signInResponse.role,
+			} satisfies AuthModel.JWTData);
+			signInResponse.token = token;
+
+			logged_in.domain = "localhost";
+			logged_in.value = token;
+			logged_in.maxAge = 60 * 60 * 24 * 7;
+			logged_in.sameSite = "lax";
+			logged_in.path = "/";
+			logged_in.httpOnly = true;
+
+			return signInResponse;
 		},
 		{
 			currentUser: true,

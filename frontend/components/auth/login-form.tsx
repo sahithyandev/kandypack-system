@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -18,7 +19,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { postAuthSignIn } from "@/lib/api-client";
 import { saveToken } from "@/lib/auth";
-import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
 	username: z.string().min(2, "Username must be at least 2 characters").max(50),

@@ -24,7 +24,7 @@ export abstract class Auth {
 			} satisfies AuthModel.signUpFailed);
 
 		return client
-			.query(
+			.query<{ username: string }>(
 				`INSERT INTO "User" (id, name, username, password, role)
 			VALUES ($1, $2, $3, $4, 'Customer')
 			RETURNING username`,

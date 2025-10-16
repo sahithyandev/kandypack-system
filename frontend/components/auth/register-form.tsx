@@ -1,8 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { postAuthSignUp } from "@/lib/api-client";
+import { saveToken } from "@/lib/auth";
 
 const registerSchema = z.object({
 	name: z.string().min(2, "Name must be at least 2 characters").max(50),
@@ -25,8 +29,8 @@ const registerSchema = z.object({
 });
 
 export default function RegisterForm() {
-	const [error, setError] = useState<string>("");
 	const [isLoading, setIsLoading] = useState(false);
+	const router = useRouter();
 
 	const defaultValues = {
 		name: "Sahithyan",
@@ -42,7 +46,6 @@ export default function RegisterForm() {
 
 	async function onSubmit(data: z.infer<typeof registerSchema>) {
 		setIsLoading(true);
-		setError("");
 
 		try {
 			const r = await postAuthSignUp({
@@ -50,9 +53,21 @@ export default function RegisterForm() {
 				username: data.username,
 				password: data.password,
 			});
-			console.log(r);
-		} catch {
-			setError("An unexpected error occurred");
+			if (!("token" in r)) {
+				console.error(r);
+				toast.error("Registration failed");
+				return;
+			}
+			toast.success("Registration successful");
+
+			saveToken(r.token);
+			router.push("/dashboard");
+		} catch (err) {
+			if (!(err instanceof AxiosError) || !err.response || !err.response.data) {
+				toast.error("Registration failed");
+				return;
+			}
+			toast.error(err.response.data.message);
 		} finally {
 			setIsLoading(false);
 		}
@@ -70,12 +85,6 @@ export default function RegisterForm() {
 									Join Kandypack logistics system
 								</p>
 							</div>
-
-							{error && (
-								<div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md">
-									{error}
-								</div>
-							)}
 
 							<FormField
 								control={form.control}
