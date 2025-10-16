@@ -9,8 +9,11 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL_CLIENT=http://localhost:2000
     depends_on:
       - backend
+    extra_hosts:
+      - "localhost:host-gateway"
     develop:
       watch:
         - path: ./frontend
@@ -62,3 +65,4 @@ services:
 
 volumes:
   postgres_data:
+  

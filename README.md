@@ -60,4 +60,24 @@ Once the system is started, the following urls can be used to access the service
 - Backend: [http://localhost:2000](http://localhost:2000)
 - Database: Exposed on port **5433**
 
+**NOTE**: Every time any changes are made to the `package.json` file, the system has to be stopped and restarted. Use the commands below to do so:
+```sh
+# Stop and remove the docker containers
+docker compose down
+
+# Create and run the docker containers
+docker compose up --build --watch
+```
+
+If you have made changes to the `db/init-scripts`, you have to clear the database and re-run the system.
+```sh
+# This command will stop the containers and clear the database 
+docker compose down -v
+
+# Create and run the docker containers
+docker compose up --build --watch
+```
+
+
+
 We are using orval to generate the API client automatically from the backend code. Use `bun run generate:api` from the frontend to do so.
