@@ -32,16 +32,14 @@ export default function RegisterForm() {
 	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
 
-	const defaultValues = {
-		name: "Sahithyan",
-		email: "sahithyank@gmail.com",
-		username: "sahithyan",
-		password: "sahithyan",
-	};
-
 	const form = useForm<z.infer<typeof registerSchema>>({
 		resolver: zodResolver(registerSchema),
-		defaultValues,
+		defaultValues: {
+			name: "",
+			email: "",
+			username: "",
+			password: "",
+		},
 	});
 
 	async function onSubmit(data: z.infer<typeof registerSchema>) {
