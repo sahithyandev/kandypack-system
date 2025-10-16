@@ -39,10 +39,11 @@ export abstract class Auth {
 	}
 	static async signIn({ username, password }: AuthModel.signInBody) {
 		const result = await client.query<{
+			id: string;
 			password: string;
 			role: string;
 		}>(
-			`SELECT password, role
+			`SELECT id, password, role
 			FROM "User"
 			WHERE username = $1
 			LIMIT 1`,
@@ -64,9 +65,25 @@ export abstract class Auth {
 				message: "Invalid username or password",
 			} satisfies AuthModel.signInInvalid);
 
+		// Fetch worker type if user is a worker
+		let workerType: string | undefined = undefined;
+		if (user.role === "Worker") {
+			const workerResult = await client.query<{ type: string }>(
+				`SELECT type
+				FROM Worker
+				WHERE id = $1
+				LIMIT 1`,
+				[user.id],
+			);
+			if (workerResult.rowCount !== null && workerResult.rowCount > 0) {
+				workerType = workerResult.rows[0].type;
+			}
+		}
+
 		return {
 			username,
 			role: user.role,
+			workerType,
 			token: "",
 		} satisfies AuthModel.signInResponse;
 	}
