@@ -1,5 +1,6 @@
 // Model define the data structure and validation for the request and response
 import { t } from "elysia";
+import { APIError } from "../../utils/error";
 
 export namespace AuthModel {
 	export type JWTData = {
@@ -30,15 +31,11 @@ export namespace AuthModel {
 	export const signUpResponse = signInResponse;
 	export type signUpResponse = signInResponse;
 
-	export const signInInvalid = t.Object({
-		message: t.String(),
-	});
-	export type signInInvalid = typeof signInInvalid.static;
+	export const signInInvalid = APIError.response;
+	export type signInInvalid = APIError.response;
 
-	export const signUpFailed = t.Object({
-		message: t.String(),
-	});
-	export type signUpFailed = typeof signUpFailed.static;
+	export const signUpFailed = APIError.response;
+	export type signUpFailed = APIError.response;
 
 	export const validateResponse = t.Object({
 		valid: t.Boolean(),
