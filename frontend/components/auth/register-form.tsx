@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { postAuthSignUp } from "@/lib/api-client";
 import { saveToken } from "@/lib/auth";
+import { isAPIError } from "@/lib/types";
 
 const registerSchema = z.object({
 	name: z.string().min(2, "Name must be at least 2 characters").max(50),
@@ -63,11 +63,12 @@ export default function RegisterForm() {
 			saveToken(r.token);
 			router.push("/dashboard");
 		} catch (err) {
-			if (!(err instanceof AxiosError) || !err.response || !err.response.data) {
-				toast.error("Registration failed");
+			if (!isAPIError(err)) {
+				console.log(err);
+				toast.error("Registration failed. Please try again later.");
 				return;
 			}
-			toast.error(err.response.data.message);
+			toast.error(err.message);
 		} finally {
 			setIsLoading(false);
 		}

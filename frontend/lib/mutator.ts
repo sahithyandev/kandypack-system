@@ -1,7 +1,8 @@
-import Axios, { type AxiosError, type AxiosRequestConfig } from "axios";
+import axios, { type AxiosError, type AxiosRequestConfig } from "axios";
 import { getToken } from "./auth";
+import type { APIError } from "./types";
 
-export const AXIOS_INSTANCE = Axios.create({
+export const AXIOS_INSTANCE = axios.create({
 	baseURL: process.env.NEXT_PUBLIC_API_URL_CLIENT || "http://localhost:2000",
 	headers: {
 		"Content-Type": "application/json",
@@ -24,12 +25,26 @@ export const customInstance = <T>(
 	config: AxiosRequestConfig,
 	options?: AxiosRequestConfig,
 ): Promise<T> => {
-	const source = Axios.CancelToken.source();
+	const source = axios.CancelToken.source();
 	const promise = AXIOS_INSTANCE({
 		...config,
 		...options,
 		cancelToken: source.token,
-	}).then(({ data }) => data);
+	})
+		.then(({ data }) => data)
+		.catch((err) => {
+			if (axios.isAxiosError(err) && err.response) {
+				const status = err.response.status;
+				const data = err.response.data;
+				if (status === 400 || status === 500) {
+					throw {
+						status,
+						message: data.message,
+					} satisfies APIError;
+				}
+			}
+			throw err;
+		});
 
 	// @ts-ignore
 	promise.cancel = () => {

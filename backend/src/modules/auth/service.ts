@@ -16,7 +16,7 @@ export abstract class Auth {
 		if (exists === null)
 			throw status(500, {
 				message: "Database error",
-			});
+			} satisfies AuthModel.signUpFailed);
 
 		if (exists.rowCount === null || exists.rowCount > 0)
 			throw status(400, {
@@ -50,7 +50,9 @@ export abstract class Auth {
 		);
 
 		if (result.rowCount === 0)
-			throw status(400, "Invalid username or password");
+			throw status(400, {
+				message: "Invalid username or password",
+			} satisfies AuthModel.signInInvalid);
 		const user = result.rows[0];
 
 		if (!user) throw status(400, "Invalid username or password");
@@ -60,7 +62,7 @@ export abstract class Auth {
 		if (!isPasswordValid)
 			throw status(400, {
 				message: "Invalid username or password",
-			});
+			} satisfies AuthModel.signInInvalid);
 
 		return {
 			username,

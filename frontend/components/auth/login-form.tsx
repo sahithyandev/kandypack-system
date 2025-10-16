@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { postAuthSignIn } from "@/lib/api-client";
 import { saveToken } from "@/lib/auth";
+import { isAPIError } from "@/lib/types";
 
 const loginSchema = z.object({
 	username: z.string().min(2, "Username must be at least 2 characters").max(50),
@@ -51,9 +52,14 @@ export default function LoginForm() {
 
 			saveToken(r.token);
 			router.push("/dashboard");
-		} catch {
-			toast.error("An unknown error occurred.");
-			return;
+		} catch (err) {
+			if (!isAPIError(err)) {
+				console.log(err);
+				toast.error("Login failed. Please try again later.");
+				return;
+			}
+
+			toast.error(err.message);
 		} finally {
 			setIsLoading(false);
 		}
