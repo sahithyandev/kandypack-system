@@ -13,8 +13,8 @@ export const storeManager = new Elysia({ prefix: "/api" })
 		"/stores/incoming-deliveries",
 		async ({ user }: any) => {
 			// Extract store manager ID from authenticated user
-			const storeManagerId = user.username; // The username is the user ID
-			return await StoreManagerService.getIncomingDeliveries(storeManagerId);
+			const storeManagerUsername = user.username; // The username is the user ID
+			return await StoreManagerService.getIncomingDeliveries(storeManagerUsername);
 		},
 		{
 			beforeHandle: requireStoreManager,
