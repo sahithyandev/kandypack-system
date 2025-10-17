@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
 	Card,
 	CardContent,
@@ -22,110 +23,53 @@ import {
 	Eye,
 	Truck,
 	Train,
+	Loader2,
 } from "lucide-react";
-
-// Mock data for pending orders
-const mockOrders = [
-	{
-		id: "ORD-2024-001",
-		customer: "Colombo Wholesale Store",
-		customerType: "Wholesale",
-		orderDate: "2024-01-15",
-		requiredDelivery: "2024-01-22",
-		route: "Colombo",
-		address: "123 Main Street, Colombo 03",
-		products: [
-			{ name: "Detergent 5kg", quantity: 50, spaceUnits: 25 },
-			{ name: "Soap Bars", quantity: 200, spaceUnits: 10 },
-		],
-		totalValue: 125000,
-		totalSpaceUnits: 35,
-		status: "pending",
-		priority: "high",
-		daysRemaining: 2,
-	},
-	{
-		id: "ORD-2024-002",
-		customer: "Galle Retail Shop",
-		customerType: "Retail",
-		orderDate: "2024-01-14",
-		requiredDelivery: "2024-01-23",
-		route: "Galle",
-		address: "456 Beach Road, Galle",
-		products: [
-			{ name: "Shampoo Bottles", quantity: 100, spaceUnits: 15 },
-			{ name: "Toothpaste", quantity: 150, spaceUnits: 8 },
-		],
-		totalValue: 75000,
-		totalSpaceUnits: 23,
-		status: "pending",
-		priority: "medium",
-		daysRemaining: 3,
-	},
-	{
-		id: "ORD-2024-003",
-		customer: "Negombo Market",
-		customerType: "Wholesale",
-		orderDate: "2024-01-13",
-		requiredDelivery: "2024-01-21",
-		route: "Negombo",
-		address: "789 Market Street, Negombo",
-		products: [
-			{ name: "Rice 25kg Bags", quantity: 100, spaceUnits: 50 },
-			{ name: "Sugar 10kg", quantity: 80, spaceUnits: 20 },
-			{ name: "Flour 10kg", quantity: 60, spaceUnits: 15 },
-		],
-		totalValue: 350000,
-		totalSpaceUnits: 85,
-		status: "pending",
-		priority: "high",
-		daysRemaining: 1,
-	},
-	{
-		id: "ORD-2024-004",
-		customer: "Matara Supermarket",
-		customerType: "Retail",
-		orderDate: "2024-01-12",
-		requiredDelivery: "2024-01-24",
-		route: "Matara",
-		address: "321 Town Road, Matara",
-		products: [
-			{ name: "Beverages (Mixed)", quantity: 200, spaceUnits: 40 },
-		],
-		totalValue: 95000,
-		totalSpaceUnits: 40,
-		status: "pending",
-		priority: "low",
-		daysRemaining: 4,
-	},
-	{
-		id: "ORD-2024-005",
-		customer: "Jaffna Store",
-		customerType: "Wholesale",
-		orderDate: "2024-01-11",
-		requiredDelivery: "2024-01-20",
-		route: "Jaffna",
-		address: "567 Temple Road, Jaffna",
-		products: [
-			{ name: "Cooking Oil 5L", quantity: 150, spaceUnits: 45 },
-			{ name: "Tea Packets", quantity: 500, spaceUnits: 20 },
-			{ name: "Biscuits (Assorted)", quantity: 300, spaceUnits: 25 },
-		],
-		totalValue: 275000,
-		totalSpaceUnits: 90,
-		status: "pending",
-		priority: "urgent",
-		daysRemaining: 0,
-	},
-];
+import { getPendingOrders, type PendingOrder } from "@/lib/dispatcher-api";
 
 export default function PendingOrdersPage() {
+	const router = useRouter();
+	const [orders, setOrders] = useState<PendingOrder[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 	const [searchTerm, setSearchTerm] = useState("");
-	const [filterPriority, setFilterPriority] = useState("all");
-	const [selectedOrder, setSelectedOrder] = useState<any>(null);
+	const [selectedOrder, setSelectedOrder] = useState<PendingOrder | null>(null);
+
+	useEffect(() => {
+		fetchOrders();
+	}, []);
+
+	const fetchOrders = async () => {
+		try {
+			setLoading(true);
+			setError(null);
+			const data = await getPendingOrders();
+			setOrders(data);
+		} catch (err: any) {
+			console.error("Error fetching pending orders:", err);
+			setError(err?.message || "Failed to fetch pending orders");
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const getDaysRemaining = (requiredDeliveryDate: string) => {
+		const today = new Date();
+		const deliveryDate = new Date(requiredDeliveryDate);
+		const diffTime = deliveryDate.getTime() - today.getTime();
+		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+		return diffDays;
+	};
+
+	const getPriority = (daysRemaining: number) => {
+		if (daysRemaining <= 0) return "urgent";
+		if (daysRemaining <= 2) return "high";
+		if (daysRemaining <= 4) return "medium";
+		return "low";
+	};
 
 	const getPriorityBadge = (priority: string) => {
-		const styles = {
+		const styles: Record<string, string> = {
 			urgent: "bg-red-100 text-red-800 border-red-200",
 			high: "bg-orange-100 text-orange-800 border-orange-200",
 			medium: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -134,24 +78,49 @@ export default function PendingOrdersPage() {
 		return styles[priority] || "bg-gray-100 text-gray-800";
 	};
 
-	const getCustomerTypeBadge = (type: string) => {
-		const styles = {
-			Wholesale: "bg-purple-100 text-purple-800",
-			Retail: "bg-blue-100 text-blue-800",
-		};
-		return styles[type] || "bg-gray-100 text-gray-800";
-	};
-
-	const filteredOrders = mockOrders.filter((order) => {
+	const filteredOrders = orders.filter((order) => {
 		const matchesSearch =
-			order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			order.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			order.route.toLowerCase().includes(searchTerm.toLowerCase());
+			order.orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			order.destinationCity.toLowerCase().includes(searchTerm.toLowerCase());
 
-		const matchesFilter =
-			filterPriority === "all" || order.priority === filterPriority;
+		return matchesSearch;
+	});
 
-		return matchesSearch && matchesFilter;
+	if (loading) {
+		return (
+			<div className="flex items-center justify-center h-96">
+				<Loader2 className="h-8 w-8 animate-spin text-primary" />
+			</div>
+		);
+	}
+
+	if (error) {
+		return (
+			<div className="space-y-6">
+				<div>
+					<h2 className="text-3xl font-bold tracking-tight">Pending Orders</h2>
+					<p className="text-muted-foreground">
+						Manage and schedule orders awaiting processing
+					</p>
+				</div>
+				<Card>
+					<CardContent className="py-12">
+						<div className="text-center">
+							<AlertTriangle className="h-12 w-12 mx-auto text-red-500 mb-4" />
+							<p className="text-lg font-medium mb-2">Error Loading Orders</p>
+							<p className="text-muted-foreground mb-4">{error}</p>
+							<Button onClick={fetchOrders}>Try Again</Button>
+						</div>
+					</CardContent>
+				</Card>
+			</div>
+		);
+	}
+
+	const urgentOrders = orders.filter(o => {
+		const days = getDaysRemaining(o.requiredDeliveryDate);
+		return days <= 0;
 	});
 
 	return (
@@ -171,7 +140,7 @@ export default function PendingOrdersPage() {
 						<CardTitle className="text-sm font-medium">Total Pending</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className="text-2xl font-bold">{mockOrders.length}</div>
+						<div className="text-2xl font-bold">{orders.length}</div>
 						<p className="text-xs text-muted-foreground mt-1">
 							Orders awaiting scheduling
 						</p>
@@ -183,7 +152,7 @@ export default function PendingOrdersPage() {
 					</CardHeader>
 					<CardContent>
 						<div className="text-2xl font-bold text-red-600">
-							{mockOrders.filter(o => o.priority === "urgent").length}
+							{urgentOrders.length}
 						</div>
 						<p className="text-xs text-muted-foreground mt-1">
 							Need immediate attention
@@ -196,7 +165,7 @@ export default function PendingOrdersPage() {
 					</CardHeader>
 					<CardContent>
 						<div className="text-2xl font-bold">
-							{mockOrders.reduce((acc, o) => acc + o.totalSpaceUnits, 0)}
+							{orders.reduce((acc, o) => acc + o.totalSpaceUnits, 0).toFixed(0)}
 						</div>
 						<p className="text-xs text-muted-foreground mt-1">
 							Space units required
@@ -209,7 +178,7 @@ export default function PendingOrdersPage() {
 					</CardHeader>
 					<CardContent>
 						<div className="text-2xl font-bold">
-							LKR {(mockOrders.reduce((acc, o) => acc + o.totalValue, 0) / 1000).toFixed(0)}k
+							LKR {(orders.reduce((acc, o) => acc + o.totalValue, 0) / 1000).toFixed(0)}k
 						</div>
 						<p className="text-xs text-muted-foreground mt-1">
 							Combined order value
@@ -238,131 +207,104 @@ export default function PendingOrdersPage() {
 									onChange={(e) => setSearchTerm(e.target.value)}
 								/>
 							</div>
-							<select
-								className="px-3 py-2 border rounded-md text-sm"
-								value={filterPriority}
-								onChange={(e) => setFilterPriority(e.target.value)}
-							>
-								<option value="all">All Priorities</option>
-								<option value="urgent">Urgent</option>
-								<option value="high">High</option>
-								<option value="medium">Medium</option>
-								<option value="low">Low</option>
-							</select>
 						</div>
 					</div>
 				</CardHeader>
 				<CardContent>
 					<div className="space-y-3">
-						{filteredOrders.map((order) => (
-							<div
-								key={order.id}
-								className="border rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
-								onClick={() => setSelectedOrder(order)}
-							>
-								<div className="flex flex-col lg:flex-row justify-between gap-4">
-									<div className="flex-1 space-y-3">
-										{/* Order Header */}
-										<div className="flex items-start justify-between">
-											<div>
-												<div className="flex items-center gap-2 flex-wrap">
-													<span className="font-semibold">{order.id}</span>
-													<span
-														className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getPriorityBadge(
-															order.priority
-														)}`}
-													>
-														{order.priority.toUpperCase()}
-													</span>
-													<span
-														className={`px-2 py-0.5 rounded-full text-xs font-medium ${getCustomerTypeBadge(
-															order.customerType
-														)}`}
-													>
-														{order.customerType}
-													</span>
-													{order.daysRemaining <= 1 && (
-														<span className="flex items-center gap-1 text-xs text-red-600">
-															<AlertTriangle className="h-3 w-3" />
-															Due soon
+						{filteredOrders.map((order) => {
+							const daysRemaining = getDaysRemaining(order.requiredDeliveryDate);
+							const priority = getPriority(daysRemaining);
+							
+							return (
+								<div
+									key={order.orderId}
+									className="border rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+									onClick={() => setSelectedOrder(order)}
+								>
+									<div className="flex flex-col lg:flex-row justify-between gap-4">
+										<div className="flex-1 space-y-3">
+											{/* Order Header */}
+											<div className="flex items-start justify-between">
+												<div>
+													<div className="flex items-center gap-2 flex-wrap">
+														<span className="font-semibold">{order.orderId}</span>
+														<span
+															className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getPriorityBadge(
+																priority
+															)}`}
+														>
+															{priority.toUpperCase()}
 														</span>
-													)}
+														{daysRemaining <= 1 && (
+															<span className="flex items-center gap-1 text-xs text-red-600">
+																<AlertTriangle className="h-3 w-3" />
+																Due soon
+															</span>
+														)}
+													</div>
+													<p className="text-sm text-muted-foreground mt-1">
+														{order.customerName}
+													</p>
 												</div>
-												<p className="text-sm text-muted-foreground mt-1">
-													{order.customer}
-												</p>
-											</div>
-											<Button size="sm" variant="outline" className="hidden lg:flex">
-												<Eye className="h-3 w-3 mr-1" />
-												View
-											</Button>
-										</div>
-
-										{/* Order Details */}
-										<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
-											<div className="flex items-center gap-2">
-												<MapPin className="h-4 w-4 text-muted-foreground" />
-												<span>{order.route}</span>
-											</div>
-											<div className="flex items-center gap-2">
-												<Calendar className="h-4 w-4 text-muted-foreground" />
-												<span>Delivery: {order.requiredDelivery}</span>
-											</div>
-											<div className="flex items-center gap-2">
-												<Package className="h-4 w-4 text-muted-foreground" />
-												<span>{order.products.length} products</span>
-											</div>
-											<div className="flex items-center gap-2">
-												<Clock className="h-4 w-4 text-muted-foreground" />
-												<span>{order.daysRemaining} days remaining</span>
-											</div>
-										</div>
-
-										{/* Products Summary */}
-										<div className="flex flex-wrap gap-2">
-											{order.products.slice(0, 2).map((product, idx) => (
-												<span
-													key={idx}
-													className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
-												>
-													{product.name} ({product.quantity})
-												</span>
-											))}
-											{order.products.length > 2 && (
-												<span className="text-xs text-muted-foreground">
-													+{order.products.length - 2} more
-												</span>
-											)}
-										</div>
-
-										{/* Bottom Info */}
-										<div className="flex justify-between items-center pt-2 border-t">
-											<div className="flex gap-4 text-sm">
-												<span className="font-medium">
-													Space: {order.totalSpaceUnits} units
-												</span>
-												<span className="font-medium">
-													Value: LKR {(order.totalValue / 1000).toFixed(0)}k
-												</span>
-											</div>
-											<div className="flex gap-2">
-												<Button size="sm" variant="outline">
-													<Train className="h-3 w-3 mr-1" />
-													Assign to Train
+												<Button size="sm" variant="outline" className="hidden lg:flex">
+													<Eye className="h-3 w-3 mr-1" />
+													View
 												</Button>
-												<Button size="sm" variant="default">
-													<Truck className="h-3 w-3 mr-1" />
-													Schedule Delivery
-												</Button>
+											</div>
+
+											{/* Order Details */}
+											<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
+												<div className="flex items-center gap-2">
+													<MapPin className="h-4 w-4 text-muted-foreground" />
+													<span>{order.destinationCity}</span>
+												</div>
+												<div className="flex items-center gap-2">
+													<Calendar className="h-4 w-4 text-muted-foreground" />
+													<span>Delivery: {order.requiredDeliveryDate}</span>
+												</div>
+												<div className="flex items-center gap-2">
+													<Package className="h-4 w-4 text-muted-foreground" />
+													<span>{order.totalSpaceUnits.toFixed(1)} units</span>
+												</div>
+												<div className="flex items-center gap-2">
+													<Clock className="h-4 w-4 text-muted-foreground" />
+													<span>{daysRemaining} days remaining</span>
+												</div>
+											</div>
+
+											{/* Bottom Info */}
+											<div className="flex justify-between items-center pt-2 border-t">
+												<div className="flex gap-4 text-sm">
+													<span className="font-medium">
+														Placed: {new Date(order.placedOn).toLocaleDateString()}
+													</span>
+													<span className="font-medium">
+														Value: LKR {(order.totalValue / 1000).toFixed(0)}k
+													</span>
+												</div>
+												<div className="flex gap-2">
+													<Button 
+														size="sm" 
+														variant="outline"
+														onClick={(e) => {
+															e.stopPropagation();
+															router.push('/dispatcher/train-scheduling');
+														}}
+													>
+														<Train className="h-3 w-3 mr-1" />
+														Assign to Train
+													</Button>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						))}
+							);
+						})}
 					</div>
 
-					{filteredOrders.length === 0 && (
+					{filteredOrders.length === 0 && !loading && (
 						<div className="text-center py-12">
 							<Package className="h-12 w-12 mx-auto text-muted-foreground" />
 							<p className="mt-2 text-muted-foreground">No pending orders found</p>

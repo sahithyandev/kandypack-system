@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
 	LayoutDashboard,
 	Package,
@@ -22,6 +22,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { getUserFromToken, removeToken } from "@/lib/auth";
 
 const navigation = [
 	{
@@ -60,11 +61,44 @@ export default function DispatcherLayout({
 	children,
 }: { children: React.ReactNode }) {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const pathname = usePathname();
+	const router = useRouter();
+
+	useEffect(() => {
+		const user = getUserFromToken();
+		
+		if (!user) {
+			// No JWT token, redirect to login
+			router.push("/login");
+			return;
+		}
+
+		// Check if user is a dispatcher
+		if (user.role !== "Worker" || user.workerType !== "Dispatcher") {
+			// Not a dispatcher, redirect to home (which will handle appropriate redirect)
+			router.push("/");
+			return;
+		}
+
+		setIsAuthenticated(true);
+	}, [router]);
 
 	const isActive = (href: string) => {
 		return pathname === href;
 	};
+
+	// Show loading state while checking authentication
+	if (!isAuthenticated) {
+		return (
+			<div className="flex items-center justify-center min-h-screen">
+				<div className="text-center">
+					<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+					<p className="mt-2 text-sm text-gray-600">Loading...</p>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="flex h-screen bg-gray-50 dark:bg-gray-900">
@@ -147,7 +181,8 @@ export default function DispatcherLayout({
 							className="w-full justify-start gap-3 text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950"
 							onClick={() => {
 								// Handle logout
-								window.location.href = "/login";
+								removeToken();
+								router.push("/login");
 							}}
 						>
 							<LogOut className="h-5 w-5" />

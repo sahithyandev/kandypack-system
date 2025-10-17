@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Card,
 	CardContent,
@@ -22,105 +22,66 @@ import {
 	Info,
 	TrendingUp,
 	Users,
+	Loader2,
+	CheckCircle,
 } from "lucide-react";
-
-// Mock data for train schedules
-const trainSchedules = [
-	{
-		id: "TRN-KDY-CMB-001",
-		trainName: "Express Cargo 101",
-		route: { from: "Kandy", to: "Colombo" },
-		departure: "2024-01-22 06:00",
-		arrival: "2024-01-22 09:00",
-		totalCapacity: 1000,
-		allocatedCapacity: 850,
-		availableCapacity: 150,
-		assignedOrders: 12,
-		status: "scheduled",
-	},
-	{
-		id: "TRN-KDY-GLE-002",
-		trainName: "Coastal Freight 202",
-		route: { from: "Kandy", to: "Galle" },
-		departure: "2024-01-22 08:30",
-		arrival: "2024-01-22 13:00",
-		totalCapacity: 800,
-		allocatedCapacity: 480,
-		availableCapacity: 320,
-		assignedOrders: 8,
-		status: "scheduled",
-	},
-	{
-		id: "TRN-KDY-MTR-003",
-		trainName: "Southern Express 303",
-		route: { from: "Kandy", to: "Matara" },
-		departure: "2024-01-22 10:00",
-		arrival: "2024-01-22 15:30",
-		totalCapacity: 900,
-		allocatedCapacity: 540,
-		availableCapacity: 360,
-		assignedOrders: 9,
-		status: "scheduled",
-	},
-	{
-		id: "TRN-KDY-JAF-004",
-		trainName: "Northern Cargo 404",
-		route: { from: "Kandy", to: "Jaffna" },
-		departure: "2024-01-22 14:00",
-		arrival: "2024-01-22 22:00",
-		totalCapacity: 1200,
-		allocatedCapacity: 960,
-		availableCapacity: 240,
-		assignedOrders: 15,
-		status: "scheduled",
-	},
-	{
-		id: "TRN-KDY-NEG-005",
-		trainName: "Airport Link 505",
-		route: { from: "Kandy", to: "Negombo" },
-		departure: "2024-01-22 16:30",
-		arrival: "2024-01-22 19:30",
-		totalCapacity: 700,
-		allocatedCapacity: 420,
-		availableCapacity: 280,
-		assignedOrders: 7,
-		status: "scheduled",
-	},
-];
-
-// Mock unassigned orders grouped by destination
-const unassignedOrders = [
-	{
-		destination: "Colombo",
-		orders: [
-			{ id: "ORD-001", customer: "ABC Store", spaceUnits: 45, priority: "high" },
-			{ id: "ORD-002", customer: "XYZ Market", spaceUnits: 30, priority: "medium" },
-			{ id: "ORD-003", customer: "Quick Shop", spaceUnits: 25, priority: "high" },
-		],
-		totalSpaceUnits: 100,
-	},
-	{
-		destination: "Galle",
-		orders: [
-			{ id: "ORD-004", customer: "Beach Mart", spaceUnits: 60, priority: "medium" },
-			{ id: "ORD-005", customer: "Coastal Store", spaceUnits: 40, priority: "low" },
-		],
-		totalSpaceUnits: 100,
-	},
-	{
-		destination: "Jaffna",
-		orders: [
-			{ id: "ORD-006", customer: "North Store", spaceUnits: 180, priority: "urgent" },
-		],
-		totalSpaceUnits: 180,
-	},
-];
+import { getTrainTrips, getPendingOrders, createShipment, type TrainTrip, type PendingOrder } from "@/lib/dispatcher-api";
 
 export default function TrainSchedulingPage() {
-	const [selectedTrain, setSelectedTrain] = useState<any>(null);
-	const [selectedDestination, setSelectedDestination] = useState("");
+	const [trainTrips, setTrainTrips] = useState<TrainTrip[]>([]);
+	const [pendingOrders, setPendingOrders] = useState<PendingOrder[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+	const [selectedTrain, setSelectedTrain] = useState<TrainTrip | null>(null);
+	const [selectedOrder, setSelectedOrder] = useState<PendingOrder | null>(null);
 	const [showManageModal, setShowManageModal] = useState(false);
-	const [managedTrain, setManagedTrain] = useState<any>(null);
+	const [managedTrain, setManagedTrain] = useState<TrainTrip | null>(null);
+	const [assigning, setAssigning] = useState(false);
+	const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+	useEffect(() => {
+		fetchData();
+	}, []);
+
+	const fetchData = async () => {
+		try {
+			setLoading(true);
+			setError(null);
+			const [trips, orders] = await Promise.all([
+				getTrainTrips(),
+				getPendingOrders()
+			]);
+			setTrainTrips(trips);
+			setPendingOrders(orders);
+		} catch (err: any) {
+			console.error("Error fetching data:", err);
+			setError(err?.message || "Failed to fetch data");
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const handleAssignOrder = async () => {
+		if (!selectedOrder || !selectedTrain) return;
+
+		try {
+			setAssigning(true);
+			const result = await createShipment({
+				orderId: selectedOrder.orderId,
+				trainTripId: selectedTrain.trainTripId
+			});
+			setSuccessMessage(`Shipment created successfully! ${result.message}`);
+			setSelectedOrder(null);
+			setSelectedTrain(null);
+			// Refresh data
+			await fetchData();
+			setTimeout(() => setSuccessMessage(null), 5000);
+		} catch (err: any) {
+			alert(err?.response?.data?.error || "Failed to create shipment");
+		} finally {
+			setAssigning(false);
+		}
+	};
 
 	const getCapacityColor = (percentage: number) => {
 		if (percentage >= 85) return "text-red-600 bg-red-100";
@@ -129,7 +90,7 @@ export default function TrainSchedulingPage() {
 	};
 
 	const getStatusBadge = (status: string) => {
-		const styles = {
+		const styles: Record<string, string> = {
 			scheduled: "bg-blue-100 text-blue-800",
 			in_transit: "bg-purple-100 text-purple-800",
 			completed: "bg-green-100 text-green-800",
@@ -139,7 +100,7 @@ export default function TrainSchedulingPage() {
 	};
 
 	const getPriorityBadge = (priority: string) => {
-		const styles = {
+		const styles: Record<string, string> = {
 			urgent: "bg-red-100 text-red-800",
 			high: "bg-orange-100 text-orange-800",
 			medium: "bg-yellow-100 text-yellow-800",
@@ -151,8 +112,50 @@ export default function TrainSchedulingPage() {
 	const capacityPercentage = (allocated: number, total: number) =>
 		Math.round((allocated / total) * 100);
 
+	if (loading) {
+		return (
+			<div className="flex items-center justify-center h-96">
+				<Loader2 className="h-8 w-8 animate-spin text-primary" />
+			</div>
+		);
+	}
+
+	if (error) {
+		return (
+			<div className="space-y-6">
+				<div>
+					<h2 className="text-3xl font-bold tracking-tight">Train Scheduling</h2>
+				</div>
+				<Card>
+					<CardContent className="py-12">
+						<div className="text-center">
+							<AlertCircle className="h-12 w-12 mx-auto text-red-500 mb-4" />
+							<p className="text-lg font-medium mb-2">Error Loading Data</p>
+							<p className="text-muted-foreground mb-4">{error}</p>
+							<Button onClick={fetchData}>Try Again</Button>
+						</div>
+					</CardContent>
+				</Card>
+			</div>
+		);
+	}
+
+	const totalCapacity = trainTrips.reduce((acc, t) => acc + t.capacityUnits, 0);
+	const totalAllocated = trainTrips.reduce((acc, t) => acc + t.allocatedUnits, 0);
+	const utilization = totalCapacity > 0 ? Math.round((totalAllocated / totalCapacity) * 100) : 0;
+
 	return (
 		<div className="space-y-6">
+			{/* Success Message */}
+			{successMessage && (
+				<Card className="border-green-200 bg-green-50 dark:bg-green-950">
+					<CardContent className="flex items-center gap-2 p-4">
+						<CheckCircle className="h-5 w-5 text-green-600" />
+						<span className="text-green-800 dark:text-green-200">{successMessage}</span>
+					</CardContent>
+				</Card>
+			)}
+
 			{/* Page Header */}
 			<div>
 				<h2 className="text-3xl font-bold tracking-tight">Train Scheduling</h2>
@@ -165,12 +168,12 @@ export default function TrainSchedulingPage() {
 			<div className="grid gap-4 md:grid-cols-4">
 				<Card>
 					<CardHeader className="pb-3">
-						<CardTitle className="text-sm font-medium">Today's Trains</CardTitle>
+						<CardTitle className="text-sm font-medium">Scheduled Trains</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className="text-2xl font-bold">{trainSchedules.length}</div>
+						<div className="text-2xl font-bold">{trainTrips.length}</div>
 						<p className="text-xs text-muted-foreground mt-1">
-							Scheduled departures
+							Upcoming departures
 						</p>
 					</CardContent>
 				</Card>
@@ -179,9 +182,7 @@ export default function TrainSchedulingPage() {
 						<CardTitle className="text-sm font-medium">Total Capacity</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className="text-2xl font-bold">
-							{trainSchedules.reduce((acc, t) => acc + t.totalCapacity, 0)}
-						</div>
+						<div className="text-2xl font-bold">{totalCapacity}</div>
 						<p className="text-xs text-muted-foreground mt-1">
 							Space units available
 						</p>
@@ -192,13 +193,7 @@ export default function TrainSchedulingPage() {
 						<CardTitle className="text-sm font-medium">Utilization</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className="text-2xl font-bold">
-							{Math.round(
-								(trainSchedules.reduce((acc, t) => acc + t.allocatedCapacity, 0) /
-									trainSchedules.reduce((acc, t) => acc + t.totalCapacity, 0)) *
-									100
-							)}%
-						</div>
+						<div className="text-2xl font-bold">{utilization}%</div>
 						<p className="text-xs text-muted-foreground mt-1">
 							Average capacity usage
 						</p>
@@ -206,14 +201,14 @@ export default function TrainSchedulingPage() {
 				</Card>
 				<Card>
 					<CardHeader className="pb-3">
-						<CardTitle className="text-sm font-medium">Unassigned</CardTitle>
+						<CardTitle className="text-sm font-medium">Pending Orders</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<div className="text-2xl font-bold text-orange-600">
-							{unassignedOrders.reduce((acc, d) => acc + d.orders.length, 0)}
+							{pendingOrders.length}
 						</div>
 						<p className="text-xs text-muted-foreground mt-1">
-							Orders pending assignment
+							Awaiting assignment
 						</p>
 					</CardContent>
 				</Card>
@@ -226,20 +221,22 @@ export default function TrainSchedulingPage() {
 						<CardHeader>
 							<CardTitle>Train Schedules</CardTitle>
 							<CardDescription>
-								Today's train departures and capacity status
+								Upcoming train departures and capacity status
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
 							<div className="space-y-4">
-								{trainSchedules.map((train) => {
+								{trainTrips.map((train) => {
 									const percentage = capacityPercentage(
-										train.allocatedCapacity,
-										train.totalCapacity
+										train.allocatedUnits,
+										train.capacityUnits
 									);
 									return (
 										<div
-											key={train.id}
-											className="border rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+											key={train.trainTripId}
+											className={`border rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer ${
+												selectedTrain?.trainTripId === train.trainTripId ? 'border-primary bg-primary/5' : ''
+											}`}
 											onClick={() => setSelectedTrain(train)}
 										>
 											{/* Train Header */}
@@ -247,17 +244,10 @@ export default function TrainSchedulingPage() {
 												<div>
 													<div className="flex items-center gap-2">
 														<Train className="h-4 w-4 text-primary" />
-														<span className="font-semibold">{train.id}</span>
-														<span
-															className={`px-2 py-0.5 rounded-full text-xs font-medium ${getStatusBadge(
-																train.status
-															)}`}
-														>
-															{train.status}
-														</span>
+														<span className="font-semibold">{train.trainName}</span>
 													</div>
-													<p className="text-sm text-muted-foreground mt-1">
-														{train.trainName}
+													<p className="text-xs text-muted-foreground mt-1">
+														{train.trainTripId}
 													</p>
 												</div>
 												{percentage >= 85 && (
@@ -272,14 +262,12 @@ export default function TrainSchedulingPage() {
 											<div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 text-sm">
 												<div className="flex items-center gap-2">
 													<MapPin className="h-4 w-4 text-muted-foreground" />
-													<span>
-														{train.route.from} → {train.route.to}
-													</span>
+													<span>{train.fromCity} → {train.toCity}</span>
 												</div>
 												<div className="flex items-center gap-2">
 													<Clock className="h-4 w-4 text-muted-foreground" />
 													<span>
-														{train.departure.split(" ")[1]} - {train.arrival.split(" ")[1]}
+														{new Date(train.scheduledDeparture).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
 													</span>
 												</div>
 											</div>
@@ -288,7 +276,7 @@ export default function TrainSchedulingPage() {
 											<div className="space-y-2">
 												<div className="flex justify-between text-sm">
 													<span className="text-muted-foreground">
-														Capacity: {train.allocatedCapacity}/{train.totalCapacity} units
+														Capacity: {train.allocatedUnits}/{train.capacityUnits} units
 													</span>
 													<span className={`font-medium ${getCapacityColor(percentage)}`}>
 														{percentage}%
@@ -310,91 +298,113 @@ export default function TrainSchedulingPage() {
 
 											{/* Additional Info */}
 											<div className="flex justify-between items-center mt-3 pt-3 border-t">
-												<div className="flex gap-4 text-sm">
-													<span className="flex items-center gap-1">
-														<Package className="h-3 w-3" />
-														{train.assignedOrders} orders
-													</span>
-													<span className="text-green-600">
-														{train.availableCapacity} units available
-													</span>
+												<div className="text-sm text-green-600">
+													{train.availableUnits} units available
 												</div>
-												<Button 
-													size="sm" 
-													variant="outline"
-													onClick={() => {
-														setManagedTrain(train);
-														setShowManageModal(true);
-													}}
-												>
-													Manage
-													<ChevronRight className="h-3 w-3 ml-1" />
-												</Button>
+												<div className="text-xs text-muted-foreground">
+													Departs: {new Date(train.scheduledDeparture).toLocaleDateString()}
+												</div>
 											</div>
 										</div>
 									);
 								})}
+								{trainTrips.length === 0 && (
+									<div className="text-center py-12">
+										<Train className="h-12 w-12 mx-auto text-muted-foreground" />
+										<p className="mt-2 text-muted-foreground">No trains scheduled</p>
+									</div>
+								)}
 							</div>
 						</CardContent>
 					</Card>
 				</div>
 
-				{/* Unassigned Orders - Takes 1 column */}
+				{/* Pending Orders - Takes 1 column */}
 				<div>
 					<Card>
 						<CardHeader>
-							<CardTitle>Unassigned Orders</CardTitle>
+							<CardTitle>Pending Orders</CardTitle>
 							<CardDescription>Orders awaiting train assignment</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<div className="space-y-4">
-								{unassignedOrders.map((destination) => (
-									<div key={destination.destination} className="border rounded-lg p-3">
-										<div className="flex justify-between items-center mb-2">
-											<span className="font-medium flex items-center gap-2">
-												<MapPin className="h-4 w-4" />
-												{destination.destination}
-											</span>
-											<span className="text-sm text-muted-foreground">
-												{destination.totalSpaceUnits} units
-											</span>
+							<div className="space-y-3">
+								{pendingOrders.slice(0, 10).map((order) => (
+									<div
+										key={order.orderId}
+										className={`border rounded-lg p-3 cursor-pointer transition-colors ${
+											selectedOrder?.orderId === order.orderId ? 'border-primary bg-primary/5' : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+										}`}
+										onClick={() => setSelectedOrder(order)}
+									>
+										<div className="flex justify-between items-start mb-2">
+											<div>
+												<span className="font-medium text-sm">{order.orderId}</span>
+												<p className="text-xs text-muted-foreground">{order.customerName}</p>
+											</div>
+											<div className="text-right">
+												<span className="text-xs font-medium">{order.totalSpaceUnits.toFixed(1)} units</span>
+												<p className="text-xs text-muted-foreground">{order.destinationCity}</p>
+											</div>
 										</div>
-										<div className="space-y-2">
-											{destination.orders.map((order) => (
-												<div
-													key={order.id}
-													className="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-800 rounded text-sm"
-												>
-													<div>
-														<span className="font-medium">{order.id}</span>
-														<p className="text-xs text-muted-foreground">
-															{order.customer}
-														</p>
-													</div>
-													<div className="flex items-center gap-2">
-														<span
-															className={`px-2 py-0.5 rounded text-xs font-medium ${getPriorityBadge(
-																order.priority
-															)}`}
-														>
-															{order.priority}
-														</span>
-														<span className="text-xs">{order.spaceUnits} units</span>
-													</div>
-												</div>
-											))}
+										<div className="text-xs text-muted-foreground">
+											Due: {order.requiredDeliveryDate}
 										</div>
-										<Button size="sm" className="w-full mt-2" variant="outline">
-											<Plus className="h-3 w-3 mr-1" />
-											Assign to Train
-										</Button>
 									</div>
 								))}
+								{pendingOrders.length === 0 && (
+									<div className="text-center py-8">
+										<Package className="h-8 w-8 mx-auto text-muted-foreground" />
+										<p className="mt-2 text-sm text-muted-foreground">No pending orders</p>
+									</div>
+								)}
 							</div>
 						</CardContent>
 					</Card>
 
-					{/* Capacity Alert */}
+					{/* Assignment Panel */}
+					{selectedTrain && selectedOrder && (
+						<Card className="mt-4 border-primary">
+							<CardHeader>
+								<CardTitle className="text-sm">Assign Order to Train</CardTitle>
+							</CardHeader>
+							<CardContent className="space-y-3">
+								<div className="text-sm">
+									<p className="font-medium">Order: {selectedOrder.orderId}</p>
+									<p className="text-muted-foreground text-xs">{selectedOrder.customerName}</p>
+								</div>
+								<div className="text-sm">
+									<p className="font-medium">Train: {selectedTrain.trainName}</p>
+									<p className="text-muted-foreground text-xs">{selectedTrain.fromCity} → {selectedTrain.toCity}</p>
+								</div>
+								<div className="text-sm">
+									<p className="text-muted-foreground">Space Required: {selectedOrder.totalSpaceUnits.toFixed(1)} units</p>
+									<p className="text-muted-foreground">Available: {selectedTrain.availableUnits} units</p>
+								</div>
+								<Button 
+									className="w-full" 
+									onClick={handleAssignOrder}
+									disabled={assigning || selectedOrder.totalSpaceUnits > selectedTrain.availableUnits}
+								>
+									{assigning ? (
+										<>
+											<Loader2 className="h-4 w-4 mr-2 animate-spin" />
+											Assigning...
+										</>
+									) : (
+										<>
+											<CheckCircle className="h-4 w-4 mr-2" />
+											Confirm Assignment
+										</>
+									)}
+								</Button>
+								{selectedOrder.totalSpaceUnits > selectedTrain.availableUnits && (
+									<p className="text-xs text-red-600">Insufficient capacity on this train</p>
+								)}
+							</CardContent>
+						</Card>
+					)}
+
+					{/* Scheduling Tips */}
 					<Card className="mt-4">
 						<CardHeader>
 							<CardTitle className="text-sm flex items-center gap-2">
@@ -404,145 +414,15 @@ export default function TrainSchedulingPage() {
 						</CardHeader>
 						<CardContent>
 							<ul className="text-xs space-y-2 text-muted-foreground">
-								<li>• Consider overflow scheduling for trains at 85% capacity</li>
-								<li>• Urgent orders should be prioritized for next available train</li>
-								<li>• Check consecutive train schedules for large orders</li>
-								<li>• Maintain 15% buffer capacity for last-minute orders</li>
+								<li>• Select a train, then select an order to assign</li>
+								<li>• Check capacity before assigning large orders</li>
+								<li>• Urgent orders should be prioritized</li>
+								<li>• Maintain buffer capacity for emergencies</li>
 							</ul>
 						</CardContent>
 					</Card>
 				</div>
 			</div>
-
-			{/* Train Management Modal */}
-			{showManageModal && managedTrain && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-					<div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-						<div className="p-6">
-							<div className="flex justify-between items-center mb-4">
-								<h3 className="text-lg font-semibold">Manage Train - {managedTrain.id}</h3>
-								<Button 
-									variant="ghost" 
-									size="icon"
-									onClick={() => setShowManageModal(false)}
-								>
-									×
-								</Button>
-							</div>
-
-							{/* Train Details */}
-							<div className="space-y-4">
-								<Card>
-									<CardHeader>
-										<CardTitle className="text-base">Train Information</CardTitle>
-									</CardHeader>
-									<CardContent>
-										<div className="grid grid-cols-2 gap-4 text-sm">
-											<div>
-												<span className="font-medium">Train Name:</span>
-												<p className="text-muted-foreground">{managedTrain.trainName}</p>
-											</div>
-											<div>
-												<span className="font-medium">Route:</span>
-												<p className="text-muted-foreground">{managedTrain.route.from} → {managedTrain.route.to}</p>
-											</div>
-											<div>
-												<span className="font-medium">Departure:</span>
-												<p className="text-muted-foreground">{managedTrain.departure}</p>
-											</div>
-											<div>
-												<span className="font-medium">Arrival:</span>
-												<p className="text-muted-foreground">{managedTrain.arrival}</p>
-											</div>
-											<div>
-												<span className="font-medium">Total Capacity:</span>
-												<p className="text-muted-foreground">{managedTrain.totalCapacity} units</p>
-											</div>
-											<div>
-												<span className="font-medium">Available Space:</span>
-												<p className="text-green-600 font-medium">{managedTrain.availableCapacity} units</p>
-											</div>
-										</div>
-									</CardContent>
-								</Card>
-
-								{/* Capacity Overview */}
-								<Card>
-									<CardHeader>
-										<CardTitle className="text-base">Capacity Overview</CardTitle>
-									</CardHeader>
-									<CardContent>
-										<div className="space-y-2">
-											<div className="flex justify-between text-sm">
-												<span>Allocated: {managedTrain.allocatedCapacity} units</span>
-												<span className="font-medium">
-													{Math.round((managedTrain.allocatedCapacity / managedTrain.totalCapacity) * 100)}%
-												</span>
-											</div>
-											<div className="w-full bg-gray-200 rounded-full h-3">
-												<div
-													className="bg-blue-500 h-3 rounded-full"
-													style={{ 
-														width: `${(managedTrain.allocatedCapacity / managedTrain.totalCapacity) * 100}%` 
-													}}
-												/>
-											</div>
-											<div className={`text-sm ${managedTrain.availableCapacity < 100 ? 'text-orange-600' : 'text-green-600'}`}>
-												{managedTrain.availableCapacity < 100 ? 
-													`⚠ Only ${managedTrain.availableCapacity} units remaining` : 
-													`✓ ${managedTrain.availableCapacity} units available`
-												}
-											</div>
-										</div>
-									</CardContent>
-								</Card>
-
-								{/* Assigned Orders */}
-								<Card>
-									<CardHeader>
-										<CardTitle className="text-base">Assigned Orders ({managedTrain.assignedOrders})</CardTitle>
-									</CardHeader>
-									<CardContent>
-										<div className="space-y-2 text-sm">
-											{/* Mock assigned orders */}
-											{Array.from({ length: Math.min(managedTrain.assignedOrders, 5) }, (_, i) => (
-												<div key={i} className="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-700 rounded">
-													<span>ORD-{String(i + 1).padStart(3, '0')}</span>
-													<span className="text-muted-foreground">{20 + i * 5} units</span>
-												</div>
-											))}
-											{managedTrain.assignedOrders > 5 && (
-												<div className="text-center text-muted-foreground text-xs">
-													... and {managedTrain.assignedOrders - 5} more orders
-												</div>
-											)}
-										</div>
-									</CardContent>
-								</Card>
-
-								{/* Action Buttons */}
-								<div className="flex gap-2 pt-4">
-									<Button className="flex-1">
-										Add Orders
-									</Button>
-									<Button variant="outline" className="flex-1">
-										Remove Orders
-									</Button>
-									<Button 
-										variant="outline" 
-										onClick={() => {
-											console.log("Viewing full details for train:", managedTrain.id);
-											alert(`Full details for ${managedTrain.id} would be displayed here`);
-										}}
-									>
-										View Full Details
-									</Button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			)}
 		</div>
 	);
 }

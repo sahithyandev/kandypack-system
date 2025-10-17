@@ -1,6 +1,31 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { getUserFromToken } from "@/lib/auth";
+
 export default function HomePage() {
+	const router = useRouter();
+
+	useEffect(() => {
+		const user = getUserFromToken();
+		
+		if (!user) {
+			// No JWT token, redirect to login
+			router.push("/login");
+			return;
+		}
+
+		// Check role and workerType
+		if (user.role === "Worker" && user.workerType === "Dispatcher") {
+			router.push("/dispatcher/overview");
+		} else {
+			// For other roles, redirect to a default dashboard or login
+			// You can customize this based on your requirements
+			router.push("/dashboard");
+		}
+	}, [router]);
+
 	return (
 		<div className="flex items-center justify-center min-h-screen">
 			<div className="text-center">

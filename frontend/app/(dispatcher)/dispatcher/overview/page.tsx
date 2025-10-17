@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Card,
 	CardContent,
@@ -17,129 +17,41 @@ import {
 	CheckCircle,
 	TrendingUp,
 	Users,
+	Loader2,
+	Calendar,
 } from "lucide-react";
-
-const stats = [
-	{
-		title: "Pending Orders",
-		value: "24",
-		description: "Awaiting scheduling",
-		icon: Package,
-		color: "text-yellow-600 bg-yellow-100",
-		trend: "+12%",
-	},
-	{
-		title: "Train Shipments",
-		value: "8",
-		description: "Today's scheduled",
-		icon: Train,
-		color: "text-blue-600 bg-blue-100",
-		trend: "+5%",
-	},
-	{
-		title: "Truck Deliveries",
-		value: "15",
-		description: "In progress",
-		icon: Truck,
-		color: "text-green-600 bg-green-100",
-		trend: "-3%",
-	},
-	{
-		title: "Delivered Today",
-		value: "42",
-		description: "Successfully completed",
-		icon: CheckCircle,
-		color: "text-purple-600 bg-purple-100",
-		trend: "+18%",
-	},
-];
-
-const recentOrders = [
-	{
-		id: "ORD-001",
-		customer: "Colombo Wholesale Store",
-		route: "Colombo",
-		products: 5,
-		status: "pending",
-		priority: "high",
-		time: "10 mins ago",
-	},
-	{
-		id: "ORD-002",
-		customer: "Galle Retail Shop",
-		route: "Galle",
-		products: 3,
-		status: "scheduled",
-		priority: "medium",
-		time: "25 mins ago",
-	},
-	{
-		id: "ORD-003",
-		customer: "Negombo Market",
-		route: "Negombo",
-		products: 8,
-		status: "pending",
-		priority: "high",
-		time: "45 mins ago",
-	},
-	{
-		id: "ORD-004",
-		customer: "Matara Supermarket",
-		route: "Matara",
-		products: 2,
-		status: "in_transit",
-		priority: "low",
-		time: "1 hour ago",
-	},
-	{
-		id: "ORD-005",
-		customer: "Jaffna Store",
-		route: "Jaffna",
-		products: 12,
-		status: "pending",
-		priority: "high",
-		time: "2 hours ago",
-	},
-];
-
-const upcomingSchedule = [
-	{
-		type: "train",
-		id: "TRN-KDY-CMB-001",
-		route: "Kandy → Colombo",
-		departure: "14:30",
-		capacity: "85%",
-		status: "on_time",
-	},
-	{
-		type: "train",
-		id: "TRN-KDY-GLE-002",
-		route: "Kandy → Galle",
-		departure: "15:45",
-		capacity: "60%",
-		status: "on_time",
-	},
-	{
-		type: "truck",
-		id: "TRK-001",
-		route: "Route A - Colombo North",
-		departure: "16:00",
-		driver: "R. Silva",
-		status: "ready",
-	},
-	{
-		type: "truck",
-		id: "TRK-002",
-		route: "Route B - Colombo South",
-		departure: "16:30",
-		driver: "K. Perera",
-		status: "ready",
-	},
-];
+import { getScheduleOverview, getPendingOrders, type ScheduleOverview, type PendingOrder } from "@/lib/dispatcher-api";
 
 export default function OverviewPage() {
+	const [schedule, setSchedule] = useState<ScheduleOverview | null>(null);
+	const [pendingOrders, setPendingOrders] = useState<PendingOrder[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+
+	useEffect(() => {
+		fetchData();
+	}, []);
+
+	const fetchData = async () => {
+		try {
+			setLoading(true);
+			setError(null);
+			const [scheduleData, ordersData] = await Promise.all([
+				getScheduleOverview(),
+				getPendingOrders()
+			]);
+			setSchedule(scheduleData);
+			setPendingOrders(ordersData);
+		} catch (err: any) {
+			console.error("Error fetching data:", err);
+			setError(err?.message || "Failed to fetch data");
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	const getStatusBadge = (status: string) => {
-		const styles = {
+		const styles: Record<string, string> = {
 			pending: "bg-yellow-100 text-yellow-800",
 			scheduled: "bg-blue-100 text-blue-800",
 			in_transit: "bg-purple-100 text-purple-800",
@@ -147,18 +59,80 @@ export default function OverviewPage() {
 			on_time: "bg-green-100 text-green-800",
 			delayed: "bg-red-100 text-red-800",
 			ready: "bg-blue-100 text-blue-800",
+			Scheduled: "bg-blue-100 text-blue-800",
+			In_Progress: "bg-purple-100 text-purple-800",
 		};
 		return styles[status] || "bg-gray-100 text-gray-800";
 	};
 
 	const getPriorityBadge = (priority: string) => {
-		const styles = {
+		const styles: Record<string, string> = {
 			high: "bg-red-100 text-red-800",
 			medium: "bg-orange-100 text-orange-800",
 			low: "bg-gray-100 text-gray-800",
 		};
 		return styles[priority] || "bg-gray-100 text-gray-800";
 	};
+
+	if (loading) {
+		return (
+			<div className="flex items-center justify-center h-96">
+				<Loader2 className="h-8 w-8 animate-spin text-primary" />
+			</div>
+		);
+	}
+
+	if (error || !schedule) {
+		return (
+			<div className="space-y-6">
+				<div>
+					<h2 className="text-3xl font-bold tracking-tight">Overview</h2>
+				</div>
+				<Card>
+					<CardContent className="py-12">
+						<div className="text-center">
+							<AlertCircle className="h-12 w-12 mx-auto text-red-500 mb-4" />
+							<p className="text-lg font-medium mb-2">Error Loading Data</p>
+							<p className="text-muted-foreground">{error || "Failed to load overview"}</p>
+						</div>
+					</CardContent>
+				</Card>
+			</div>
+		);
+	}
+
+	const inProgressTruckTrips = schedule.truckTrips.filter(t => t.status === "In_Progress").length;
+
+	const stats = [
+		{
+			title: "Pending Orders",
+			value: pendingOrders.length.toString(),
+			description: "Awaiting scheduling",
+			icon: Package,
+			color: "text-yellow-600 bg-yellow-100",
+		},
+		{
+			title: "Train Shipments",
+			value: schedule.trainTrips.length.toString(),
+			description: "Scheduled trips",
+			icon: Train,
+			color: "text-blue-600 bg-blue-100",
+		},
+		{
+			title: "Truck Deliveries",
+			value: inProgressTruckTrips.toString(),
+			description: "In progress",
+			icon: Truck,
+			color: "text-green-600 bg-green-100",
+		},
+		{
+			title: "Total Truck Trips",
+			value: schedule.truckTrips.length.toString(),
+			description: "Scheduled deliveries",
+			icon: CheckCircle,
+			color: "text-purple-600 bg-purple-100",
+		},
+	];
 
 	return (
 		<div className="space-y-6">
@@ -186,15 +160,9 @@ export default function OverviewPage() {
 							</CardHeader>
 							<CardContent>
 								<div className="text-2xl font-bold">{stat.value}</div>
-								<div className="flex items-center justify-between">
-									<p className="text-xs text-muted-foreground">
-										{stat.description}
-									</p>
-									<span className="text-xs text-green-600 flex items-center gap-1">
-										<TrendingUp className="h-3 w-3" />
-										{stat.trend}
-									</span>
-								</div>
+								<p className="text-xs text-muted-foreground mt-1">
+									{stat.description}
+								</p>
 							</CardContent>
 						</Card>
 					);
@@ -205,52 +173,47 @@ export default function OverviewPage() {
 				{/* Recent Orders */}
 				<Card>
 					<CardHeader>
-						<CardTitle>Recent Orders</CardTitle>
+						<CardTitle>Recent Pending Orders</CardTitle>
 						<CardDescription>
-							Latest orders requiring your attention
+							Latest orders awaiting scheduling
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<div className="space-y-4">
-							{recentOrders.map((order, index) => (
+							{pendingOrders.slice(0, 5).map((order) => (
 								<div
-									key={index}
+									key={order.orderId}
 									className="flex items-center justify-between p-4 rounded-lg border hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
 								>
 									<div className="flex-1 space-y-1">
 										<div className="flex items-center gap-2">
-											<span className="font-medium">{order.id}</span>
-											<span
-												className={`px-2 py-0.5 rounded text-xs font-medium ${getPriorityBadge(
-													order.priority
-												)}`}
-											>
-												{order.priority}
-											</span>
+											<span className="font-medium">{order.orderId}</span>
 										</div>
 										<p className="text-sm text-muted-foreground">
-											{order.customer} • {order.route}
+											{order.customerName} • {order.destinationCity}
 										</p>
 										<div className="flex items-center gap-4 text-xs text-muted-foreground">
 											<span className="flex items-center gap-1">
 												<Package className="h-3 w-3" />
-												{order.products} products
+												{order.totalSpaceUnits.toFixed(1)} units
 											</span>
 											<span className="flex items-center gap-1">
 												<Clock className="h-3 w-3" />
-												{order.time}
+												Due: {order.requiredDeliveryDate}
 											</span>
 										</div>
 									</div>
-									<span
-										className={`px-2.5 py-1 rounded-full text-xs font-medium ${getStatusBadge(
-											order.status
-										)}`}
-									>
-										{order.status.replace("_", " ")}
+									<span className="px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+										Pending
 									</span>
 								</div>
 							))}
+							{pendingOrders.length === 0 && (
+								<div className="text-center py-8">
+									<Package className="h-8 w-8 mx-auto text-muted-foreground" />
+									<p className="mt-2 text-sm text-muted-foreground">No pending orders</p>
+								</div>
+							)}
 						</div>
 					</CardContent>
 				</Card>
@@ -265,50 +228,78 @@ export default function OverviewPage() {
 					</CardHeader>
 					<CardContent>
 						<div className="space-y-4">
-							{upcomingSchedule.map((schedule, index) => (
+							{schedule.trainTrips.slice(0, 3).map((trip) => (
 								<div
-									key={index}
+									key={trip.trainTripId}
 									className="flex items-center justify-between p-4 rounded-lg border hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
 								>
 									<div className="flex items-center gap-3">
-										{schedule.type === "train" ? (
-											<div className="rounded-full bg-blue-100 p-2 text-blue-600">
-												<Train className="h-4 w-4" />
-											</div>
-										) : (
-											<div className="rounded-full bg-green-100 p-2 text-green-600">
-												<Truck className="h-4 w-4" />
-											</div>
-										)}
+										<div className="rounded-full bg-blue-100 p-2 text-blue-600">
+											<Train className="h-4 w-4" />
+										</div>
 										<div className="space-y-1">
-											<p className="font-medium">{schedule.id}</p>
+											<p className="font-medium">{trip.trainName}</p>
 											<p className="text-sm text-muted-foreground">
-												{schedule.route}
+												{trip.toCity}
 											</p>
-											{schedule.type === "train" && (
-												<p className="text-xs text-muted-foreground">
-													Capacity: {schedule.capacity}
-												</p>
-											)}
-											{schedule.type === "truck" && schedule.driver && (
-												<p className="text-xs text-muted-foreground">
-													Driver: {schedule.driver}
-												</p>
-											)}
+											<p className="text-xs text-muted-foreground">
+												{trip.shipmentCount} shipments
+											</p>
 										</div>
 									</div>
 									<div className="text-right space-y-1">
-										<p className="font-medium">{schedule.departure}</p>
+										<p className="font-medium text-sm">
+											{new Date(trip.scheduledDeparture).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+										</p>
 										<span
 											className={`px-2 py-0.5 rounded-full text-xs font-medium ${getStatusBadge(
-												schedule.status
+												trip.status
 											)}`}
 										>
-											{schedule.status.replace("_", " ")}
+											{trip.status}
 										</span>
 									</div>
 								</div>
 							))}
+							{schedule.truckTrips.slice(0, 2).map((trip) => (
+								<div
+									key={trip.truckTripId}
+									className="flex items-center justify-between p-4 rounded-lg border hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+								>
+									<div className="flex items-center gap-3">
+										<div className="rounded-full bg-green-100 p-2 text-green-600">
+											<Truck className="h-4 w-4" />
+										</div>
+										<div className="space-y-1">
+											<p className="font-medium">{trip.vehicleNo}</p>
+											<p className="text-sm text-muted-foreground">
+												{trip.routeName}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												Driver: {trip.driverName}
+											</p>
+										</div>
+									</div>
+									<div className="text-right space-y-1">
+										<p className="font-medium text-sm">
+											{new Date(trip.scheduledStart).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+										</p>
+										<span
+											className={`px-2 py-0.5 rounded-full text-xs font-medium ${getStatusBadge(
+												trip.status
+											)}`}
+										>
+											{trip.status.replace("_", " ")}
+										</span>
+									</div>
+								</div>
+							))}
+							{schedule.trainTrips.length === 0 && schedule.truckTrips.length === 0 && (
+								<div className="text-center py-8">
+									<Calendar className="h-8 w-8 mx-auto text-muted-foreground" />
+									<p className="mt-2 text-sm text-muted-foreground">No scheduled trips</p>
+								</div>
+							)}
 						</div>
 					</CardContent>
 				</Card>
