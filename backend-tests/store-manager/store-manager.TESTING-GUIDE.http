@@ -1,0 +1,249 @@
+###############################################################################
+# STORE MANAGER API TESTING GUIDE
+###############################################################################
+# Base URL: http://localhost:2000
+# 
+# Prerequisites:
+# 1. Backend server running on port 2000
+# 2. Database with sample data loaded (7-sample-data.sql)
+# 3. Valid JWT token from login
+#
+# Test User Credentials:
+# Username: manager2
+# Password: password123
+# Role: Worker (Store_Manager)
+# Manages: Colombo Central Store (store-cmb-01)
+###############################################################################
+
+### STEP 1: Login as Store Manager
+POST http://localhost:2000/api/auth/sign-in
+Content-Type: application/json
+
+{
+  "username": "manager2",
+  "password": "password123"
+}
+
+# Response will contain:
+# {
+#   "username": "manager2",
+#   "role": "Worker",
+#   "workerType": "Store_Manager",
+#   "token": "eyJhbGc..."
+# }
+# 
+# Copy the token value and use it in the Authorization header below
+# Replace YOUR_JWT_TOKEN_HERE with the actual token
+
+###############################################################################
+# ENDPOINT 1: GET INCOMING DELIVERIES
+###############################################################################
+# Description: Retrieves shipments on trains arriving at the manager's store
+# Expected: 2 shipments arriving on trains from Kandy to Colombo
+
+### Get Incoming Deliveries
+GET http://localhost:2000/api/stores/incoming-deliveries
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+# Expected Response:
+# [
+#   {
+#     "shipmentId": "ship-incoming-001",
+#     "trainTripId": "tt-kdy-cmb-001",
+#     "trainName": "Udarata Menike",
+#     "fromCity": "Kandy",
+#     "scheduledArrival": "2025-10-...",
+#     "orderCount": 1,
+#     "totalUnits": 45.5
+#   },
+#   {
+#     "shipmentId": "ship-incoming-002",
+#     "trainTripId": "tt-kdy-cmb-002",
+#     "trainName": "Udarata Menike",
+#     "fromCity": "Kandy",
+#     "scheduledArrival": "2025-10-...",
+#     "orderCount": 1,
+#     "totalUnits": 65.0
+#   }
+# ]
+
+###############################################################################
+# ENDPOINT 2: GET SCHEDULED DEPARTURES
+###############################################################################
+# Description: Retrieves truck trips scheduled to depart from the manager's store
+# Expected: 2 scheduled truck trips
+
+### Get Scheduled Departures
+GET http://localhost:2000/api/truck-trips/scheduled-departures
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+# Expected Response:
+# [
+#   {
+#     "truckTripId": "trip-scheduled-001",
+#     "vehicleNo": "CBA-1234",
+#     "routeName": "Colombo Fort Area",
+#     "driverName": "Test Driver",
+#     "assistantName": "Test Assistant",
+#     "scheduledStart": "2025-10-...",
+#     "status": "Scheduled"
+#   },
+#   {
+#     "truckTripId": "trip-scheduled-002",
+#     "vehicleNo": "CP-5678",
+#     "routeName": "Colombo South",
+#     "driverName": "Second Driver",
+#     "assistantName": "Second Assistant",
+#     "scheduledStart": "2025-10-...",
+#     "status": "Scheduled"
+#   }
+# ]
+
+###############################################################################
+# ENDPOINT 3: DISPATCH TRUCK TRIP
+###############################################################################
+# Description: Marks a scheduled truck trip as dispatched (In_Progress)
+# This calls the start_truck_trip stored procedure
+
+### Dispatch First Truck Trip
+POST http://localhost:2000/api/truck-trips/trip-scheduled-001/dispatch
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+# Expected Response:
+# {
+#   "truckTripId": "trip-scheduled-001",
+#   "status": "In_Progress",
+#   "actualStart": "2025-10-17T...",
+#   "message": "Truck trip for vehicle CBA-1234 has been dispatched."
+# }
+
+###############################################################################
+# ENDPOINT 4: GET IN-PROGRESS TRIPS
+###############################################################################
+# Description: Retrieves all truck trips currently in progress
+# Expected: Shows the trip we just dispatched plus any existing in-progress trips
+
+### Get In-Progress Trips
+GET http://localhost:2000/api/truck-trips/in-progress
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+# Expected Response (includes the trip we just dispatched):
+# [
+#   {
+#     "truckTripId": "trip-scheduled-001",
+#     "vehicleNo": "CBA-1234",
+#     "driverName": "Test Driver",
+#     "actualStart": "2025-10-17T...",
+#     "status": "In_Progress"
+#   },
+#   {
+#     "truckTripId": "trip-in-progress-001",
+#     "vehicleNo": "WP-9012",
+#     "driverName": "Test Driver",
+#     "actualStart": "2025-10-17T...",
+#     "status": "In_Progress"
+#   }
+# ]
+
+###############################################################################
+# ENDPOINT 5: COMPLETE TRUCK TRIP
+###############################################################################
+# Description: Marks an in-progress trip as completed
+# This calls the complete_truck_trip stored procedure which:
+# - Updates trip status to Completed
+# - Logs worker hours in Worker_Record
+# - Marks workers as Free
+
+### Complete Truck Trip
+POST http://localhost:2000/api/truck-trips/trip-in-progress-001/complete
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+# Expected Response:
+# {
+#   "truckTripId": "trip-in-progress-001",
+#   "status": "Completed",
+#   "actualEnd": "2025-10-17T...",
+#   "message": "Trip completed. Worker hours have been logged."
+# }
+
+###############################################################################
+# ERROR CASES TO TEST
+###############################################################################
+
+### Test 1: Unauthorized Access (No Token)
+GET http://localhost:2000/api/stores/incoming-deliveries
+
+# Expected: 401 Unauthorized
+
+### Test 2: Wrong Role (Login as Dispatcher instead)
+# First login as dispatcher
+POST http://localhost:2000/api/auth/sign-in
+Content-Type: application/json
+
+{
+  "username": "dispatcher1",
+  "password": "password123"
+}
+
+### Then try to access Store Manager endpoint with dispatcher token
+GET http://localhost:2000/api/stores/incoming-deliveries
+Authorization: Bearer DISPATCHER_JWT_TOKEN_HERE
+
+# Expected: 403 Forbidden
+# Response: { "error": "Access denied. Store_Manager role required." }
+
+### Test 3: Dispatch a Trip That Doesn't Belong to Your Store
+POST http://localhost:2000/api/truck-trips/non-existent-trip/dispatch
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+# Expected: 404 Not Found
+# Response: { "error": "Truck trip not found or does not belong to your store" }
+
+### Test 4: Complete a Trip That's Not In Progress
+POST http://localhost:2000/api/truck-trips/trip-scheduled-002/complete
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+# Expected: 400 Bad Request
+# Response: { "error": "Trip is not in In_Progress status" }
+
+###############################################################################
+# VERIFICATION QUERIES (Run in PostgreSQL)
+###############################################################################
+
+# -- Check Store Manager's store
+# SELECT s.id, s.name, s.city_id, sm.id as manager_id, u.username
+# FROM Store s
+# JOIN Store_Manager sm ON s.managed_by = sm.id
+# JOIN "User" u ON sm.id = u.id
+# WHERE u.username = 'manager2';
+
+# -- Check incoming shipments for Colombo
+# SELECT s.id, tt.id as train_trip_id, t.name, c1.name as from_city, 
+#        tt.scheduled_arrival, s.allocated_space_units
+# FROM Shipment s
+# JOIN Train_Trip tt ON s.train_trip_id = tt.id
+# JOIN Train t ON tt.train_id = t.id
+# JOIN City c1 ON tt.from_city_id = c1.id
+# WHERE tt.to_city_id = 'city-cmb'
+# AND tt.scheduled_arrival > NOW();
+
+# -- Check scheduled truck trips from Colombo store
+# SELECT tt.id, tr.vehicle_no, r.name as route, 
+#        u_driver.name as driver, tt.status, tt.scheduled_start
+# FROM Truck_Trip tt
+# JOIN Truck tr ON tt.truck_id = tr.id
+# JOIN Route r ON tt.route_id = r.id
+# JOIN Worker w ON tt.driver_id = w.id
+# JOIN "User" u_driver ON w.id = u_driver.id
+# LEFT JOIN Shipment s ON tt.shipment_id = s.id
+# LEFT JOIN "Order" o ON s.order_id = o.id
+# WHERE o.store_id = 'store-cmb-01'
+# AND tt.status = 'Scheduled';
+
+# -- Check worker records after completing a trip
+# SELECT wr.*, u.name as worker_name, w.type as worker_type
+# FROM Worker_Record wr
+# JOIN Worker w ON wr.worker_id = w.id
+# JOIN "User" u ON w.id = u.id
+# ORDER BY wr.created_at DESC
+# LIMIT 5;

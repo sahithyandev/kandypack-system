@@ -105,4 +105,9 @@ export const requireWorkerType = (requiredType: string) => {
  */
 export const requireDispatcher = requireWorkerType("Dispatcher");
 
+/**
+ * Store Manager-specific authentication handler
+ */
+export const requireStoreManager = requireWorkerType("Store_Manager");
+
 export default authMiddleware;

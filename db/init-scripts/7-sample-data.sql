@@ -267,6 +267,103 @@ INSERT INTO Shipment (id, order_id, train_trip_id, allocated_space_units, shippe
 ON CONFLICT (id) DO NOTHING;
 
 -- ============================================================================
+-- 15. STORE MANAGER TEST DATA
+-- ============================================================================
+
+-- Add more workers for testing
+INSERT INTO "User" (id, username, name, password, role) VALUES
+('driver-002', 'driver2', 'Second Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+('assistant-002', 'assistant2', 'Second Assistant', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO Worker (id, type, hourly_pay, status, weekly_hours) VALUES
+('driver-002', 'Driver', 1500.00, 'Free', 0),
+('assistant-002', 'Assistant', 1200.00, 'Free', 0)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO Driver (id, consecutive_deliveries) VALUES
+('driver-002', 0)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO Assistant (id, consecutive_routes) VALUES
+('assistant-002', 0)
+ON CONFLICT (id) DO NOTHING;
+
+-- Create shipments arriving at Colombo store (for incoming deliveries endpoint)
+INSERT INTO Shipment (id, order_id, train_trip_id, allocated_space_units, shipped_quantity, status, shipped_at) VALUES
+('ship-incoming-001', 'ord-pending-001', 'tt-kdy-cmb-001', 45.5, 1, 'In_Transit', NULL),
+('ship-incoming-002', 'ord-pending-002', 'tt-kdy-cmb-002', 65.0, 1, 'In_Transit', NULL)
+ON CONFLICT (id) DO NOTHING;
+
+-- Update order status to In_Train_Transit for the shipments
+UPDATE "Order" SET status = 'In_Train_Transit' WHERE id IN ('ord-pending-001', 'ord-pending-002');
+
+-- Create more At_Store orders for truck scheduling
+INSERT INTO "Order" (id, store_id, customer_id, delivery_address, route_id, placed_on, required_delivery_date, status, total_value, total_space_units) VALUES
+('ord-at-store-002', 'store-cmb-01', '0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 
+    'Arpico Supercenter, Colombo 05', 'route-cmb-01', 
+    CURRENT_TIMESTAMP - INTERVAL '2 days', 
+    CURRENT_DATE + INTERVAL '8 days', 
+    'At_Store', 7500.00, 40.0)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO Order_Item (id, order_id, product_id, quantity) VALUES
+('oi-at-store-03', 'ord-at-store-002', 'prod-001', 25),
+('oi-at-store-04', 'ord-at-store-002', 'prod-002', 35)
+ON CONFLICT (id) DO NOTHING;
+
+-- Create shipment for second at-store order
+INSERT INTO Shipment (id, order_id, train_trip_id, allocated_space_units, shipped_quantity, status, shipped_at) VALUES
+('ship-at-store-002', 'ord-at-store-002', 'tt-kdy-cmb-001', 40.0, 1, 'Delivered', CURRENT_TIMESTAMP - INTERVAL '6 hours')
+ON CONFLICT (id) DO NOTHING;
+
+-- Create third at-store order for in-progress trip test
+INSERT INTO "Order" (id, store_id, customer_id, delivery_address, route_id, placed_on, required_delivery_date, status, total_value, total_space_units) VALUES
+('ord-at-store-003', 'store-cmb-01', '0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 
+    'Laugfs Supermarket, Colombo 04', 'route-cmb-01', 
+    CURRENT_TIMESTAMP - INTERVAL '1 day', 
+    CURRENT_DATE + INTERVAL '9 days', 
+    'At_Store', 6200.00, 32.0)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO Order_Item (id, order_id, product_id, quantity) VALUES
+('oi-at-store-05', 'ord-at-store-003', 'prod-003', 40),
+('oi-at-store-06', 'ord-at-store-003', 'prod-006', 50)
+ON CONFLICT (id) DO NOTHING;
+
+-- Create shipment for third at-store order (for in-progress trip)
+INSERT INTO Shipment (id, order_id, train_trip_id, allocated_space_units, shipped_quantity, status, shipped_at) VALUES
+('ship-at-store-003', 'ord-at-store-003', 'tt-kdy-cmb-002', 32.0, 1, 'Delivered', CURRENT_TIMESTAMP - INTERVAL '4 hours')
+ON CONFLICT (id) DO NOTHING;
+
+-- Create scheduled truck trips (for scheduled departures endpoint)
+INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, status) VALUES
+('trip-scheduled-001', 'truck-001', 'route-cmb-01', '0199e825-7df3-7000-ab6f-71669cef9383', '0199e824-f514-7000-87e6-1bf03af11985', 
+    'ship-at-store-001', 
+    CURRENT_TIMESTAMP + INTERVAL '2 hours', 
+    CURRENT_TIMESTAMP + INTERVAL '6 hours', 
+    'Scheduled'),
+('trip-scheduled-002', 'truck-002', 'route-cmb-02', 'driver-002', 'assistant-002', 
+    'ship-at-store-002', 
+    CURRENT_TIMESTAMP + INTERVAL '4 hours', 
+    CURRENT_TIMESTAMP + INTERVAL '9 hours', 
+    'Scheduled')
+ON CONFLICT (id) DO NOTHING;
+
+-- Create an in-progress truck trip (for in-progress and complete endpoints)
+INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, actual_start, status) VALUES
+('trip-in-progress-001', 'truck-003', 'route-cmb-01', 'driver-002', NULL, 
+    'ship-at-store-003', 
+    CURRENT_TIMESTAMP - INTERVAL '1 hour', 
+    CURRENT_TIMESTAMP + INTERVAL '3 hours',
+    CURRENT_TIMESTAMP - INTERVAL '1 hour', 
+    'In_Progress')
+ON CONFLICT (id) DO NOTHING;
+
+-- Mark the driver as Busy for the in-progress trip
+UPDATE Worker SET status = 'Busy' WHERE id = 'driver-002';
+
+-- ============================================================================
 -- VERIFICATION QUERIES (For testing)
 -- ============================================================================
 -- Uncomment these to verify data after running the script
@@ -284,12 +381,15 @@ ON CONFLICT (id) DO NOTHING;
 -- - 6 Cities
 -- - 4 Routes with stops
 -- - 8 Products
--- - 3 Stores (1 managed by test store manager)
+-- - 3 Stores (1 managed by test store manager: Colombo Central Store)
 -- - 1 Customer
--- - 4 Workers (1 Dispatcher, 1 Driver, 1 Assistant, 1 Store Manager)
+-- - 6 Workers (1 Dispatcher, 2 Drivers, 2 Assistants, 1 Store Manager)
 -- - 3 Trains
 -- - 3 Trucks
 -- - 4 Future train trips
--- - 4 Pending orders (ready for dispatcher to schedule)
--- - 1 At_Store order (ready for truck scheduling)
+-- - 2 Pending orders (ready for dispatcher to schedule)
+-- - 3 At_Store orders with shipments (for truck trip testing)
+-- - 2 Scheduled truck trips (for dispatch testing)
+-- - 1 In-Progress truck trip (for completion testing)
+-- - 2 In-Transit shipments arriving at Colombo (for incoming deliveries testing)
 -- ============================================================================
