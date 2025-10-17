@@ -37,7 +37,15 @@ INSERT INTO "User" (id, username, name, password, role) VALUES
 ('0199e825-7df3-7000-ab6f-71669cef9383', 'driver1', 'Test Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('0199e824-f514-7000-87e6-1bf03af11985', 'assistant1', 'Test Assistant', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('0199e7bd-d5f8-7000-9fd6-f2a853034f88', 'dispatcher1', 'Test Dispatcher', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker')
+('driver-002', 'driver2', 'Second Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+('driver-003', 'driver3', 'Third Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+('driver-004', 'driver4', 'Fourth Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+('driver-005', 'driver5', 'Fifth Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+('assistant-002', 'assistant2', 'Second Assistant', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+('assistant-003', 'assistant3', 'Third Assistant', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+('assistant-004', 'assistant4', 'Fourth Assistant', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker')
 ON CONFLICT (id) DO NOTHING;
+
 -- ============================================================================
 -- 1. CITIES
 -- ============================================================================
@@ -82,6 +90,10 @@ INSERT INTO Product (id, name, unit_price, space_consumption_rate) VALUES
 ('prod-006', 'Tea 200g', 420.00, 0.5),
 ('prod-007', 'Biscuits Pack', 250.00, 0.6),
 ('prod-008', 'Soap Bar', 120.00, 0.3)
+('prod-det-01', 'Sunlight Soap 100g', 80.00, 0.2),
+('prod-bev-01', 'Coca-Cola 500ml', 150.00, 0.5),
+('prod-snk-01', 'Potato Chips 100g', 200.00, 0.4),
+('prod-snk-02', 'Chocolate Bar', 250.00, 0.3)
 ON CONFLICT (id) DO NOTHING;
 
 -- ============================================================================
@@ -95,25 +107,35 @@ ON CONFLICT (id) DO NOTHING;
 -- Driver
 INSERT INTO Worker (id, type, hourly_pay, status, weekly_hours) VALUES
 ('0199e825-7df3-7000-ab6f-71669cef9383', 'Driver', 1500.00, 'Free', 0)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE SET status = 'Free', weekly_hours = 0;
 
 INSERT INTO Driver (id, consecutive_deliveries) VALUES
 ('0199e825-7df3-7000-ab6f-71669cef9383', 0)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE SET consecutive_deliveries = 0;
 
 -- Assistant
 INSERT INTO Worker (id, type, hourly_pay, status, weekly_hours) VALUES
 ('0199e824-f514-7000-87e6-1bf03af11985', 'Assistant', 1200.00, 'Free', 0)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE SET status = 'Free', weekly_hours = 0;
 
 INSERT INTO Assistant (id, consecutive_routes) VALUES
 ('0199e824-f514-7000-87e6-1bf03af11985', 0)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE SET consecutive_routes = 0;
 
 -- Manager
 INSERT INTO Worker (id, type, hourly_pay, status, weekly_hours) VALUES
 ('0199e825-4ae5-7000-9d86-8be81708d4f1', 'Store_Manager', 2500.00, 'Free', 0)
 ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO Worker (id, type, hourly_pay, status, weekly_hours) VALUES
+('driver-002', 'Driver', 1500.00, 'Free', 0),
+('driver-003', 'Driver', 1500.00, 'Free', 0),
+('driver-004', 'Driver', 1500.00, 'Free', 0),
+('driver-005', 'Driver', 1500.00, 'Free', 0),
+('assistant-002', 'Assistant', 1200.00, 'Free', 0),
+('assistant-003', 'Assistant', 1200.00, 'Free', 0),
+('assistant-004', 'Assistant', 1200.00, 'Free', 0)
+ON CONFLICT (id) DO UPDATE SET status = 'Free', weekly_hours = 0;
 
 
 -- ============================================================================
@@ -135,6 +157,8 @@ ON CONFLICT (id) DO NOTHING;
 -- ============================================================================
 INSERT INTO Customer (id, type, street_name, city, postal_code, phone_no) VALUES
 ('0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 'Wholesale', 'Main Street', 'Colombo', '00100', '+94771234567')
+('cust-retail-001', 'Retail', '45 Main Street', 'Matara', '81000', '+94771112222'),
+('cust-wholesale-001', 'Wholesale', '123 Galle Road', 'Galle', '80000', '+94773334444')
 ON CONFLICT (id) DO NOTHING;
 
 -- ============================================================================
@@ -270,24 +294,18 @@ ON CONFLICT (id) DO NOTHING;
 -- 15. STORE MANAGER TEST DATA
 -- ============================================================================
 
--- Add more workers for testing
-INSERT INTO "User" (id, username, name, password, role) VALUES
-('driver-002', 'driver2', 'Second Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
-('assistant-002', 'assistant2', 'Second Assistant', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker')
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO Worker (id, type, hourly_pay, status, weekly_hours) VALUES
-('driver-002', 'Driver', 1500.00, 'Free', 0),
-('assistant-002', 'Assistant', 1200.00, 'Free', 0)
-ON CONFLICT (id) DO NOTHING;
-
 INSERT INTO Driver (id, consecutive_deliveries) VALUES
-('driver-002', 0)
-ON CONFLICT (id) DO NOTHING;
+('driver-002', 0),
+('driver-003', 0),
+('driver-004', 0),
+('driver-005', 0)
+ON CONFLICT (id) DO UPDATE SET consecutive_deliveries = 0;
 
 INSERT INTO Assistant (id, consecutive_routes) VALUES
-('assistant-002', 0)
-ON CONFLICT (id) DO NOTHING;
+('assistant-002', 0),
+('assistant-003', 0),
+('assistant-004', 0)
+ON CONFLICT (id) DO UPDATE SET consecutive_routes = 0;
 
 -- Create shipments arriving at Colombo store (for incoming deliveries endpoint)
 INSERT INTO Shipment (id, order_id, train_trip_id, allocated_space_units, shipped_quantity, status, shipped_at) VALUES
@@ -336,33 +354,6 @@ INSERT INTO Shipment (id, order_id, train_trip_id, allocated_space_units, shippe
 ('ship-at-store-003', 'ord-at-store-003', 'tt-kdy-cmb-002', 32.0, 1, 'Delivered', CURRENT_TIMESTAMP - INTERVAL '4 hours')
 ON CONFLICT (id) DO NOTHING;
 
--- Create scheduled truck trips (for scheduled departures endpoint)
-INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, status) VALUES
-('trip-scheduled-001', 'truck-001', 'route-cmb-01', '0199e825-7df3-7000-ab6f-71669cef9383', '0199e824-f514-7000-87e6-1bf03af11985', 
-    'ship-at-store-001', 
-    CURRENT_TIMESTAMP + INTERVAL '2 hours', 
-    CURRENT_TIMESTAMP + INTERVAL '6 hours', 
-    'Scheduled'),
-('trip-scheduled-002', 'truck-002', 'route-cmb-02', 'driver-002', 'assistant-002', 
-    'ship-at-store-002', 
-    CURRENT_TIMESTAMP + INTERVAL '4 hours', 
-    CURRENT_TIMESTAMP + INTERVAL '9 hours', 
-    'Scheduled')
-ON CONFLICT (id) DO NOTHING;
-
--- Create an in-progress truck trip (for in-progress and complete endpoints)
-INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, actual_start, status) VALUES
-('trip-in-progress-001', 'truck-003', 'route-cmb-01', 'driver-002', NULL, 
-    'ship-at-store-003', 
-    CURRENT_TIMESTAMP - INTERVAL '1 hour', 
-    CURRENT_TIMESTAMP + INTERVAL '3 hours',
-    CURRENT_TIMESTAMP - INTERVAL '1 hour', 
-    'In_Progress')
-ON CONFLICT (id) DO NOTHING;
-
--- Mark the driver as Busy for the in-progress trip
-UPDATE Worker SET status = 'Busy' WHERE id = 'driver-002';
-
 -- ============================================================================
 -- VERIFICATION QUERIES (For testing)
 -- ============================================================================
@@ -375,21 +366,183 @@ UPDATE Worker SET status = 'Busy' WHERE id = 'driver-002';
 -- SELECT * FROM Truck;
 
 -- ============================================================================
+-- 16. ADDITIONAL CUSTOMER PORTAL TEST DATA
+-- ============================================================================
+
+-- Add more customer users with different types
+INSERT INTO "User" (id, username, name, password, role) VALUES
+('cust-retail-001', 'retailcust1', 'Small Retail Shop', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Customer'),
+('cust-wholesale-001', 'wholesalecust1', 'Mega Wholesale Center', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Customer')
+ON CONFLICT (id) DO NOTHING;
+
+-- Create completed orders for customer1 to test order history
+-- Order 1: Fully delivered order
+INSERT INTO "Order" (id, store_id, customer_id, delivery_address, route_id, placed_on, required_delivery_date, status, total_value, total_space_units) VALUES
+('ord-delivered-001', 'store-cmb-01', '0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 
+    'Sathosa Head Office, Colombo 02', 'route-cmb-01', 
+    CURRENT_TIMESTAMP - INTERVAL '20 days', 
+    CURRENT_TIMESTAMP - INTERVAL '5 days', 
+    'Delivered', 50000.00, 220.0)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO Order_Item (id, order_id, product_id, quantity) VALUES
+('oi-del-001-01', 'ord-delivered-001', 'prod-det-01', 200),  -- Sunlight Soap
+('oi-del-001-02', 'ord-delivered-001', 'prod-bev-01', 150),  -- Coca-Cola
+('oi-del-001-03', 'ord-delivered-001', 'prod-001', 50)       -- Rice
+ON CONFLICT (id) DO NOTHING;
+
+-- Create shipment for delivered order (to show status history)
+INSERT INTO Shipment (id, order_id, train_trip_id, allocated_space_units, shipped_quantity, status, shipped_at) VALUES
+('ship-delivered-001', 'ord-delivered-001', 'tt-kdy-cmb-001', 220.0, 1, 'Delivered', CURRENT_TIMESTAMP - INTERVAL '15 days')
+ON CONFLICT (id) DO NOTHING;
+
+-- Note: Truck trip for delivered order is created later in section 17
+
+-- Order 2: Currently in truck transit
+INSERT INTO "Order" (id, store_id, customer_id, delivery_address, route_id, placed_on, required_delivery_date, status, total_value, total_space_units) VALUES
+('ord-in-transit-001', 'store-cmb-01', '0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 
+    'Keells Super, Galle Road, Colombo 03', 'route-cmb-02', 
+    CURRENT_TIMESTAMP - INTERVAL '10 days', 
+    CURRENT_DATE + INTERVAL '2 days', 
+    'In_Truck_Transit', 30000.00, 150.0)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO Order_Item (id, order_id, product_id, quantity) VALUES
+('oi-transit-001-01', 'ord-in-transit-001', 'prod-001', 100),  -- Rice
+('oi-transit-001-02', 'ord-in-transit-001', 'prod-002', 80),   -- Sugar
+('oi-transit-001-03', 'ord-in-transit-001', 'prod-005', 50)    -- Cooking Oil
+ON CONFLICT (id) DO NOTHING;
+
+-- Create shipment for in-transit order
+INSERT INTO Shipment (id, order_id, train_trip_id, allocated_space_units, shipped_quantity, status, shipped_at) VALUES
+('ship-in-transit-001', 'ord-in-transit-001', 'tt-kdy-cmb-002', 150.0, 1, 'Delivered', CURRENT_TIMESTAMP - INTERVAL '3 days')
+ON CONFLICT (id) DO NOTHING;
+
+-- Note: Truck trip for in-transit order is created later in section 17
+
+-- Orders for other customers to test
+INSERT INTO "Order" (id, store_id, customer_id, delivery_address, route_id, placed_on, required_delivery_date, status, total_value, total_space_units) VALUES
+-- Retail customer order
+('ord-retail-001', 'store-gal-01', 'cust-retail-001', 
+    '45, Main Street, Matara', 'route-gal-01', 
+    CURRENT_TIMESTAMP - INTERVAL '3 days', 
+    CURRENT_DATE + INTERVAL '10 days', 
+    'Pending', 15000.00, 75.0),
+-- Wholesale customer order
+('ord-wholesale-001', 'store-gal-01', 'cust-wholesale-001', 
+    '123 Galle Road, Galle', 'route-gal-01', 
+    CURRENT_TIMESTAMP - INTERVAL '1 day', 
+    CURRENT_DATE + INTERVAL '12 days', 
+    'Pending', 45000.00, 200.0)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO Order_Item (id, order_id, product_id, quantity) VALUES
+-- Retail order items
+('oi-retail-001-01', 'ord-retail-001', 'prod-det-01', 500),
+('oi-retail-001-02', 'ord-retail-001', 'prod-snk-02', 250),
+-- Wholesale order items
+('oi-wholesale-001-01', 'ord-wholesale-001', 'prod-001', 200),
+('oi-wholesale-001-02', 'ord-wholesale-001', 'prod-002', 150),
+('oi-wholesale-001-03', 'ord-wholesale-001', 'prod-003', 180),
+('oi-wholesale-001-04', 'ord-wholesale-001', 'prod-005', 100)
+ON CONFLICT (id) DO NOTHING;
+
+-- Update order summaries
+CALL update_order_summary('ord-delivered-001');
+CALL update_order_summary('ord-in-transit-001');
+CALL update_order_summary('ord-retail-001');
+CALL update_order_summary('ord-wholesale-001');
+
+-- ============================================================================
+-- 17. TRUCK TRIPS (Insert in chronological order: completed -> scheduled -> in-progress)
+-- Each trip uses different workers to avoid conflicts
+-- ============================================================================
+
+-- COMPLETED HISTORICAL TRIPS (Insert first to avoid worker status conflicts)
+-- Truck trip for delivered order (completed 6 days ago) - driver1 + assistant1
+INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, actual_start, actual_end, status) VALUES
+('trip-delivered-001', 'truck-001', 'route-cmb-01', '0199e825-7df3-7000-ab6f-71669cef9383', '0199e824-f514-7000-87e6-1bf03af11985', 
+    'ship-delivered-001', 
+    CURRENT_TIMESTAMP - INTERVAL '6 days', 
+    CURRENT_TIMESTAMP - INTERVAL '6 days' + INTERVAL '4 hours',
+    CURRENT_TIMESTAMP - INTERVAL '6 days',
+    CURRENT_TIMESTAMP - INTERVAL '6 days' + INTERVAL '3 hours 45 minutes',
+    'Completed')
+ON CONFLICT (id) DO NOTHING;
+
+-- SCHEDULED TRIPS (Future trips - each uses different workers)
+-- Scheduled trip 1: driver-002 + assistant-002
+INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, status) VALUES
+('trip-scheduled-001', 'truck-001', 'route-cmb-01', 'driver-002', 'assistant-002', 
+    'ship-at-store-001', 
+    CURRENT_TIMESTAMP + INTERVAL '2 hours', 
+    CURRENT_TIMESTAMP + INTERVAL '6 hours', 
+    'Scheduled'),
+-- Scheduled trip 2: driver-003 + assistant-003
+('trip-scheduled-002', 'truck-002', 'route-cmb-02', 'driver-003', 'assistant-003', 
+    'ship-at-store-002', 
+    CURRENT_TIMESTAMP + INTERVAL '4 hours', 
+    CURRENT_TIMESTAMP + INTERVAL '9 hours', 
+    'Scheduled')
+ON CONFLICT (id) DO NOTHING;
+
+-- IN-PROGRESS TRIPS (Currently active - each uses different workers)
+-- In-progress trip 1 (for customer portal testing): driver-004 + assistant-004
+INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, actual_start, status) VALUES
+('trip-in-transit-001', 'truck-002', 'route-cmb-02', 'driver-004', 'assistant-004', 
+    'ship-in-transit-001', 
+    CURRENT_TIMESTAMP - INTERVAL '2 hours', 
+    CURRENT_TIMESTAMP + INTERVAL '2 hours',
+    CURRENT_TIMESTAMP - INTERVAL '2 hours',
+    'In_Progress')
+ON CONFLICT (id) DO NOTHING;
+
+-- In-progress trip 2 (for store manager testing): driver-005 (no assistant)
+INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, actual_start, status) VALUES
+('trip-in-progress-001', 'truck-003', 'route-cmb-01', 'driver-005', NULL, 
+    'ship-at-store-003', 
+    CURRENT_TIMESTAMP - INTERVAL '1 hour', 
+    CURRENT_TIMESTAMP + INTERVAL '3 hours',
+    CURRENT_TIMESTAMP - INTERVAL '1 hour', 
+    'In_Progress')
+ON CONFLICT (id) DO NOTHING;
+
+-- Mark workers as Busy for in-progress trips only
+UPDATE Worker SET status = 'Busy' WHERE id IN ('driver-004', 'assistant-004', 'driver-005');
+
+-- ============================================================================
 -- SUMMARY
 -- ============================================================================
 -- This seed file creates:
 -- - 6 Cities
 -- - 4 Routes with stops
--- - 8 Products
+-- - 12 Products (8 basic + 4 additional for customer portal)
 -- - 3 Stores (1 managed by test store manager: Colombo Central Store)
--- - 1 Customer
--- - 6 Workers (1 Dispatcher, 2 Drivers, 2 Assistants, 1 Store Manager)
+-- - 3 Customers (1 test, 1 retail, 1 wholesale)
+-- - 11 Workers (1 Dispatcher, 5 Drivers, 4 Assistants, 1 Store Manager)
 -- - 3 Trains
 -- - 3 Trucks
 -- - 4 Future train trips
--- - 2 Pending orders (ready for dispatcher to schedule)
--- - 3 At_Store orders with shipments (for truck trip testing)
--- - 2 Scheduled truck trips (for dispatch testing)
--- - 1 In-Progress truck trip (for completion testing)
+-- - Multiple orders in various states (Pending, At_Store, In_Train_Transit, In_Truck_Transit, Delivered)
+-- - Shipments and truck trips with complete status history
+-- - 5 Truck trips total (1 Completed, 2 Scheduled, 2 In-Progress)
+-- - Each truck trip uses different workers (no conflicts)
 -- - 2 In-Transit shipments arriving at Colombo (for incoming deliveries testing)
+--
+-- Test Credentials:
+-- Customer Portal:
+--   - customer1 / password123 (Wholesale, multiple orders in different states)
+--   - retailcust1 / password123 (Retail, one pending order)
+--   - wholesalecust1 / password123 (Wholesale, one pending order)
+-- Store Manager:
+--   - manager2 / password123 (Manages Colombo Central Store)
+-- Dispatcher:
+--   - dispatcher1 / password123
+--
+-- Worker Assignments (No Conflicts):
+--   - driver1 + assistant1: trip-delivered-001 (Completed)
+--   - driver-002 + assistant-002: trip-scheduled-001 (Scheduled)
+--   - driver-003 + assistant-003: trip-scheduled-002 (Scheduled)
+--   - driver-004 + assistant-004: trip-in-transit-001 (In-Progress) [BUSY]
+--   - driver-005: trip-in-progress-001 (In-Progress) [BUSY]
 -- ============================================================================

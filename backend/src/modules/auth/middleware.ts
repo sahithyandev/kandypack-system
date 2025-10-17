@@ -57,10 +57,12 @@ resolve: async ({ headers, jwt, cookie: { logged_in } }) => {
 	});
 
 /**
- * Generic worker type authorization handler
- * Checks if the current user has the required worker type
+ * Generic role-based authorization handler
+ * Checks if the current user has the required role and optionally a specific worker type
+ * @param role - Required user role (e.g., "Worker", "Customer")
+ * @param type - Optional worker type (e.g., "Dispatcher", "Store_Manager") - only used when role is "Worker"
  */
-export const requireWorkerType = (requiredType: string) => {
+export const requireRole = (role: string, type?: string) => {
 	return async (context: any) => {
 		const { headers, jwt, set } = context;
 		
@@ -79,16 +81,18 @@ export const requireWorkerType = (requiredType: string) => {
 			return { error: "Invalid or expired token" };
 		}
 
-		// Check if user is a worker
-		if (payload.role !== "Worker") {
+		// Check if user has the required role
+		if (payload.role !== role) {
 			set.status = 403;
-			return { error: "Access denied. Worker role required." };
+			return { error: `Access denied. ${role} role required.` };
 		}
 
-		// Check if user has the required worker type
-		if (payload.workerType !== requiredType) {
-			set.status = 403;
-			return { error: `Access denied. ${requiredType} role required.` };
+		// If role is Worker and type is specified, check the worker type
+		if (role === "Worker" && type) {
+			if (payload.workerType !== type) {
+				set.status = 403;
+				return { error: `Access denied. ${type} role required.` };
+			}
 		}
 
 		// Store user info in context for handlers to access
@@ -103,11 +107,16 @@ export const requireWorkerType = (requiredType: string) => {
 /**
  * Dispatcher-specific authentication handler
  */
-export const requireDispatcher = requireWorkerType("Dispatcher");
+export const requireDispatcher = requireRole("Worker", "Dispatcher");
 
 /**
  * Store Manager-specific authentication handler
  */
-export const requireStoreManager = requireWorkerType("Store_Manager");
+export const requireStoreManager = requireRole("Worker", "Store_Manager");
+
+/**
+ * Customer-specific authentication handler
+ */
+export const requireCustomer = requireRole("Customer");
 
 export default authMiddleware;
