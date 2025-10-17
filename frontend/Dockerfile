@@ -4,7 +4,9 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json bun.lock ./
-RUN bun install
+# RUN bun install
+RUN BUN_INSTALL_SKIP_INTEGRITY=1 bun install
+
 
 # Copy app code
 COPY . .

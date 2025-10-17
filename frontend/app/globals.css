@@ -118,5 +118,29 @@
 	}
 	body {
 		@apply bg-background text-foreground;
+		/* Apply the font variables provided by next/font to ensure preloaded fonts are used */
+		font-family:
+			var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto,
+			"Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
 	}
+}
+
+/* Gradient helpers to visually distinguish the sidebar and cards */
+.sidebar-gradient {
+	background: linear-gradient(
+		180deg,
+		var(--sidebar) 0%,
+		var(--sidebar-accent) 100%
+	);
+	color: var(--sidebar-foreground);
+}
+
+.card-gradient {
+	/* subtle vertical gradient using card and popover colors */
+	background: linear-gradient(
+		180deg,
+		color-mix(in srgb, var(--card) 85%, var(--popover) 15%) 0%,
+		var(--card) 100%
+	);
+	color: var(--card-foreground);
 }

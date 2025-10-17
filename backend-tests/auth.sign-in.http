@@ -1,0 +1,7 @@
+POST http://localhost:2000/auth/sign-in
+Content-Type: application/json
+
+{
+	"username": "testuser",
+	"password": "password123"
+}

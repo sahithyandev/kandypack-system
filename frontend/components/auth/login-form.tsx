@@ -1,7 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,27 +17,57 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { postAuthSignIn } from "@/lib/api-client";
+import { saveToken } from "@/lib/auth";
+import { isAPIError } from "@/lib/types";
 
-const schema = z.object({
-	username: z.string().min(2).max(50),
-	password: z.string().min(6).max(50),
+const loginSchema = z.object({
+	username: z.string().min(2, "Username must be at least 2 characters").max(50),
+	password: z.string().min(6, "Password must be at least 6 characters").max(50),
 });
 
 export default function LoginForm() {
-	const form = useForm<z.infer<typeof schema>>({
-		resolver: zodResolver(schema),
+	const [isLoading, setIsLoading] = useState(false);
+	const router = useRouter();
+
+	const form = useForm<z.infer<typeof loginSchema>>({
+		resolver: zodResolver(loginSchema),
 		defaultValues: {
 			username: "",
 			password: "",
 		},
 	});
 
-	function onSubmit(data: z.infer<typeof schema>) {
-		console.log(data);
+	async function onSubmit(data: z.infer<typeof loginSchema>) {
+		setIsLoading(true);
+
+		try {
+			const r = await postAuthSignIn({
+				username: data.username,
+				password: data.password,
+			});
+			if (!("token" in r)) {
+				toast.error("Login failed. Please check your credentials.");
+				return;
+			}
+
+			saveToken(r.token);
+			router.push("/dashboard");
+		} catch (err) {
+			if (!isAPIError(err)) {
+				console.log(err);
+				toast.error("Login failed. Please try again later.");
+				return;
+			}
+
+			toast.error(err.message);
+		} finally {
+			setIsLoading(false);
+		}
 	}
 
 	return (
-		<Card className="overflow-hidden p-0">
+		<Card className="p-0 min-w-md">
 			<CardContent className="grid p-0">
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="p-6 md:p-8">
@@ -59,6 +92,7 @@ export default function LoginForm() {
 									</FormItem>
 								)}
 							/>
+
 							<FormField
 								control={form.control}
 								name="password"
@@ -66,18 +100,24 @@ export default function LoginForm() {
 									<FormItem>
 										<FormLabel>Password</FormLabel>
 										<FormControl>
-											<Input type="password" {...field} />
+											<Input
+												type="password"
+												placeholder="**********"
+												{...field}
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
 								)}
 							/>
-							<Button type="submit" className="w-full">
-								Login
+
+							<Button type="submit" className="w-full" disabled={isLoading}>
+								{isLoading ? "Processing..." : "Login"}
 							</Button>
+
 							<div className="text-center text-sm">
 								Don&apos;t have an account?{" "}
-								<a href="/sign-up" className="underline underline-offset-2">
+								<a href="/register" className="underline underline-offset-2">
 									Sign up
 								</a>
 							</div>

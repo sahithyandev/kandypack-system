@@ -18,6 +18,9 @@
 			"recommended": true,
 			"nursery": {
 				"useUniqueElementIds": "off"
+			},
+			"complexity": {
+				"noStaticOnlyClass": "off"
 			}
 		}
 	},
