@@ -52,12 +52,14 @@ export default function LoginForm() {
 			}
 
 			saveToken(r.token);
-			
+
 			// Decode JWT to check role and workerType
 			const user = decodeJWT(r.token);
-			
+
 			if (user && user.role === "Worker" && user.workerType === "Dispatcher") {
 				router.push("/dispatcher/overview");
+			} else if (user && user.role === "Worker" && user.workerType === "Store_Manager") {
+				router.push("/store-manager/incoming");
 			} else {
 				router.push("/dashboard");
 			}

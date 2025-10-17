@@ -13,12 +13,13 @@ export abstract class StoreManagerService {
 	 * @param storeManagerId - The ID of the store manager (from JWT)
 	 * @returns The store ID, or throws 404 if not found
 	 */
-	private static async getStoreIdForManager(storeManagerId: string): Promise<string> {
+	private static async getStoreIdForManager(storeManagerUsername: string): Promise<string> {
 		const result = await client.query<{ store_id: string }>(
-			`SELECT id AS store_id
-			FROM Store
-			WHERE managed_by = $1`,
-			[storeManagerId]
+			`SELECT s.id AS store_id
+			FROM Store s
+			JOIN "User" u ON u.id = s.managed_by
+			WHERE u.username = $1`,
+			[storeManagerUsername]
 		);
 
 		if (result.rowCount === 0) {
@@ -36,10 +37,10 @@ export abstract class StoreManagerService {
 	 * Get all shipments on trains arriving at the manager's store
 	 */
 	static async getIncomingDeliveries(
-		storeManagerId: string
+		storeManagerUsername: string
 	): Promise<StoreManagerModel.IncomingDeliveriesResponse> {
 		// First get the store ID for this manager
-		const storeId = await this.getStoreIdForManager(storeManagerId);
+		const storeId = await this.getStoreIdForManager(storeManagerUsername);
 
 		// Get store's city ID
 		const storeResult = await client.query<{ city_id: string }>(

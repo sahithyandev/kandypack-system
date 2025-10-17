@@ -38,10 +38,16 @@ export function decodeJWT(token: string): JWTPayload | null {
 export function getUserFromToken(): JWTPayload | null {
 	const token = getToken();
 	if (!token) return null;
+	console.log(decodeJWT(token));
 	return decodeJWT(token);
 }
 
 export function isDispatcher(): boolean {
 	const user = getUserFromToken();
 	return user?.role === "Worker" && user?.workerType === "Dispatcher";
+}
+
+export function isStoreManager(): boolean {
+	const user = getUserFromToken();
+	return user?.role === "Worker" && user?.workerType === "Store_Manager";
 }
