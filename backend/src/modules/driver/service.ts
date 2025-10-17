@@ -12,6 +12,11 @@ export abstract class DriverService {
 			worker_id: string;
 			status: "Busy" | "Free" | "On_Leave";
 			consecutive_deliveries: number;
+			total_trips: number;
+			daily_driving_distance: number;
+			daily_driving_time: number;
+			cumulative_distance: number;
+			cumulative_time: number;
 				hourly_pay: number;
 				weekly_hours: number;
 		}>(
@@ -20,9 +25,14 @@ export abstract class DriverService {
 							u.name,
 							w.id AS worker_id,
 							w.status,
-								d.consecutive_deliveries,
-								w.hourly_pay,
-								w.weekly_hours
+						d.consecutive_deliveries,
+						d.total_trips,
+						d.daily_driving_distance,
+						d.daily_driving_time,
+						d.cumulative_distance,
+						d.cumulative_time,
+						w.hourly_pay,
+						w.weekly_hours
 				 FROM "User" u
 				 JOIN Worker w ON w.id = u.id
 				 JOIN Driver d ON d.id = w.id

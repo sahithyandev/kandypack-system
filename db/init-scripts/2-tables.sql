@@ -29,7 +29,12 @@ CREATE TABLE IF NOT EXISTS Worker (
 -- Specialised Worker Roles
 CREATE TABLE IF NOT EXISTS Driver (
 	id VARCHAR(50) PRIMARY KEY REFERENCES Worker(id) ON DELETE CASCADE,
-	consecutive_deliveries INT DEFAULT 0 CHECK (consecutive_deliveries >= 0)
+	consecutive_deliveries INT DEFAULT 0 CHECK (consecutive_deliveries >= 0),
+	total_trips INT DEFAULT 0 CHECK (total_trips >= 0),
+	daily_driving_distance NUMERIC(10,2) DEFAULT 0 CHECK (daily_driving_distance >= 0),
+	daily_driving_time NUMERIC(10,2) DEFAULT 0 CHECK (daily_driving_time >= 0),
+	cumulative_distance NUMERIC(12,2) DEFAULT 0 CHECK (cumulative_distance >= 0),
+	cumulative_time NUMERIC(12,2) DEFAULT 0 CHECK (cumulative_time >= 0)
 );
 CREATE TABLE IF NOT EXISTS Assistant (
 	id VARCHAR(50) PRIMARY KEY REFERENCES Worker(id) ON DELETE CASCADE,

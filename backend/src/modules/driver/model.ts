@@ -38,6 +38,11 @@ export namespace DriverModel {
 		worker_id: t.String(),
 		status: t.Union([t.Literal("Busy"), t.Literal("Free"), t.Literal("On_Leave")]),
 		consecutive_deliveries: t.Number(),
+		total_trips: t.Number(),
+		daily_driving_distance: t.Number(),
+		daily_driving_time: t.Number(),
+		cumulative_distance: t.Number(),
+		cumulative_time: t.Number(),
 		hourly_pay: t.Number(),
 		weekly_hours: t.Number(),
 	});

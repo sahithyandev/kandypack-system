@@ -5,6 +5,11 @@ export type DriverProfile = {
   worker_id: string;
   status: "Busy" | "Free" | "On_Leave";
   consecutive_deliveries: number;
+  total_trips: number;
+  daily_driving_distance: number;
+  daily_driving_time: number;
+  cumulative_distance: number;
+  cumulative_time: number;
   hourly_pay: number;
   weekly_hours: number;
 };
