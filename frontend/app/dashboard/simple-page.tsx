@@ -8,9 +8,13 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import StatsCard from "@/components/stats-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { postAuthSignOut } from "@/lib/api-client";
+import { removeToken } from "@/lib/auth";
 
 /**
  * SimpleDashboardPage Component
@@ -21,6 +25,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
  * @returns JSX element containing the complete dashboard interface
  */
 export default function SimpleDashboardPage() {
+	const router = useRouter();
+	function logOut() {
+		removeToken();
+		postAuthSignOut()
+			.then(() => {
+				router.push("/login");
+			})
+			.catch(() => {
+				toast.error("Failed to log out. Please try again.");
+			});
+	}
+
 	return (
 		<div className="min-h-screen">
 			{/* Navigation Header */}
@@ -62,12 +78,9 @@ export default function SimpleDashboardPage() {
 							>
 								Notifications
 							</Link>
-							<Link
-								href="/login"
-								className="bg-red-500 text-white px-3 py-2 rounded text-sm font-medium hover:bg-red-600"
-							>
-								Logout
-							</Link>
+							<Button variant="destructive" onClick={logOut}>
+								Log out
+							</Button>
 						</nav>
 					</div>
 				</div>

@@ -13,12 +13,10 @@ export abstract class Auth {
 			LIMIT 1`,
 			[body.username],
 		);
-		console.log(exists);
-		console.log(exists.rowCount);
 		if (exists === null)
 			throw status(500, {
 				message: "Database error",
-			});
+			} satisfies AuthModel.signUpFailed);
 
 		if (exists.rowCount === null || exists.rowCount > 0)
 			throw status(400, {
@@ -26,7 +24,7 @@ export abstract class Auth {
 			} satisfies AuthModel.signUpFailed);
 
 		return client
-			.query(
+			.query<{ username: string }>(
 				`INSERT INTO "User" (id, name, username, password, role)
 			VALUES ($1, $2, $3, $4, 'Customer')
 			RETURNING username`,
@@ -42,8 +40,9 @@ export abstract class Auth {
 	static async signIn({ username, password }: AuthModel.signInBody) {
 		const result = await client.query<{
 			password: string;
+			role: string;
 		}>(
-			`SELECT password
+			`SELECT password, role
 			FROM "User"
 			WHERE username = $1
 			LIMIT 1`,
@@ -51,7 +50,9 @@ export abstract class Auth {
 		);
 
 		if (result.rowCount === 0)
-			throw status(400, "Invalid username or password");
+			throw status(400, {
+				message: "Invalid username or password",
+			} satisfies AuthModel.signInInvalid);
 		const user = result.rows[0];
 
 		if (!user) throw status(400, "Invalid username or password");
@@ -59,13 +60,13 @@ export abstract class Auth {
 		const isPasswordValid = await Bun.password.verify(password, user.password);
 
 		if (!isPasswordValid)
-			throw status(
-				400,
-				"Invalid username or password" satisfies AuthModel.signInInvalid,
-			);
+			throw status(400, {
+				message: "Invalid username or password",
+			} satisfies AuthModel.signInInvalid);
 
 		return {
 			username,
+			role: user.role,
 			token: "",
 		} satisfies AuthModel.signInResponse;
 	}
