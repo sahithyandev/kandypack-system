@@ -60,8 +60,10 @@ export default function LoginForm() {
 				router.push("/dispatcher/overview");
 			} else if (user && user.role === "Worker" && user.workerType === "Store_Manager") {
 				router.push("/store-manager/incoming");
+			} else if (user && user.role === "Customer") {
+				router.push("/customer");
 			} else {
-				router.push("/dashboard");
+				router.push("/login");
 			}
 		} catch (err) {
 			if (!isAPIError(err)) {

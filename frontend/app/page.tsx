@@ -21,10 +21,11 @@ export default function HomePage() {
 			router.push("/dispatcher/overview");
 		} else if (user.role === "Worker" && user.workerType === "Store_Manager") {
 			router.push("/store-manager/incoming");
+		} else if (user.role === "Customer") {
+			router.push("/customer");
 		} else {
-			// For other roles, redirect to a default dashboard or login
-			// You can customize this based on your requirements
-			router.push("/dashboard");
+			// For other roles, redirect to login
+			router.push("/login");
 		}
 	}, [router]);
 
