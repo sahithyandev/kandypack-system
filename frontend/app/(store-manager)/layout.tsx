@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Train, Truck, CheckCircle2, Menu, X, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getUserFromToken, isStoreManager, removeToken } from "@/lib/auth";
+import { Loader2 } from "lucide-react";
 
 const navigation = [
   { name: "Incoming Deliveries", href: "/store-manager/incoming", icon: Train },
@@ -14,8 +16,32 @@ const navigation = [
 
 export default function StoreManagerLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
   const isActive = (href: string) => pathname === href;
+  const user = getUserFromToken();
+
+  useEffect(() => {
+    if (!isStoreManager()) {
+      router.push("/");
+    } else {
+      setIsLoading(false);
+    }
+  }, [router]);
+
+  const handleLogout = () => {
+    removeToken();
+    router.push("/login");
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
@@ -45,8 +71,8 @@ export default function StoreManagerLayout({ children }: { children: React.React
                 <User className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-sm font-medium">Store Manager</p>
-                <p className="text-xs text-muted-foreground">store@kandypack.lk</p>
+                <p className="text-sm font-medium">{user?.username || "Store Manager"}</p>
+                <p className="text-xs text-muted-foreground">{user?.workerType || "Store Manager"}</p>
               </div>
             </div>
           </div>
@@ -80,7 +106,7 @@ export default function StoreManagerLayout({ children }: { children: React.React
             <Button
               variant="ghost"
               className="w-full justify-start gap-3 text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950"
-              onClick={() => (window.location.href = "/login")}
+              onClick={handleLogout}
             >
               <LogOut className="h-5 w-5" />
               Logout

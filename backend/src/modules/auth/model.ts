@@ -19,11 +19,17 @@ export namespace AuthModel {
 		name: t.String(),
 		username: t.String(),
 		password: t.String(),
+		type: t.Optional(t.Union([t.Literal("Retail"), t.Literal("Wholesale")])),
+		street_name: t.Optional(t.String()),
+		city: t.Optional(t.String()),
+		postal_code: t.Optional(t.String()),
+		phone_no: t.Optional(t.String()),
 	});
 	export type signUpBody = typeof signUpBody.static;
 
 	export const signInResponse = t.Object({
 		username: t.String(),
+		name: t.String(),
 		role: t.String(),
 		workerType: t.Optional(t.String()),
 		token: t.String(),

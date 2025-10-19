@@ -20,7 +20,7 @@ export default async function LoginPage() {
 		return <div>Failed to validate login status. Please try again later.</div>;
 	}
 	if (response.valid) {
-		redirect("/dashboard");
+		redirect("/");
 		return;
 	}
 

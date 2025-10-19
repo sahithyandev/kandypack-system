@@ -59,7 +59,8 @@ export default function RegisterForm() {
 			toast.success("Registration successful");
 
 			saveToken(r.token);
-			router.push("/dashboard");
+			// Redirect to home page which will handle role-based routing
+			router.push("/");
 		} catch (err) {
 			if (!isAPIError(err)) {
 				console.log(err);
