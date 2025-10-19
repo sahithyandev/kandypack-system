@@ -1,0 +1,3 @@
+### Get Pending Orders
+GET http://localhost:2000/api/orders/pending
+Authorization: Bearer YOUR_JWT_TOKEN_HERE

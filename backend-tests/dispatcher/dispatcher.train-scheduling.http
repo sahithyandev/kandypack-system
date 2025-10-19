@@ -1,0 +1,21 @@
+### Get All Train Trips
+GET http://localhost:2000/api/train-trips
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Get Train Trips to Specific City
+GET http://localhost:2000/api/train-trips?destinationCityId=city-cmb
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Create Shipment (Assign Order to Train Trip)
+POST http://localhost:2000/api/shipments
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "orderId": "ord-002",
+  "trainTripId": "tt-k2c-20251020"
+}

@@ -1,0 +1,3 @@
+### Get Schedule Overview
+GET http://localhost:2000/api/schedules/overview
+Authorization: Bearer YOUR_JWT_TOKEN_HERE

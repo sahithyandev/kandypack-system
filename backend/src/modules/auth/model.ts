@@ -6,6 +6,7 @@ export namespace AuthModel {
 	export type JWTData = {
 		username: string;
 		role: string;
+		workerType?: string; // Worker type if user is a worker, undefined for customers
 	};
 
 	export const signInBody = t.Object({
@@ -24,6 +25,7 @@ export namespace AuthModel {
 	export const signInResponse = t.Object({
 		username: t.String(),
 		role: t.String(),
+		workerType: t.Optional(t.String()),
 		token: t.String(),
 	});
 	export type signInResponse = typeof signInResponse.static;
@@ -49,7 +51,8 @@ export namespace AuthModel {
 			"username" in obj &&
 			"role" in obj &&
 			typeof obj.role === "string" &&
-			typeof obj.username === "string"
+			typeof obj.username === "string" &&
+			(!("workerType" in obj) || typeof (obj as any).workerType === "string" || (obj as any).workerType === undefined)
 		);
 	}
 }

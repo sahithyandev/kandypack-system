@@ -7,6 +7,7 @@ import authMiddleware from "./modules/auth/middleware";
 import { driver } from "./modules/driver";
 import { client } from "./utils/db";
 import jwtInstance from "./utils/jwt";
+import { dispatcher } from "./modules/dispatcher";
 
 await client.connect().catch((error) => {
 	console.error("Failed to connect to the database:", error);
@@ -66,6 +67,7 @@ export const app = new Elysia()
 			}),
 		},
 	)
+	.use(dispatcher)
 	.listen(2000);
 
 console.log(
