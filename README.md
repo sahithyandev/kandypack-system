@@ -81,3 +81,73 @@ docker compose up --build --watch
 
 
 We are using orval to generate the API client automatically from the backend code. Use `bun run generate:api` from the frontend to do so.
+
+## CI/CD Pipeline
+
+This project includes a comprehensive CI/CD pipeline that automatically builds, tests, and deploys the application.
+
+### Pipeline Overview
+
+The pipeline runs automatically on:
+- Push to `main`, `Deploy-Workflow`, or `develop` branches
+- Pull requests to `main`
+- Manual workflow dispatch
+
+### Pipeline Stages
+
+1. **Code Quality & Linting** - Biome linting and formatting checks
+2. **Build Backend** - TypeScript type checking and Docker image build
+3. **Build Frontend** - Next.js build and Docker image creation
+4. **Database Validation** - PostgreSQL schema and data verification
+5. **Integration Tests** - Automated testing (configurable)
+6. **Deploy to VPS** - Automatic deployment to production (main/Deploy-Workflow only)
+
+### Local Commands
+
+```bash
+# Code quality
+bun run lint              # Check for issues
+bun run lint:fix          # Auto-fix issues
+bun run format            # Format all files
+bun run check:fix         # Fix everything
+
+# Development
+bun run dev               # Start all services
+bun run dev:backend       # Backend only
+bun run dev:frontend      # Frontend only
+
+# Building
+bun run build:backend     # Build backend
+bun run build:frontend    # Build frontend
+
+# Docker
+bun run docker:prod       # Run production build
+```
+
+### Deployment
+
+The application automatically deploys to VPS when code is pushed to `main` or `Deploy-Workflow` branches.
+
+**Prerequisites**:
+- VPS with Docker installed
+- GitHub Secrets configured
+
+**Required Secrets**:
+- `SSH_KEY` - Private SSH key for VPS
+- `HOST` - VPS IP address
+- `USER` - SSH username
+- `DEPLOY_PATH` - Deployment directory
+- `ENV_FILE` - Production environment variables
+
+For detailed deployment instructions, see:
+- [CI/CD Guide](.github/CI_CD_GUIDE.md) - Complete CI/CD documentation
+- [Deployment Quick Start](.github/DEPLOYMENT_QUICKSTART.md) - 15-minute setup guide
+- [Secrets Setup](.github/SECRETS_SETUP.md) - GitHub secrets configuration
+- [Deployment Guide](DEPLOYMENT.md) - Full deployment documentation
+
+### Production Access
+
+After deployment, access the application at:
+- **Frontend**: `http://YOUR_VPS_IP:3000`
+- **Backend API**: `http://YOUR_VPS_IP:2000`
+- **API Docs**: `http://YOUR_VPS_IP:2000/swagger`
