@@ -36,7 +36,7 @@ INSERT INTO "User" (id, username, name, password, role) VALUES
 ('worker-mgr-001', 'manager1', 'Test Store Manager', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('0199e825-7df3-7000-ab6f-71669cef9383', 'driver1', 'Test Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('0199e824-f514-7000-87e6-1bf03af11985', 'assistant1', 'Test Assistant', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
-('0199e7bd-d5f8-7000-9fd6-f2a853034f88', 'dispatcher1', 'Test Dispatcher', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker')
+('0199e7bd-d5f8-7000-9fd6-f2a853034f88', 'dispatcher1', 'Test Dispatcher', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('driver-002', 'driver2', 'Second Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('driver-003', 'driver3', 'Third Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('driver-004', 'driver4', 'Fourth Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
