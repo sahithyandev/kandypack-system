@@ -1,4 +1,4 @@
-import VehicleInfo from "@/components/driver/vehicle-info";
+import VehiclesList from "@/components/driver/vehicles-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function VehiclesPage() {
@@ -9,7 +9,7 @@ export default function VehiclesPage() {
 					<CardTitle>Vehicles</CardTitle>
 				</CardHeader>
 				<CardContent>
-					<VehicleInfo />
+					<VehiclesList />
 				</CardContent>
 			</Card>
 		</div>
