@@ -64,8 +64,11 @@ CREATE TABLE IF NOT EXISTS Route_Stop (
 -- Vehicle Tables
 CREATE TABLE IF NOT EXISTS Truck (
 	id VARCHAR(50) PRIMARY KEY,
-	vehicle_no VARCHAR(20) UNIQUE NOT NULL
+	vehicle_no VARCHAR(20) UNIQUE NOT NULL,
+	status VARCHAR(20) NOT NULL DEFAULT 'available' CHECK (status IN ('busy','available','maintenance'))
 );
+
+-- Truck status: busy, available, or maintenance
 CREATE TABLE IF NOT EXISTS Train (
 	id VARCHAR(50) PRIMARY KEY,
 	name VARCHAR(50) NOT NULL

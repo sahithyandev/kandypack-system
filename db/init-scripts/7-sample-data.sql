@@ -372,3 +372,20 @@ INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipmen
 VALUES (
   'trucktrip-2', 'truck-2', 'route-2', 'user-driver-3', NULL, NULL, NOW() + INTERVAL '3 days', NOW() + INTERVAL '3 days' + INTERVAL '3 hours', 'Scheduled'
 ) ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 16. SAMPLE STATES: Busy drivers and vehicles
+-- ============================================================================
+-- Mark a driver as Busy (will be excluded from available drivers)
+UPDATE Worker SET status = 'Busy' WHERE id IN ('user-driver-1', 'user-driver-2');
+
+-- Align truck status with trip assignments (these trucks already have trips)
+UPDATE Truck SET status = 'busy' WHERE id IN ('truck-1', 'truck-2');
+
+-- Put one truck under maintenance (not used in trips)
+UPDATE Truck SET status = 'maintenance' WHERE id = 'truck-003';
+
+-- Set one existing trip to In_Progress to reflect an active delivery
+UPDATE Truck_Trip 
+SET status = 'In_Progress', actual_start = NOW() - INTERVAL '30 minutes'
+WHERE id = 'trucktrip-1';
