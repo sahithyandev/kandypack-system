@@ -3,6 +3,7 @@
 import jwt from "@elysiajs/jwt";
 import { Elysia, t, status } from "elysia";
 import { DriverModel } from "./model";
+import authMiddleware from "../auth/middleware";
 import { DriverService } from "./service";
 
 if (!process.env.JWT_SECRET) {
@@ -16,27 +17,29 @@ export const driver = new Elysia({ prefix: "/driver" })
 			secret: process.env.JWT_SECRET,
 		}),
 	)
+  // attach auth macro/types so `currentUser` is available in handlers
+  .use(authMiddleware)
 	// Alias (typo kept intentionally): /driver/vechicles
 	.get(
 		"/vechicles",
-		async ({ jwt, cookie: { session } }) => {
-			if (!session?.value) throw status(401, "Unauthorized");
-			await jwt.verify(String(session.value));
+		async ({ currentUser }) => {
+			if (!currentUser) throw status(401, "Unauthorized");
 			return DriverService.getAllTrucks();
 		},
 		{
+			currentUser: true,
 			response: DriverModel.trucksResponse,
 		},
 	)
 	// Canonical vehicles endpoint
 	.get(
 		"/vehicles",
-		async ({ jwt, cookie: { session } }) => {
-			if (!session?.value) throw status(401, "Unauthorized");
-			await jwt.verify(String(session.value));
+		async ({ currentUser }) => {
+			if (!currentUser) throw status(401, "Unauthorized");
 			return DriverService.getAllTrucks();
 		},
 		{
+			currentUser: true,
 			response: DriverModel.trucksResponse,
 		},
 	)
@@ -44,42 +47,42 @@ export const driver = new Elysia({ prefix: "/driver" })
 	// Get driver's vehicle details (assigned truck and trip context)
 	.get(
 		"/vehicle",
-		async ({ jwt, cookie: { session } }) => {
-			if (!session?.value) throw status(401, "Unauthorized");
-			const payload = await jwt.verify(String(session.value));
-			const username = (payload as any)?.username as string | undefined;
+		async ({ currentUser }) => {
+			if (!currentUser) throw status(401, "Unauthorized");
+			const username = (currentUser as any)?.username as string | undefined;
 			if (!username) throw status(401, "Unauthorized");
 			return DriverService.getVehicleForDriver(username);
 		},
 		{
+			currentUser: true,
 			response: DriverModel.vehicleResponse,
 		},
 	)
 	// Get authenticated driver profile (derived from session token)
 	.get(
 		"/profile",
-			async ({ jwt, cookie: { session } }) => {
-			if (!session?.value) throw status(401, "Unauthorized");
-				const payload = await jwt.verify(String(session.value));
-			const username = (payload as any)?.username as string | undefined;
+		async ({ currentUser }) => {
+			if (!currentUser) throw status(401, "Unauthorized");
+			const username = (currentUser as any)?.username as string | undefined;
 			if (!username) throw status(401, "Unauthorized");
 			return DriverService.getProfileByUsername(username);
 		},
 		{
+			currentUser: true,
 			response: DriverModel.profileResponse,
 		},
 	)
 	// List trips assigned to driver; optional status query to filter
 	.get(
 		"/trips",
-			async ({ jwt, cookie: { session }, query }) => {
-			if (!session?.value) throw status(401, "Unauthorized");
-				const payload = await jwt.verify(String(session.value));
-			const username = (payload as any)?.username as string | undefined;
+		async ({ currentUser, query }) => {
+			if (!currentUser) throw status(401, "Unauthorized");
+			const username = (currentUser as any)?.username as string | undefined;
 			if (!username) throw status(401, "Unauthorized");
 			return DriverService.getTripsForDriver(username, query.status);
 		},
 		{
+			currentUser: true,
 			query: DriverModel.listTripsQuery,
 			response: t.Array(DriverModel.trip),
 		},
@@ -87,14 +90,14 @@ export const driver = new Elysia({ prefix: "/driver" })
 	// Start a scheduled trip
 	.post(
 		"/trips/:id/start",
-			async ({ jwt, cookie: { session }, params }) => {
-			if (!session?.value) throw status(401, "Unauthorized");
-				const payload = await jwt.verify(String(session.value));
-			const username = (payload as any)?.username as string | undefined;
+		async ({ currentUser, params }) => {
+			if (!currentUser) throw status(401, "Unauthorized");
+			const username = (currentUser as any)?.username as string | undefined;
 			if (!username) throw status(401, "Unauthorized");
 			return DriverService.startTrip(username, params.id);
 		},
 		{
+			currentUser: true,
 			params: DriverModel.tripIdParam,
 			response: DriverModel.trip,
 		},
@@ -102,16 +105,16 @@ export const driver = new Elysia({ prefix: "/driver" })
 	// Complete an in-progress trip
 	.post(
 		"/trips/:id/complete",
-			async ({ jwt, cookie: { session }, params }) => {
-			if (!session?.value) throw status(401, "Unauthorized");
-				const payload = await jwt.verify(String(session.value));
-			const username = (payload as any)?.username as string | undefined;
+		async ({ currentUser, params }) => {
+			if (!currentUser) throw status(401, "Unauthorized");
+			const username = (currentUser as any)?.username as string | undefined;
 			if (!username) throw status(401, "Unauthorized");
 			return DriverService.completeTrip(username, params.id);
 		},
 		{
+			currentUser: true,
 			params: DriverModel.tripIdParam,
 			response: DriverModel.trip,
 		},
-	);
+	)
 

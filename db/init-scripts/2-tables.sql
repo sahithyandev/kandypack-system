@@ -93,16 +93,15 @@ CREATE TABLE IF NOT EXISTS "Order" (
 	store_id VARCHAR(50) REFERENCES Store(id) ON DELETE RESTRICT,
 	customer_id VARCHAR(50) NOT NULL REFERENCES Customer(id) ON DELETE CASCADE,
 	delivery_address VARCHAR(255) NOT NULL,
-	route_id VARCHAR(50) REFERENCES Route(id) ON DELETE
-	SET NULL,
-		placed_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		required_delivery_date DATE NOT NULL,
-		status order_status NOT NULL DEFAULT 'Pending',
-		total_value NUMERIC(12, 2) DEFAULT 0,
-		total_space_units NUMERIC(12, 2) DEFAULT 0,
-		CONSTRAINT chk_delivery_date CHECK (
-			required_delivery_date >= (placed_on::date + INTERVAL '7 day')
-		)
+	route_id VARCHAR(50) REFERENCES Route(id) ON DELETE SET NULL,
+	placed_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	required_delivery_date DATE NOT NULL,
+	status order_status NOT NULL DEFAULT 'Pending',
+	total_value NUMERIC(12, 2) DEFAULT 0,
+	total_space_units NUMERIC(12, 2) DEFAULT 0,
+	CONSTRAINT chk_delivery_date CHECK (
+		required_delivery_date >= (placed_on::date + INTERVAL '7 day')
+	)
 );
 CREATE TABLE IF NOT EXISTS Order_Item (
 	id VARCHAR(50) PRIMARY KEY,
