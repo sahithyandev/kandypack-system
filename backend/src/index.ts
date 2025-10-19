@@ -8,6 +8,8 @@ import { driver } from "./modules/driver";
 import { client } from "./utils/db";
 import jwtInstance from "./utils/jwt";
 import { dispatcher } from "./modules/dispatcher";
+import { storeManager } from "./modules/store-manager";
+import { customer } from "./modules/customer";
 
 await client.connect().catch((error) => {
 	console.error("Failed to connect to the database:", error);
@@ -48,7 +50,7 @@ export const app = new Elysia()
 	.use(driver)
 	.get(
 		"/",
-		async ({ currentUser }) => {
+		async ({ currentUser }: any) => {
 			if (currentUser) {
 				return {
 					message: `Hello, ${currentUser.username} (${currentUser.role})! You are signed in.`,
@@ -71,6 +73,8 @@ export const app = new Elysia()
 		},
 	)
 	.use(dispatcher)
+	.use(storeManager)
+	.use(customer)
 	.listen(2000);
 
 console.log(
