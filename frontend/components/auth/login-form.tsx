@@ -58,6 +58,8 @@ export default function LoginForm() {
 			
 			if (user && user.role === "Worker" && user.workerType === "Dispatcher") {
 				router.push("/dispatcher/overview");
+			} else if (user && user.role === "Worker" && user.workerType === "Driver") {
+				router.push("/driver");
 			} else {
 				router.push("/dashboard");
 			}
