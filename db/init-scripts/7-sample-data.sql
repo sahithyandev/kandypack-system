@@ -13,7 +13,9 @@ ON CONFLICT (config_key) DO NOTHING;
 
 INSERT INTO "User" (id, username, name, password, role)
 VALUES 
-    ('0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 'customer1', 'Test Customer', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Customer') 
+    ('0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 'customer1', 'Test Customer 1', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Customer'),
+    ('cust-retail-001', 'customer2', 'Test Customer 2', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Customer'),
+    ('cust-wholesale-001', 'customer3', 'Test Customer 3', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Customer')
 ON CONFLICT (id) DO NOTHING;
 
 -- Worker Users
@@ -22,9 +24,16 @@ INSERT INTO "User" (id, username, name, password, role)
 VALUES 
     ('0199e825-4ae5-7000-9d86-8be81708d4f1', 'manager2', 'Test Store Manager 2', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
     ('worker-mgr-001', 'manager1', 'Test Store Manager', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
-    ('0199e825-7df3-7000-ab6f-71669cef9383', 'driver1', 'Test Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+    ('0199e825-7df3-7000-ab6f-71669cef9383', 'driver1', 'Test Driver 2', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+    ('driver-002', 'driver2', 'Test Driver 2', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+    ('driver-003', 'driver3', 'Test Driver 3', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+    ('driver-004', 'driver4', 'Test Driver 4', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+    ('driver-005', 'driver5', 'Test Driver 5', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
     ('0199e824-f514-7000-87e6-1bf03af11985', 'assistant1', 'Test Assistant', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
-    ('0199e7bd-d5f8-7000-9fd6-f2a853034f88', 'dispatcher1', 'Test Dispatcher', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker') 
+    ('assistant-002', 'assistant2', 'Test Assistant', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+    ('assistant-003', 'assistant3', 'Test Assistant', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+    ('assistant-004', 'assistant4', 'Test Assistant', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
+    ('0199e7bd-d5f8-7000-9fd6-f2a853034f88', 'dispatcher1', 'Test Dispatcher', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker')
 ON CONFLICT (id) DO NOTHING;
 
 -- ============================================================================
@@ -127,7 +136,8 @@ INSERT INTO Worker (id, type, hourly_pay, status, weekly_hours) VALUES
 ('driver-005', 'Driver', 1500.00, 'Free', 0),
 ('assistant-002', 'Assistant', 1200.00, 'Free', 0),
 ('assistant-003', 'Assistant', 1200.00, 'Free', 0),
-('assistant-004', 'Assistant', 1200.00, 'Free', 0)
+('assistant-004', 'Assistant', 1200.00, 'Free', 0),
+('0199e825-4ae5-7000-9d86-8be81708d4f1', 'Store_Manager', 1200.00, 'Free', 0)
 ON CONFLICT (id) DO UPDATE SET status = 'Free', weekly_hours = 0;
 
 -- ============================================================================
@@ -148,7 +158,7 @@ VALUES ('store-cmb-01', 'Colombo Central Store', 'city-cmb', '0199e825-4ae5-7000
 -- 6. CUSTOMER DATA
 -- ============================================================================
 INSERT INTO Customer (id, type, street_name, city, postal_code, phone_no) VALUES
-('0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 'Wholesale', 'Main Street', 'Colombo', '00100', '+94771234567')
+('0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 'Wholesale', 'Main Street', 'Colombo', '00100', '+94771234567'),
 ('cust-retail-001', 'Retail', '45 Main Street', 'Matara', '81000', '+94771112222'),
 ('cust-wholesale-001', 'Wholesale', '123 Galle Road', 'Galle', '80000', '+94773334444')
 ON CONFLICT (id) DO NOTHING;
