@@ -14,26 +14,26 @@ const productCategories = [
 	{
 		id: 1,
 		title: "Beverages",
-		desc: "Refreshing drinks crafted for every moment.",
-		img: "https://images.unsplash.com/photo-1585386959984-a41552231693?auto=format&fit=crop&w=800&q=80",
+		desc: "Refreshing drinks crafted for every moment. Perfect for quenching your thirst anytime.",
+		img: "https://images.unsplash.com/photo-1625865019845-7b2c89b8a8a9?auto=format&fit=crop&w=800&q=80",
 	},
 	{
 		id: 2,
 		title: "Snacks",
-		desc: "Crunchy and delicious snacks for all ages.",
-		img: "https://images.unsplash.com/photo-1604908177373-fb53ed4c8b0d?auto=format&fit=crop&w=800&q=80",
+		desc: "Crunchy and delicious snacks for all ages. Enjoy a tasty treat on the go or at home.",
+		img: "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=800&q=80",
 	},
 	{
 		id: 3,
 		title: "Condiments",
-		desc: "Flavorful additions that elevate every meal.",
+		desc: "Flavorful additions that elevate every meal. Enhance your dishes with our quality condiments.",
 		img: "https://images.unsplash.com/photo-1505576399279-565b52d4ac71?auto=format&fit=crop&w=800&q=80",
 	},
 	{
 		id: 4,
 		title: "Personal Care",
-		desc: "Quality hygiene products for your daily essentials.",
-		img: "https://images.unsplash.com/photo-1606813902789-8e6a688c8e2b?auto=format&fit=crop&w=800&q=80",
+		desc: "Quality hygiene products for your daily essentials. Stay fresh and confident every day.",
+		img: "https://images.unsplash.com/photo-1577467013350-7c22a844e1a9?auto=format&fit=crop&w=800&q=80",
 	},
 ];
 
@@ -106,7 +106,7 @@ export default function HomePage() {
 			{/* ABOUT */}
 			<section
 				id="about"
-				className="py-24 px-6 max-w-5xl mx-auto text-center space-y-6"
+				className="py-24 px-6 max-w-7xl mx-auto text-left space-y-6"
 			>
 				<motion.h2
 					initial={{ opacity: 0, y: 30 }}
@@ -117,7 +117,7 @@ export default function HomePage() {
 				>
 					Our Commitment to Quality and Sustainability
 				</motion.h2>
-				<p className="text-muted-foreground max-w-2xl mx-auto">
+				<p className="text-muted-foreground max-w-2xl">
 					Founded in Kandy, Kandypack has grown into one of Sri Lanka’s most
 					trusted FMCG manufacturers. We believe in delivering consistent
 					quality through efficient production, responsible sourcing, and
@@ -130,28 +130,21 @@ export default function HomePage() {
 				id="distribution"
 				className="relative py-24 bg-gradient-to-r from-primary/5 to-green-100/10 dark:from-slate-900 dark:to-slate-800"
 			>
-				<div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-					<div>
-						<Image
-							src="https://images.unsplash.com/photo-1581092787763-9f2c1aef0e1c?auto=format&fit=crop&w=900&q=80"
-							alt="Distribution"
-							width={700}
-							height={500}
-							className="rounded-3xl shadow-xl"
-						/>
-					</div>
-					<div>
-						<h3 className="text-3xl font-bold mb-4">
-							Efficient Hybrid Distribution
-						</h3>
-						<p className="text-muted-foreground mb-4">
-							Kandypack’s logistics network combines the efficiency of railway
-							transport for bulk distribution with road-based last-mile
-							delivery, ensuring timely supply to retailers across Sri Lanka.
-						</p>
-						<div className="flex gap-4 text-sm text-muted-foreground">
-							<div>🚂 Railway Freight</div>
-							<div>🚚 Road Delivery</div>
+				<div className="max-w-7xl mx-auto px-6 flex flex-col items-end text-right">
+					<h3 className="text-3xl font-bold mb-4">
+						Efficient Hybrid Distribution
+					</h3>
+					<p className="text-muted-foreground mb-4 max-w-prose">
+						Kandypack’s logistics network combines the efficiency of railway
+						transport for bulk distribution with road-based last-mile delivery,
+						ensuring timely supply to retailers across Sri Lanka.
+					</p>
+					<div className="flex gap-4 text-sm">
+						<div className="px-4 py-2 bg-primary/40 text-primary-foreground font-medium rounded-lg shadow-sm">
+							🚂 Railway Freight
+						</div>
+						<div className="px-4 py-2 bg-primary/40 text-primary-foreground font-medium rounded-lg shadow-sm">
+							🚚 Road Delivery
 						</div>
 					</div>
 				</div>
@@ -162,15 +155,15 @@ export default function HomePage() {
 				id="products"
 				className="py-28 overflow-x-auto snap-x snap-mandatory"
 			>
-				<h2 className="text-center text-3xl font-bold mb-10">Our Product</h2>
-				<div className="flex gap-8 px-6 min-w-max justify-center">
+				<h2 className="text-center text-3xl font-bold mb-10">Our Products</h2>
+				<div className="flex gap-5 px-6 min-w-max justify-center">
 					{productCategories.map((p) => (
 						<motion.div
 							key={p.id}
 							whileHover={{ scale: 1.03 }}
 							className="snap-center"
 						>
-							<Card className="rounded-3xl border-border/50 bg-background/60 shadow-lg backdrop-blur-sm w-[320px] flex-shrink-0">
+							<Card className="rounded-3xl border-border/50 bg-background/60 shadow-lg backdrop-blur-sm w-[320px] flex-shrink-0 gap-0 py-0 h-full">
 								<Image
 									src={p.img}
 									alt={p.title}
@@ -179,7 +172,7 @@ export default function HomePage() {
 									className="rounded-t-3xl h-48 w-full object-cover"
 								/>
 								<CardContent className="p-3">
-									<CardTitle className="mb-1 mt-1">{p.title}</CardTitle>
+									<CardTitle className="mb-2.5 mt-1">{p.title}</CardTitle>
 									<CardDescription>{p.desc}</CardDescription>
 								</CardContent>
 							</Card>
@@ -203,8 +196,10 @@ export default function HomePage() {
 				<div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-8">
 					{/* Company Info */}
 					<div>
-						<h4 className="text-lg font-bold mb-4">Kandypack</h4>
-						<p className="text-sm">
+						<h4 className="text-lg font-bold mb-4 text-foreground/90">
+							Kandypack
+						</h4>
+						<p className="text-sm max-w-prose text-pretty">
 							Delivering quality FMCG products across Sri Lanka with a
 							commitment to sustainability and innovation.
 						</p>
@@ -262,7 +257,7 @@ export default function HomePage() {
 					{/* Social Media */}
 					<div>
 						<h4 className="text-lg font-bold mb-4">Follow Us</h4>
-						<div className="flex gap-4">
+						<div className="flex gap-3 flex-col">
 							<a
 								href="https://facebook.com"
 								target="_blank"
@@ -286,14 +281,6 @@ export default function HomePage() {
 								className="hover:text-primary transition-colors flex items-center gap-2"
 							>
 								Instagram
-							</a>
-							<a
-								href="https://linkedin.com"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="hover:text-primary transition-colors flex items-center gap-2"
-							>
-								LinkedIn
 							</a>
 						</div>
 					</div>
