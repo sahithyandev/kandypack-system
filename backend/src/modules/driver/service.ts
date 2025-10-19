@@ -25,14 +25,14 @@ export abstract class DriverService {
 							u.name,
 							w.id AS worker_id,
 							w.status,
-						d.consecutive_deliveries,
-						d.total_trips,
-						d.daily_driving_distance,
-						d.daily_driving_time,
-						d.cumulative_distance,
-						d.cumulative_time,
-						w.hourly_pay,
-						w.weekly_hours
+					d.consecutive_deliveries,
+					d.total_trips,
+					(d.daily_driving_distance)::float8 AS daily_driving_distance,
+					(d.daily_driving_time)::float8 AS daily_driving_time,
+					(d.cumulative_distance)::float8 AS cumulative_distance,
+					(d.cumulative_time)::float8 AS cumulative_time,
+					(w.hourly_pay)::float8 AS hourly_pay,
+					(w.weekly_hours)::float8 AS weekly_hours
 				 FROM "User" u
 				 JOIN Worker w ON w.id = u.id
 				 JOIN Driver d ON d.id = w.id
