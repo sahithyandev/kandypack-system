@@ -110,7 +110,7 @@ jobs:
 
       - name: Test Docker image
         run: |
-          docker run --rm kandypack-frontend:test node --version
+          docker run --rm kandypack-frontend:test bun --version
           echo "Frontend Docker image built successfully"
 
   # Job 4: Database Validation

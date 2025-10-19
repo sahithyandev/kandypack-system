@@ -89,7 +89,7 @@ INSERT INTO Product (id, name, unit_price, space_consumption_rate) VALUES
 ('prod-005', 'Cooking Oil 1L', 650.00, 1.2),
 ('prod-006', 'Tea 200g', 420.00, 0.5),
 ('prod-007', 'Biscuits Pack', 250.00, 0.6),
-('prod-008', 'Soap Bar', 120.00, 0.3)
+('prod-008', 'Soap Bar', 120.00, 0.3),
 ('prod-det-01', 'Sunlight Soap 100g', 80.00, 0.2),
 ('prod-bev-01', 'Coca-Cola 500ml', 150.00, 0.5),
 ('prod-snk-01', 'Potato Chips 100g', 200.00, 0.4),
