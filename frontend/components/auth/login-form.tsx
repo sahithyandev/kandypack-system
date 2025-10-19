@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { postAuthSignIn } from "@/lib/api-client";
-import { saveToken } from "@/lib/auth";
+import { saveToken, decodeJWT } from "@/lib/auth";
 import { isAPIError } from "@/lib/types";
 
 const loginSchema = z.object({
@@ -52,7 +52,15 @@ export default function LoginForm() {
 			}
 
 			saveToken(r.token);
-			router.push("/dashboard");
+			
+			// Decode JWT to check role and workerType
+			const user = decodeJWT(r.token);
+			
+			if (user && user.role === "Worker" && user.workerType === "Dispatcher") {
+				router.push("/dispatcher/overview");
+			} else {
+				router.push("/dashboard");
+			}
 		} catch (err) {
 			if (!isAPIError(err)) {
 				console.log(err);

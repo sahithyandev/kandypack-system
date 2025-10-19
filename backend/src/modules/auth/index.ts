@@ -56,6 +56,7 @@ export const auth = new Elysia({ prefix: "/auth" })
 			const token = await jwt.sign({
 				username: signInResponse.username,
 				role: signInResponse.role,
+				workerType: signInResponse.workerType,
 			} satisfies AuthModel.JWTData);
 			signInResponse.token = token;
 
@@ -91,6 +92,7 @@ export const auth = new Elysia({ prefix: "/auth" })
 			const token = await jwt.sign({
 				username: response.username,
 				role: response.role,
+				workerType: response.workerType,
 			} satisfies AuthModel.JWTData);
 			response.token = token;
 

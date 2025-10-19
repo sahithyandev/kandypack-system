@@ -1,0 +1,189 @@
+### ============================================================================
+### DISPATCHER API TESTING GUIDE
+### ============================================================================
+### This file contains ready-to-use HTTP requests with seed data IDs
+### Replace YOUR_JWT_TOKEN with the token from dispatcher login
+### ============================================================================
+
+### STEP 0: Sign in as Dispatcher to get JWT token
+POST http://localhost:2000/auth/sign-in
+Content-Type: application/json
+
+{
+  "username": "dispatcher1",
+  "password": "password123"
+}
+
+# Copy the "token" from response and replace YOUR_JWT_TOKEN below
+
+### ============================================================================
+### PENDING ORDERS - Test getting orders awaiting scheduling
+### ============================================================================
+
+### Get all pending orders
+GET http://localhost:2000/api/orders/pending
+Authorization: Bearer YOUR_JWT_TOKEN
+
+# Expected: 4 pending orders (ord-001, ord-002, ord-003, ord-004)
+
+### ============================================================================
+### TRAIN SCHEDULING - Test viewing train trips and creating shipments
+### ============================================================================
+
+### Get all future train trips
+GET http://localhost:2000/api/train-trips
+Authorization: Bearer YOUR_JWT_TOKEN
+
+# Expected: 4 train trips with capacity info
+
+###
+
+### Get train trips to Colombo only
+GET http://localhost:2000/api/train-trips?destinationCityId=city-cmb
+Authorization: Bearer YOUR_JWT_TOKEN
+
+# Expected: 2 train trips (tt-kdy-cmb-001, tt-kdy-cmb-002)
+
+###
+
+### Create shipment - Assign ord-001 to train trip
+POST http://localhost:2000/api/shipments
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "orderId": "ord-001",
+  "trainTripId": "tt-kdy-cmb-001"
+}
+
+# Expected: 201 Created with shipmentId
+# Order status will change from Pending to In_Train_Transit
+
+###
+
+### Create another shipment - Assign ord-002 to same train
+POST http://localhost:2000/api/shipments
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "orderId": "ord-002",
+  "trainTripId": "tt-kdy-cmb-001"
+}
+
+###
+
+### Create shipment for Galle order
+POST http://localhost:2000/api/shipments
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "orderId": "ord-003",
+  "trainTripId": "tt-cmb-gal-001"
+}
+
+###
+
+### TEST ERROR: Try to assign already scheduled order (should fail with 400)
+POST http://localhost:2000/api/shipments
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "orderId": "ord-001",
+  "trainTripId": "tt-kdy-cmb-002"
+}
+
+# Expected: 400 Error - Order is not in Pending status
+
+### ============================================================================
+### TRUCK SCHEDULING - Test truck delivery scheduling
+### ============================================================================
+
+### Get shipments at store (ready for truck delivery)
+GET http://localhost:2000/api/shipments/at-store
+Authorization: Bearer YOUR_JWT_TOKEN
+
+# Expected: 1 shipment (ship-at-store-001) with order ord-at-store-001
+
+###
+
+### Get shipments at specific store
+GET http://localhost:2000/api/shipments/at-store?storeId=store-cmb-01
+Authorization: Bearer YOUR_JWT_TOKEN
+
+###
+
+### Get available resources (drivers, assistants, trucks)
+GET http://localhost:2000/api/resources/available
+Authorization: Bearer YOUR_JWT_TOKEN
+
+# Expected:
+# - 1 driver (driver1)
+# - 1 assistant (assistant1)  
+# - 3 trucks (truck-001, truck-002, truck-003)
+
+###
+
+### Schedule truck trip for the at-store shipment
+POST http://localhost:2000/api/truck-trips
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "shipmentId": "ship-at-store-001",
+  "truckId": "truck-001",
+  "routeId": "route-cmb-02",
+  "driverId": "0199e825-7df3-7000-ab6f-71669cef9383",
+  "assistantId": "0199e824-f514-7000-87e6-1bf03af11985",
+  "scheduledStart": "2025-10-18T10:00:00Z",
+  "scheduledEnd": "2025-10-18T14:00:00Z"
+}
+
+# Expected: 201 Created with truckTripId
+# Database triggers will validate worker availability and business rules
+
+###
+
+### TEST ERROR: Try to schedule same driver again (should fail - consecutive trip limit)
+POST http://localhost:2000/api/truck-trips
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "shipmentId": "ship-at-store-001",
+  "truckId": "truck-002",
+  "routeId": "route-cmb-01",
+  "driverId": "0199e825-7df3-7000-ab6f-71669cef9383",
+  "assistantId": "0199e824-f514-7000-87e6-1bf03af11985",
+  "scheduledStart": "2025-10-18T15:00:00Z",
+  "scheduledEnd": "2025-10-18T19:00:00Z"
+}
+
+# Expected: 400 Error - Driver consecutive trip limit exceeded
+
+### ============================================================================
+### SCHEDULE OVERVIEW - Test comprehensive view
+### ============================================================================
+
+### Get complete schedule overview
+GET http://localhost:2000/api/schedules/overview
+Authorization: Bearer YOUR_JWT_TOKEN
+
+# Expected:
+# - List of future train trips with shipment counts
+# - List of scheduled/in-progress truck trips
+
+### ============================================================================
+### TESTING WORKFLOW
+### ============================================================================
+# 1. Sign in as dispatcher (STEP 0)
+# 2. View pending orders
+# 3. View available train trips
+# 4. Create shipments (assign orders to trains)
+# 5. View shipments at store
+# 6. View available resources
+# 7. Schedule truck trips
+# 8. View schedule overview
+### ============================================================================

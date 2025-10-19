@@ -1,0 +1,32 @@
+### Get Shipments at Store
+GET http://localhost:2000/api/shipments/at-store
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Get Shipments at Specific Store
+GET http://localhost:2000/api/shipments/at-store?storeId=store-cmb-01
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Get Available Resources
+GET http://localhost:2000/api/resources/available
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+###
+
+### Schedule Truck Trip
+POST http://localhost:2000/api/truck-trips
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "shipmentId": "ship-001",
+  "truckId": "truck-01",
+  "routeId": "route-cmb-01",
+  "driverId": "user-drv-01",
+  "assistantId": "user-ast-01",
+  "scheduledStart": "2025-10-21T10:00:00Z",
+  "scheduledEnd": "2025-10-21T14:00:00Z"
+}
