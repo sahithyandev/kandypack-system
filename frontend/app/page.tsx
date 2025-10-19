@@ -72,43 +72,24 @@ export default function HomePage() {
 
 			{/* HERO */}
 			<section className="relative overflow-hidden py-28">
-				<div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center px-6">
-					<motion.div
-						initial={{ opacity: 0, y: 30 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.7 }}
-						className="z-10 space-y-6"
-					>
-						<h1 className="text-5xl font-extrabold leading-tight">
-							Delivering Quality FMCG Products Across Sri Lanka
-						</h1>
-						<p className="text-muted-foreground text-lg max-w-md">
-							Kandypack connects Sri Lanka with reliable, sustainable, and
-							affordable packaged goods — powered by a hybrid rail and road
-							network.
-						</p>
-						<div className="flex gap-4">
-							<Button>Learn More</Button>
-							<Button variant="outline">Contact</Button>
-						</div>
-					</motion.div>
-
-					<motion.div
-						initial={{ opacity: 0, scale: 0.95 }}
-						animate={{ opacity: 1, scale: 1 }}
-						transition={{ duration: 0.9 }}
-						className="relative"
-					>
-						<div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-green-400/10 blur-3xl" />
-						<Image
-							src="https://images.unsplash.com/photo-1607083206173-06f4c2b71c5d?auto=format&fit=crop&w=900&q=80"
-							alt="Distribution network"
-							width={800}
-							height={600}
-							className="relative z-10 rounded-3xl shadow-2xl object-cover"
-						/>
-					</motion.div>
-				</div>
+				<motion.div
+					initial={{ opacity: 0, y: 30 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.7 }}
+					className="max-w-7xl mx-auto flex flex-col gap-16 items-center px-6 text-center"
+				>
+					<h1 className="text-5xl font-extrabold leading-tight max-w-[32ch] mx-auto text-balance">
+						Delivering Quality FMCG Products Across Sri Lanka
+					</h1>
+					<p className="text-muted-foreground text-lg max-w-prose mx-auto">
+						Kandypack connects Sri Lanka with reliable, sustainable, and
+						affordable packaged goods — powered by a hybrid rail and road
+						network.
+					</p>
+					<Button className="dark:text-white !py-6 !px-9 rounded-full">
+						Create Account
+					</Button>
+				</motion.div>
 			</section>
 
 			{/* TRUST STRIP */}
