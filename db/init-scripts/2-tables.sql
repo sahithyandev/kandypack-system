@@ -80,18 +80,17 @@ CREATE TABLE IF NOT EXISTS route_stop (
 );
 
 -- Vehicle Tables
-
-CREATE TABLE IF NOT EXISTS truck (
-    id varchar(50) PRIMARY KEY,
-    vehicle_no varchar(20) UNIQUE NOT NULL
+CREATE TABLE IF NOT EXISTS Truck (
+	id VARCHAR(50) PRIMARY KEY,
+	vehicle_no VARCHAR(20) UNIQUE NOT NULL,
+	status VARCHAR(20) NOT NULL DEFAULT 'available' CHECK (status IN ('busy','available','maintenance'))
 );
 
-
-CREATE TABLE IF NOT EXISTS train (
-    id varchar(50) PRIMARY KEY,
-    name varchar(50) NOT NULL
+-- Truck status: busy, available, or maintenance
+CREATE TABLE IF NOT EXISTS Train (
+	id VARCHAR(50) PRIMARY KEY,
+	name VARCHAR(50) NOT NULL
 );
-
 -- Store and Product Tables
 
 CREATE TABLE IF NOT EXISTS store (
@@ -112,28 +111,27 @@ CREATE TABLE IF NOT EXISTS product (
 -- Order and Order Item Tables
 
 CREATE TABLE IF NOT EXISTS "Order" (
-    id varchar(50) PRIMARY KEY,
-    store_id varchar(50) REFERENCES store(id) ON DELETE RESTRICT,
-    customer_id varchar(50) NOT NULL REFERENCES customer(id) ON DELETE CASCADE,
-    delivery_address varchar(255) NOT NULL,
-    route_id varchar(50) REFERENCES route(id) ON DELETE SET NULL,
-    placed_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    required_delivery_date DATE NOT NULL,
-    status order_status NOT NULL DEFAULT 'Pending',
-    total_value numeric(12, 2) DEFAULT 0,
-    total_space_units numeric(12, 2) DEFAULT 0,
-    CONSTRAINT chk_delivery_date CHECK (required_delivery_date >= (placed_on::date + INTERVAL '7 day'))
+	id VARCHAR(50) PRIMARY KEY,
+	store_id VARCHAR(50) REFERENCES Store(id) ON DELETE RESTRICT,
+	customer_id VARCHAR(50) NOT NULL REFERENCES Customer(id) ON DELETE CASCADE,
+	delivery_address VARCHAR(255) NOT NULL,
+	route_id VARCHAR(50) REFERENCES Route(id) ON DELETE SET NULL,
+	placed_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	required_delivery_date DATE NOT NULL,
+	status order_status NOT NULL DEFAULT 'Pending',
+	total_value NUMERIC(12, 2) DEFAULT 0,
+	total_space_units NUMERIC(12, 2) DEFAULT 0,
+	CONSTRAINT chk_delivery_date CHECK (
+		required_delivery_date >= (placed_on::date + INTERVAL '7 day')
+	)
 );
-
-
-CREATE TABLE IF NOT EXISTS order_item (
-    id varchar(50) PRIMARY KEY,
-    order_id varchar(50) NOT NULL REFERENCES "Order"(id) ON DELETE CASCADE,
-    product_id varchar(50) NOT NULL REFERENCES product(id) ON DELETE RESTRICT,
-    quantity INT NOT NULL CHECK (quantity > 0),
-    UNIQUE(order_id, product_id)
+CREATE TABLE IF NOT EXISTS Order_Item (
+	id VARCHAR(50) PRIMARY KEY,
+	order_id VARCHAR(50) NOT NULL REFERENCES "Order"(id) ON DELETE CASCADE,
+	product_id VARCHAR(50) NOT NULL REFERENCES Product(id) ON DELETE RESTRICT,
+	quantity INT NOT NULL CHECK (quantity > 0),
+	UNIQUE(order_id, product_id)
 );
-
 -- Logistics and Trip Tables
 
 CREATE TABLE IF NOT EXISTS train_trip (

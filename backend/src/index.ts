@@ -18,6 +18,8 @@ await client.connect().catch((error) => {
 export const app = new Elysia()
 	.use(
 		cors({
+			// Credentialed requests require a specific allowed origin (not "*")
+			origin: ["http://localhost:3000", "http://127.0.0.1:3000"],
 			credentials: true,
 		}),
 	)
@@ -45,6 +47,7 @@ export const app = new Elysia()
 	.use(jwtInstance)
 	.use(auth)
 	.use(authMiddleware)
+	.use(driver)
 	.get(
 		"/",
 		async ({ currentUser }: any) => {

@@ -62,6 +62,8 @@ export default function LoginForm() {
 				router.push("/store-manager/incoming");
 			} else if (user && user.role === "Customer") {
 				router.push("/customer");
+			} else if (user && user.role === "Worker" && user.workerType === "Driver") {
+				router.push("/driver");
 			} else {
 				router.push("/login");
 			}

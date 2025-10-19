@@ -47,5 +47,35 @@ export namespace DriverModel {
 		weekly_hours: t.Number(),
 	});
 	export type profileResponse = typeof profileResponse.static;
+
+	// Vehicle details for driver's assigned/most-recent truck
+	export const vehicleTrip = t.Object({
+		id: t.String(),
+		status: tripStatus,
+		scheduled_start: t.String(),
+		scheduled_end: t.Nullable(t.String()),
+	});
+	export type vehicleTrip = typeof vehicleTrip.static;
+
+	export const vehicleResponse = t.Object({
+		id: t.String(), // truck id
+		vehicle_no: t.String(), // plate
+		truck_status: t.String(), // busy | available | maintenance
+		next_trip: t.Nullable(vehicleTrip),
+		last_completed_trip_end: t.Nullable(t.String()),
+		total_trips_with_vehicle: t.Number(),
+	});
+	export type vehicleResponse = typeof vehicleResponse.static;
+
+	// All trucks list for vehicle page
+	export const truckSummary = t.Object({
+		id: t.String(),
+		vehicle_no: t.String(),
+		status: t.String(), // busy | available | maintenance
+	});
+	export type truckSummary = typeof truckSummary.static;
+
+	export const trucksResponse = t.Array(truckSummary);
+	export type trucksResponse = typeof trucksResponse.static;
 }
 
