@@ -64,22 +64,22 @@ BEGIN
     
     -- Get driver weekly hour limit
     SELECT config_value::NUMERIC INTO v_driver_hour_limit
-    FROM system_configuration
+    FROM System_Configuration
     WHERE config_key = 'DRIVER_WEEKLY_HOUR_LIMIT';
     
     -- Get assistant weekly hour limit
     SELECT config_value::NUMERIC INTO v_assistant_hour_limit
-    FROM system_configuration
+    FROM System_Configuration
     WHERE config_key = 'ASSISTANT_WEEKLY_HOUR_LIMIT';
     
     -- Get driver consecutive trip limit
     SELECT config_value::INT INTO v_driver_consecutive_limit
-    FROM system_configuration
+    FROM System_Configuration
     WHERE config_key = 'DRIVER_CONSECUTIVE_TRIP_LIMIT';
     
     -- Get assistant consecutive trip limit
     SELECT config_value::INT INTO v_assistant_consecutive_limit
-    FROM system_configuration
+    FROM System_Configuration
     WHERE config_key = 'ASSISTANT_CONSECUTIVE_TRIP_LIMIT';
     
     -- =================================================================
@@ -88,7 +88,7 @@ BEGIN
     
     -- Check driver availability
     SELECT status INTO driver_status
-    FROM worker
+    FROM Worker
     WHERE id = NEW.driver_id;
     
     IF driver_status != 'Free' THEN 
@@ -98,8 +98,8 @@ BEGIN
     
     -- Check assistant availability (if assigned)
     IF NEW.assistant_id IS NOT NULL THEN
-        SELECT status INTO assistant_status
-        FROM worker
+    SELECT status INTO assistant_status
+    FROM Worker
         WHERE id = NEW.assistant_id;
         
         IF assistant_status != 'Free' THEN 
@@ -119,7 +119,7 @@ BEGIN
     
     -- Check driver weekly hour limit
     SELECT weekly_hours INTO driver_weekly_hours
-    FROM worker
+    FROM Worker
     WHERE id = NEW.driver_id;
     
     IF (driver_weekly_hours + trip_duration_hours) > v_driver_hour_limit THEN 
@@ -129,8 +129,8 @@ BEGIN
     
     -- Check assistant weekly hour limit (if assigned)
     IF NEW.assistant_id IS NOT NULL THEN
-        SELECT weekly_hours INTO assistant_weekly_hours
-        FROM worker
+    SELECT weekly_hours INTO assistant_weekly_hours
+    FROM Worker
         WHERE id = NEW.assistant_id;
         
         IF (assistant_weekly_hours + trip_duration_hours) > v_assistant_hour_limit THEN 
@@ -145,7 +145,7 @@ BEGIN
     
     -- Check driver consecutive deliveries
     SELECT COALESCE(MAX(actual_end), '1970-01-01') INTO last_trip_end
-    FROM truck_trip
+    FROM Truck_Trip
     WHERE driver_id = NEW.driver_id
         AND status = 'Completed';
     
@@ -153,7 +153,7 @@ BEGIN
     IF NEW.scheduled_start - last_trip_end <= INTERVAL '1 hour' THEN 
         new_consecutive_d := (
             SELECT consecutive_deliveries
-            FROM driver
+            FROM Driver
             WHERE id = NEW.driver_id
         ) + 1;
     ELSE 
@@ -167,7 +167,7 @@ BEGIN
     END IF;
     
     -- Update driver consecutive delivery count
-    UPDATE driver
+    UPDATE Driver
     SET consecutive_deliveries = new_consecutive_d
     WHERE id = NEW.driver_id;
     
@@ -175,7 +175,7 @@ BEGIN
     IF NEW.assistant_id IS NOT NULL THEN
         -- Get assistant's last trip end time
         SELECT COALESCE(MAX(actual_end), '1970-01-01') INTO last_trip_end
-        FROM truck_trip
+    FROM Truck_Trip
         WHERE assistant_id = NEW.assistant_id
             AND status = 'Completed';
         
@@ -183,7 +183,7 @@ BEGIN
         IF NEW.scheduled_start - last_trip_end <= INTERVAL '1 hour' THEN 
             new_consecutive_a := (
                 SELECT consecutive_routes
-                FROM assistant
+                FROM Assistant
                 WHERE id = NEW.assistant_id
             ) + 1;
         ELSE 
@@ -197,7 +197,7 @@ BEGIN
         END IF;
         
         -- Update assistant consecutive route count
-        UPDATE assistant
+    UPDATE Assistant
         SET consecutive_routes = new_consecutive_a
         WHERE id = NEW.assistant_id;
     END IF;
@@ -214,11 +214,11 @@ $$ LANGUAGE plpgsql;
 -- =============================================================================
 
 -- Drop existing trigger if it exists
-DROP TRIGGER IF EXISTS worker_assignment_validation_trigger ON truck_trip;
+DROP TRIGGER IF EXISTS worker_assignment_validation_trigger ON Truck_Trip;
 
 -- Create the worker assignment validation trigger
 CREATE TRIGGER worker_assignment_validation_trigger
-    BEFORE INSERT ON truck_trip
+    BEFORE INSERT ON Truck_Trip
     FOR EACH ROW EXECUTE FUNCTION trg_validate_worker_assignment();
 
 -- =============================================================================

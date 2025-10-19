@@ -17,12 +17,12 @@ SELECT
     s.name AS store_name,
     s_city.name AS store_city
 FROM "Order" o
-    JOIN customer c ON o.customer_id = c.id
+    JOIN Customer c ON o.customer_id = c.id
     JOIN "User" u ON c.id = u.id
-    JOIN order_item oi ON o.id = oi.order_id
-    JOIN product p ON oi.product_id = p.id
-    LEFT JOIN store s ON o.store_id = s.id
-    LEFT JOIN city s_city ON s.city_id = s_city.id;
+    JOIN Order_Item oi ON o.id = oi.order_id
+    JOIN Product p ON oi.product_id = p.id
+    LEFT JOIN Store s ON o.store_id = s.id
+    LEFT JOIN City s_city ON s.city_id = s_city.id;
 
 
 CREATE OR REPLACE VIEW v_workerassignments AS
@@ -35,9 +35,9 @@ SELECT
     tt.status AS trip_status,
     tt.scheduled_start,
     tt.scheduled_end
-FROM worker w
+FROM Worker w
     JOIN "User" u ON w.id = u.id
-    LEFT JOIN truck_trip tt ON (
+    LEFT JOIN Truck_Trip tt ON (
         w.id = tt.driver_id OR w.id = tt.assistant_id
     )
     AND tt.status IN ('Scheduled', 'In_Progress');
@@ -52,9 +52,9 @@ SELECT
     COUNT(o.id) AS number_of_orders,
     SUM(o.total_value) AS total_sales_value
 FROM "Order" o
-    JOIN route r ON o.route_id = r.id
-    JOIN route_stop rs ON r.id = rs.route_id
-    JOIN city c ON rs.city_id = c.id
+    JOIN Route r ON o.route_id = r.id
+    JOIN Route_Stop rs ON r.id = rs.route_id
+    JOIN City c ON rs.city_id = c.id
 WHERE o.status = 'Delivered'
 GROUP BY 
     r.name,
@@ -68,8 +68,8 @@ SELECT
     p.name AS product_name,
     SUM(oi.quantity) AS total_quantity_ordered,
     COUNT(DISTINCT o.id) AS number_of_orders
-FROM order_item oi
-    JOIN product p ON oi.product_id = p.id
+FROM Order_Item oi
+    JOIN Product p ON oi.product_id = p.id
     JOIN "Order" o ON oi.order_id = o.id
 GROUP BY p.name
 ORDER BY total_quantity_ordered DESC;
@@ -83,8 +83,8 @@ SELECT
     wr.date,
     wr.hours_worked,
     wr.truck_trip_id
-FROM worker_record wr
-    JOIN worker w ON wr.worker_id = w.id
+FROM Worker_Record wr
+    JOIN Worker w ON wr.worker_id = w.id
     JOIN "User" u ON w.id = u.id;
 
 
@@ -95,8 +95,8 @@ SELECT
     EXTRACT(MONTH FROM tt.actual_start) AS trip_month,
     COUNT(tt.id) AS number_of_trips,
     SUM(EXTRACT(EPOCH FROM (tt.actual_end - tt.actual_start)) / 3600) AS total_hours_in_use
-FROM truck_trip tt
-    JOIN truck t ON tt.truck_id = t.id
+FROM Truck_Trip tt
+    JOIN Truck t ON tt.truck_id = t.id
 WHERE tt.status = 'Completed'
 GROUP BY 
     t.vehicle_no,

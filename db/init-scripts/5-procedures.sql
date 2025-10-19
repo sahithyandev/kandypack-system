@@ -19,8 +19,8 @@ BEGIN
     INTO 
         v_totals.total_value,
         v_totals.total_space
-    FROM order_item oi
-        JOIN product p ON oi.product_id = p.id
+    FROM Order_Item oi
+        JOIN Product p ON oi.product_id = p.id
     WHERE oi.order_id = p_order_id;
     
     RETURN v_totals;
@@ -45,13 +45,13 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE PROCEDURE start_truck_trip(p_trip_id VARCHAR) AS $$ 
 BEGIN
-    UPDATE truck_trip
+    UPDATE Truck_Trip
     SET 
         status = 'In_Progress',
         actual_start = CURRENT_TIMESTAMP
     WHERE id = p_trip_id;
     
-    UPDATE worker
+    UPDATE Worker
     SET status = 'Busy'
     WHERE id IN (
         SELECT driver_id
@@ -59,7 +59,7 @@ BEGIN
         WHERE id = p_trip_id
     );
     
-    UPDATE worker
+    UPDATE Worker
     SET status = 'Busy'
     WHERE id IN (
         SELECT assistant_id
@@ -75,7 +75,7 @@ DECLARE
     trip_record RECORD;
     hours_diff NUMERIC;
 BEGIN
-    UPDATE truck_trip
+    UPDATE Truck_Trip
     SET 
         status = 'Completed',
         actual_end = CURRENT_TIMESTAMP
@@ -88,7 +88,7 @@ BEGIN
         )
     ) / 3600;
     
-    INSERT INTO worker_record (id, worker_id, date, hours_worked, truck_trip_id)
+    INSERT INTO Worker_Record (id, worker_id, date, hours_worked, truck_trip_id)
     VALUES (
         'wr-' || substr(md5(random()::text), 0, 20),
         trip_record.driver_id,
@@ -97,12 +97,12 @@ BEGIN
         p_trip_id
     );
     
-    UPDATE worker
+    UPDATE Worker
     SET weekly_hours = weekly_hours + hours_diff
     WHERE id = trip_record.driver_id;
     
     IF trip_record.assistant_id IS NOT NULL THEN
-        INSERT INTO worker_record (id, worker_id, date, hours_worked, truck_trip_id)
+    INSERT INTO Worker_Record (id, worker_id, date, hours_worked, truck_trip_id)
         VALUES (
             'wr-' || substr(md5(random()::text), 0, 20),
             trip_record.assistant_id,
@@ -111,17 +111,17 @@ BEGIN
             p_trip_id
         );
         
-        UPDATE worker
+    UPDATE Worker
         SET weekly_hours = weekly_hours + hours_diff
         WHERE id = trip_record.assistant_id;
     END IF;
     
-    UPDATE worker
+    UPDATE Worker
     SET status = 'Free'
     WHERE id = trip_record.driver_id;
     
     IF trip_record.assistant_id IS NOT NULL THEN
-        UPDATE worker
+    UPDATE Worker
         SET status = 'Free'
         WHERE id = trip_record.assistant_id;
     END IF;

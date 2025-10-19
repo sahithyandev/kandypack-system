@@ -40,7 +40,7 @@ ON CONFLICT (id) DO NOTHING;
 -- 1. CITIES
 -- ============================================================================
 
-INSERT INTO city (id, name)
+INSERT INTO City (id, name)
 VALUES 
     ('city-cmb', 'Colombo'),
     ('city-kdy', 'Kandy'),
@@ -54,7 +54,7 @@ ON CONFLICT (id) DO NOTHING;
 -- 2. ROUTES
 -- ============================================================================
 
-INSERT INTO route (id, name, max_delivery_time_hours, area)
+INSERT INTO Route (id, name, max_delivery_time_hours, area)
 VALUES 
     ('route-cmb-01', 'Colombo Fort Area', 4.0, 'Colombo District'),
     ('route-cmb-02', 'Colombo South', 5.0, 'Colombo District'),
@@ -66,7 +66,7 @@ ON CONFLICT (id) DO NOTHING;
 -- 3. ROUTE STOPS
 -- ============================================================================
 
-INSERT INTO route_stop (id, route_id, city_id, stop_order)
+INSERT INTO Route_Stop (id, route_id, city_id, stop_order)
 VALUES ('rs-cmb-01-1', 'route-cmb-01', 'city-cmb', 1),
        ('rs-cmb-02-1', 'route-cmb-02', 'city-cmb', 1),
        ('rs-neg-01-1', 'route-neg-01', 'city-neg', 1),
@@ -75,7 +75,7 @@ VALUES ('rs-cmb-01-1', 'route-cmb-01', 'city-cmb', 1),
 -- ============================================================================
 -- 4. PRODUCTS
 -- ============================================================================
-INSERT INTO product (id, name, unit_price, space_consumption_rate)
+INSERT INTO Product (id, name, unit_price, space_consumption_rate)
 VALUES 
     ('prod-001', 'Rice 5kg', 850.00, 2.5),
     ('prod-002', 'Sugar 1kg', 180.00, 1.0),
@@ -96,7 +96,7 @@ ON CONFLICT (id) DO NOTHING;
 -- ============================================================================
 -- Dispatcher
 
-INSERT INTO worker (id, type, hourly_pay, status, weekly_hours)
+INSERT INTO Worker (id, type, hourly_pay, status, weekly_hours)
 VALUES 
     ('0199e7bd-d5f8-7000-9fd6-f2a853034f88', 'Dispatcher', 2500.00, 'Free', 0) 
 ON CONFLICT (id) DO NOTHING;
@@ -111,7 +111,7 @@ INSERT INTO Driver (id, consecutive_deliveries) VALUES
 ON CONFLICT (id) DO UPDATE SET consecutive_deliveries = 0;
 
 
-INSERT INTO driver (id, consecutive_deliveries)
+INSERT INTO Driver (id, consecutive_deliveries)
 VALUES ('0199e825-7df3-7000-ab6f-71669cef9383', 0) ON CONFLICT (id) DO NOTHING;
 
 -- Assistant
@@ -125,7 +125,7 @@ ON CONFLICT (id) DO UPDATE SET consecutive_routes = 0;
 
 
 
-INSERT INTO assistant (id, consecutive_routes)
+INSERT INTO Assistant (id, consecutive_routes)
 VALUES ('0199e824-f514-7000-87e6-1bf03af11985', 0) ON CONFLICT (id) DO NOTHING;
 
 -- Manager
@@ -145,11 +145,11 @@ ON CONFLICT (id) DO UPDATE SET status = 'Free', weekly_hours = 0;
 -- ============================================================================
 -- Store Manager
 
-INSERT INTO store_manager (id)
+INSERT INTO Store_Manager (id)
 VALUES ('0199e825-4ae5-7000-9d86-8be81708d4f1') ON CONFLICT (id) DO NOTHING;
 
 
-INSERT INTO store (id, name, city_id, managed_by)
+INSERT INTO Store (id, name, city_id, managed_by)
 VALUES ('store-cmb-01', 'Colombo Central Store', 'city-cmb', '0199e825-4ae5-7000-9d86-8be81708d4f1'),
        ('store-kdy-01', 'Kandy Main Store', 'city-kdy', NULL),
        ('store-gal-01', 'Galle Store', 'city-gal', NULL) ON CONFLICT (id) DO NOTHING;
@@ -167,7 +167,7 @@ ON CONFLICT (id) DO NOTHING;
 -- 8. TRAINS
 -- ============================================================================
 
-INSERT INTO train (id, name)
+INSERT INTO Train (id, name)
 VALUES ('train-001', 'Udarata Menike'),
        ('train-002', 'Rajarata Rejina'),
        ('train-003', 'Ruhunu Kumari') ON CONFLICT (id) DO NOTHING;
@@ -176,7 +176,7 @@ VALUES ('train-001', 'Udarata Menike'),
 -- 9. TRUCKS
 -- ============================================================================
 
-INSERT INTO truck (id, vehicle_no)
+INSERT INTO Truck (id, vehicle_no)
 VALUES ('truck-001', 'CBA-1234'),
        ('truck-002', 'CP-5678'),
        ('truck-003', 'WP-9012') ON CONFLICT (id) DO NOTHING;
@@ -186,7 +186,7 @@ VALUES ('truck-001', 'CBA-1234'),
 -- ============================================================================
 -- Note: Adjust dates to be in the future relative to when you run this
 
-INSERT INTO train_trip (id, train_id, from_city_id, to_city_id, scheduled_departure, scheduled_arrival, capacity_units, allocated_units)
+INSERT INTO Train_Trip (id, train_id, from_city_id, to_city_id, scheduled_departure, scheduled_arrival, capacity_units, allocated_units)
 VALUES ('tt-kdy-cmb-001', 'train-001', 'city-kdy', 'city-cmb', CURRENT_TIMESTAMP + INTERVAL '2 days 8 hours', CURRENT_TIMESTAMP + INTERVAL '2 days 12 hours', 500.0, 0.0),
        ('tt-kdy-cmb-002', 'train-001', 'city-kdy', 'city-cmb', CURRENT_TIMESTAMP + INTERVAL '3 days 8 hours', CURRENT_TIMESTAMP + INTERVAL '3 days 12 hours', 500.0, 0.0),
        ('tt-cmb-gal-001', 'train-003', 'city-cmb', 'city-gal', CURRENT_TIMESTAMP + INTERVAL '1 day 14 hours', CURRENT_TIMESTAMP + INTERVAL '1 day 18 hours', 400.0, 0.0),
@@ -218,7 +218,7 @@ VALUES -- Orders for Colombo store
 -- 12. ORDER ITEMS
 -- ============================================================================
 
-INSERT INTO order_item (id, order_id, product_id, quantity)
+INSERT INTO Order_Item (id, order_id, product_id, quantity)
 VALUES -- Order 1 items (ord-pending-001)
 ('oi-p001-01', 'ord-pending-001', 'prod-001', 30),
                                          -- Rice
@@ -277,13 +277,13 @@ INSERT INTO "Order" (id,
 VALUES ('ord-at-store-001', 'store-cmb-01', '0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 'Test Delivery Address, Colombo 03', 'route-cmb-02', CURRENT_TIMESTAMP - INTERVAL '3 days', CURRENT_DATE + INTERVAL '7 days', 'At_Store', 5000.00, 25.0) ON CONFLICT (id) DO NOTHING;
 
 
-INSERT INTO order_item (id, order_id, product_id, quantity)
+INSERT INTO Order_Item (id, order_id, product_id, quantity)
 VALUES ('oi-at-store-01', 'ord-at-store-001', 'prod-001', 30),
        ('oi-at-store-02', 'ord-at-store-001', 'prod-005', 20) ON CONFLICT (id) DO NOTHING;
 
 -- Create shipment for the at-store order
 
-INSERT INTO shipment (id, order_id, train_trip_id, allocated_space_units, shipped_quantity, status, shipped_at)
+INSERT INTO Shipment (id, order_id, train_trip_id, allocated_space_units, shipped_quantity, status, shipped_at)
 VALUES ('ship-at-store-001', 'ord-at-store-001', 'tt-kdy-cmb-001', 25.0, 1, 'Delivered', CURRENT_TIMESTAMP - INTERVAL '1 day') ON CONFLICT (id) DO NOTHING;
 
 -- ============================================================================
@@ -556,7 +556,7 @@ VALUES ('user-driver-1', 'driver.john', 'John Doe', 'password-hash-1', 'Worker')
 
 -- Create corresponding Worker rows
 
-INSERT INTO worker (id, type, hourly_pay, status, weekly_hours)
+INSERT INTO Worker (id, type, hourly_pay, status, weekly_hours)
 VALUES 
     ('user-driver-1', 'Driver', 18.50, 'Free', 10),
     ('user-driver-2', 'Driver', 20.00, 'Free', 5) 
@@ -564,48 +564,48 @@ ON CONFLICT (id) DO NOTHING;
 
 -- Promote to Driver speciality table
 
-INSERT INTO driver (id, consecutive_deliveries)
+INSERT INTO Driver (id, consecutive_deliveries)
 VALUES ('user-driver-1', 0),
        ('user-driver-2', 0) ON CONFLICT (id) DO NOTHING;
 
 -- Sample trucks
 
-INSERT INTO truck (id, vehicle_no)
+INSERT INTO Truck (id, vehicle_no)
 VALUES ('truck-1', 'TN-01-TR-1001'),
        ('truck-2', 'TN-01-TR-1002') ON CONFLICT (id) DO NOTHING;
 
 -- Sample cities and route used by truck trips
 
-INSERT INTO city (id, name)
+INSERT INTO City (id, name)
 VALUES ('city-1', 'Springfield'),
        ('city-2', 'Shelbyville') ON CONFLICT (id) DO NOTHING;
 
 
-INSERT INTO route (id, name, max_delivery_time_hours, area)
+INSERT INTO Route (id, name, max_delivery_time_hours, area)
 VALUES ('route-1', 'Springfield - Shelbyville', 5, 'Central'),
        ('route-2', 'Shelbyville - Springfield', 5, 'Central') ON CONFLICT (id) DO NOTHING;
 
 -- Sample train trip & shipment (so truck_trip can reference a shipment if needed)
 
-INSERT INTO train (id, name)
+INSERT INTO Train (id, name)
 VALUES ('train-1', 'InterCity-1') ON CONFLICT (id) DO NOTHING;
 
 
-INSERT INTO train_trip (id, train_id, from_city_id, to_city_id, scheduled_departure, scheduled_arrival, capacity_units, allocated_units)
+INSERT INTO Train_Trip (id, train_id, from_city_id, to_city_id, scheduled_departure, scheduled_arrival, capacity_units, allocated_units)
 VALUES ('traintrip-1', 'train-1', 'city-1', 'city-2', now() + INTERVAL '1 day', now() + INTERVAL '1 day' + INTERVAL '6 hours', 1000, 0) ON CONFLICT (id) DO NOTHING;
 
 
-INSERT INTO shipment (id, order_id, train_trip_id, allocated_space_units, shipped_quantity, status)
+INSERT INTO Shipment (id, order_id, train_trip_id, allocated_space_units, shipped_quantity, status)
 VALUES ('shipment-1', 'ord-at-store-001', 'traintrip-1', 100, 10, 'Pending') ON CONFLICT (id) DO NOTHING;
 
 -- Sample truck trip assigning driver to a truck and route
 
-INSERT INTO truck_trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, status)
-VALUES ('trucktrip-1', 'truck-1', 'route-1', 'user-driver-1', NULL, 'shipment-1', now() + INTERVAL '2 days', now() + INTERVAL '2 days' + INTERVAL '4 hours', 'Scheduled') ON CONFLICT (id) DO NOTHING;
+INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, status)
+VALUES ('trucktrip-1', 'truck-1', 'route-1', '0199e825-7df3-7000-ab6f-71669cef9383', NULL, 'shipment-1', now() + INTERVAL '2 days', now() + INTERVAL '2 days' + INTERVAL '4 hours', 'Scheduled') ON CONFLICT (id) DO NOTHING;
 
 -- Worker record for the driver (hours worked for the trip)
 
-INSERT INTO worker_record (id, worker_id, "date", hours_worked, assignment_type, truck_trip_id)
+INSERT INTO Worker_Record (id, worker_id, "date", hours_worked, assignment_type, truck_trip_id)
 VALUES ('wrec-1', 'user-driver-1', (now() + INTERVAL '2 days')::date, 4, 'Truck_Trip', 'trucktrip-1') ON CONFLICT (id) DO NOTHING;
 
 -- Another driver and trip sample
@@ -618,15 +618,15 @@ INSERT INTO "User" (id,
 VALUES ('user-driver-3', 'driver.lee', 'Lee Chan', 'password-hash-3', 'Worker') ON CONFLICT (id) DO NOTHING;
 
 
-INSERT INTO worker (id, type, hourly_pay, status, weekly_hours)
+INSERT INTO Worker (id, type, hourly_pay, status, weekly_hours)
 VALUES 
     ('user-driver-3', 'Driver', 19.00, 'Free', 0) 
 ON CONFLICT (id) DO NOTHING;
 
 
-INSERT INTO driver (id, consecutive_deliveries)
+INSERT INTO Driver (id, consecutive_deliveries)
 VALUES ('user-driver-3', 0) ON CONFLICT (id) DO NOTHING;
 
 
-INSERT INTO truck_trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, status)
+INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, status)
 VALUES ('trucktrip-2', 'truck-2', 'route-2', 'user-driver-3', NULL, NULL, now() + INTERVAL '3 days', now() + INTERVAL '3 days' + INTERVAL '3 hours', 'Scheduled') ON CONFLICT (id) DO NOTHING;
