@@ -4,6 +4,7 @@ import { logger } from "@grotto/logysia";
 import { Elysia, t } from "elysia";
 import { auth } from "./modules/auth";
 import authMiddleware from "./modules/auth/middleware";
+import { driver } from "./modules/driver";
 import { client } from "./utils/db";
 import jwtInstance from "./utils/jwt";
 import { dispatcher } from "./modules/dispatcher";
