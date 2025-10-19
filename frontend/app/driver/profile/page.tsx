@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDriverProfile, type DriverProfile } from "@/lib/driver-api";
 import { Badge } from "@/components/ui/badge";
 import { User } from "lucide-react";
-import DriverHeader from "@/components/driver/driver-header";
 
 function initials(name: string) {
   const parts = name.trim().split(/\s+/);
@@ -24,9 +23,8 @@ export default function DriverProfilePage() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <section className="lg:col-span-2 flex flex-col gap-6">
-        <div className="mt-2 flex items-center justify-between">
+        <div className="mt-2">
           <h2 className="text-2xl font-bold">Profile</h2>
-          <DriverHeader />
         </div>
 
         <Card>

@@ -38,7 +38,7 @@ export default function DriverProfilePanel() {
             <div className="font-medium truncate">{profile?.name ?? "Driver"}</div>
             <div className="text-xs text-muted-foreground truncate flex items-center gap-2">
               <span>@{profile?.username ?? "username"}</span>
-              {profile?.status && (
+              {/* {profile?.status && (
                 <Badge
                   variant={profile.status === "Busy" ? "default" : profile.status === "Free" ? "secondary" : "outline"}
                   className={
@@ -51,13 +51,13 @@ export default function DriverProfilePanel() {
                 >
                   {profile.status.replace("_", " ")}
                 </Badge>
-              )}
+              )} */}
             </div>
           </div>
         </div>
       </SidebarHeader>
       <SidebarSeparator />
-      <div className="px-3 py-2 text-sm">
+      {/* <div className="px-3 py-2 text-sm">
         {error && <div className="text-destructive mb-2">{error}</div>}
         <dl className="space-y-1">
           <div className="flex justify-between"><dt className="text-muted-foreground">Status</dt><dd className="font-medium">{profile?.status ?? "-"}</dd></div>
@@ -70,7 +70,7 @@ export default function DriverProfilePanel() {
             View Profile
           </Link>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import DriverSidebar from "@/components/driver/driver-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SIDEBAR_COOKIE_NAME } from "@/lib/consts";
+import DriverHeader from "@/components/driver/driver-header";
 
 export const metadata: Metadata = {
 	title: "Driver Dashboard",
@@ -49,11 +50,27 @@ export default async function Layout({
 	const defaultOpen = cookieStore.get(SIDEBAR_COOKIE_NAME)?.value === "true";
 	return (
 		<SidebarProvider defaultOpen={defaultOpen}>
-			<DriverSidebar />
-			<main className="px-3 py-2 w-full">
-				<SidebarTrigger className="cursor-pointer" />
-				{children}
-			</main>
+			<div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+				{/* Sidebar */}
+				<DriverSidebar />
+
+				{/* Main content area */}
+				<div className="flex flex-1 flex-col">
+					{/* Top header to mirror dispatcher layout */}
+					<header className="flex h-16 items-center justify-between border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 sm:px-6">
+						<SidebarTrigger className="cursor-pointer lg:hidden" />
+						<h1 className="text-lg sm:text-xl font-semibold">Driver Dashboard</h1>
+						<div className="flex items-center gap-2">
+							<DriverHeader />
+						</div>
+					</header>
+
+					{/* Page content */}
+					<main className="flex-1 overflow-y-auto p-4 sm:p-6">
+						{children}
+					</main>
+				</div>
+			</div>
 		</SidebarProvider>
 	);
 }

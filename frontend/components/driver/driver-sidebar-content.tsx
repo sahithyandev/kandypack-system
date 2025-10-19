@@ -36,11 +36,11 @@ const linkGroups: Array<LinkGroup> = [
 				label: "Dashboard",
 				icon: <Home />,
 			},
-			{
-				href: "/driver/profile",
-				label: "Profile",
-				icon: <User />,
-			},
+			// {
+			// 	href: "/driver/profile",
+			// 	label: "Profile",
+			// 	icon: <User />,
+			// },
 			{
 				href: "/driver/trips",
 				label: "Trips",
@@ -53,8 +53,8 @@ const linkGroups: Array<LinkGroup> = [
 			},
 			{ href: "/driver/analytics", label: "Analytics", icon: <BarChart2 /> },
 			{ href: "/driver/vehicles", label: "Vehicles", icon: <Truck /> },
-			{ href: "/driver/reports", label: "Reports", icon: <FileText /> },
-			{ href: "/driver/support", label: "Support", icon: <HelpCircle /> },
+			// { href: "/driver/reports", label: "Reports", icon: <FileText /> },
+			// { href: "/driver/support", label: "Support", icon: <HelpCircle /> },
 		],
 	},
 ];
