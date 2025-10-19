@@ -347,7 +347,7 @@ VALUES (
 ) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO Shipment (id, order_id, train_trip_id, allocated_space_units, shipped_quantity, status)
-VALUES ('shipment-1', NULL, 'traintrip-1', 100, 10, 'Pending') ON CONFLICT (id) DO NOTHING;
+VALUES ('shipment-1', 'ord-at-store-001', 'traintrip-1', 100, 10, 'Pending') ON CONFLICT (id) DO NOTHING;
 
 -- Sample truck trip assigning driver to a truck and route
 INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, status)
