@@ -5,12 +5,16 @@ import MapPlaceholder from "@/components/driver/map-placeholder";
 import Schedule from "@/components/driver/schedule";
 import VehicleInfo from "@/components/driver/vehicle-info";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import DriverHeader from "@/components/driver/driver-header";
 
 export default function DriverHome() {
 	return (
 		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 			<section className="lg:col-span-2 flex flex-col gap-6">
-				<h2 className="text-2xl font-bold mt-2">Driver Dashboard</h2>
+				<div className="mt-2 flex items-center justify-between">
+					<h2 className="text-2xl font-bold">Driver Dashboard</h2>
+					<DriverHeader />
+				</div>
 
 				<Card>
 					<CardHeader>
