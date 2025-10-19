@@ -156,7 +156,7 @@ ON CONFLICT (id) DO NOTHING;
 -- 6. CUSTOMER DATA
 -- ============================================================================
 INSERT INTO Customer (id, type, street_name, city, postal_code, phone_no) VALUES
-('0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 'Wholesale', 'Main Street', 'Colombo', '00100', '+94771234567')
+('0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 'Wholesale', 'Main Street', 'Colombo', '00100', '+94771234567'),
 ('cust-retail-001', 'Retail', '45 Main Street', 'Matara', '81000', '+94771112222'),
 ('cust-wholesale-001', 'Wholesale', '123 Galle Road', 'Galle', '80000', '+94773334444')
 ON CONFLICT (id) DO NOTHING;

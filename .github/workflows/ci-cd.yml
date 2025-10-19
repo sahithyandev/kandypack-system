@@ -257,37 +257,3 @@ jobs:
               exit 1
             fi
           EOF
-
-      - name: Health Check
-        run: |
-          echo "Performing health checks..."
-          max_attempts=10
-          attempt=0
-          
-          while [ $attempt -lt $max_attempts ]; do
-            if curl -f http://${{ secrets.HOST }}:2000/health > /dev/null 2>&1; then
-              echo "Backend health check passed!"
-              exit 0
-            fi
-            attempt=$((attempt + 1))
-            echo "Health check attempt $attempt/$max_attempts failed, retrying..."
-            sleep 5
-          done
-          
-          echo "Health check failed after $max_attempts attempts"
-          exit 1
-
-      - name: Deployment Summary
-        if: always()
-        run: |
-          if [ ${{ job.status }} == 'success' ]; then
-            echo "================================"
-            echo "Deployment to VPS completed successfully!"
-            echo "Frontend: http://${{ secrets.HOST }}:3000"
-            echo "Backend: http://${{ secrets.HOST }}:2000"
-            echo "API Docs: http://${{ secrets.HOST }}:2000/swagger"
-            echo "================================"
-          else
-            echo "Deployment to VPS failed!"
-            echo "Check the logs above for details"
-          fi
