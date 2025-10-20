@@ -63,7 +63,7 @@ GROUP BY
     sales_quarter;
 
 
-CREATE OR REPLACE VIEW v_most_ordered_products AS
+CREATE MATERIALIZED VIEW v_most_ordered_products AS
 WITH ranked_items AS (
     SELECT
         EXTRACT(YEAR FROM o.placed_on) AS year,
@@ -96,8 +96,6 @@ ORDER BY year, quarter, total_quantity DESC;
 
 CREATE UNIQUE INDEX idx_v_most_ordered_products_key
 ON v_most_ordered_products (year, quarter, product_id);
-
-REFRESH MATERIALIZED VIEW CONCURRENTLY v_most_ordered_products;
 
 CREATE OR REPLACE VIEW v_workerhoursreport AS
 SELECT 
@@ -138,5 +136,3 @@ ORDER BY tt.truck_id, t.vehicle_no, year, month;
 
 CREATE UNIQUE INDEX idx_v_truck_usage_monthly_key
 ON v_truck_usage_monthly (truck_id, year, month);
-
-REFRESH MATERIALIZED VIEW CONCURRENTLY v_truck_usage_monthly;

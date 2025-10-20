@@ -630,3 +630,8 @@ VALUES ('user-driver-3', 0) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO truck_trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, status)
 VALUES ('trucktrip-2', 'truck-2', 'route-2', 'user-driver-3', NULL, NULL, now() + INTERVAL '3 days', now() + INTERVAL '3 days' + INTERVAL '3 hours', 'Scheduled') ON CONFLICT (id) DO NOTHING;
+
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_truck_usage_monthly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_most_ordered_products;
