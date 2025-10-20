@@ -8,16 +8,58 @@
 
 import type { BodyType } from "./mutator";
 import { customInstance } from "./mutator";
+export type GetAuthValidate200OneUserAnyOf = {
+	username: string;
+	role: string;
+	workerType?: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetAuthValidate200OneUser =
+	GetAuthValidate200OneUserAnyOf | null | null;
+
 export type GetAuthValidate200One = {
 	valid: boolean;
+	/** @nullable */
+	user: GetAuthValidate200OneUser;
 };
+
+export type GetAuthValidate200TwoUserAnyOf = {
+	username: string;
+	role: string;
+	workerType?: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetAuthValidate200TwoUser =
+	GetAuthValidate200TwoUserAnyOf | null | null;
 
 export type GetAuthValidate200Two = {
 	valid: boolean;
+	/** @nullable */
+	user: GetAuthValidate200TwoUser;
 };
+
+export type GetAuthValidate200ThreeUserAnyOf = {
+	username: string;
+	role: string;
+	workerType?: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetAuthValidate200ThreeUser =
+	GetAuthValidate200ThreeUserAnyOf | null | null;
 
 export type GetAuthValidate200Three = {
 	valid: boolean;
+	/** @nullable */
+	user: GetAuthValidate200ThreeUser;
 };
 
 export type PostAuthSignUpBodyOneType = "Retail" | "Wholesale";
@@ -1952,6 +1994,36 @@ export type GetApiOrdersByOrderId500Three = {
 	error: string;
 };
 
+export type GetAdminDashboardStats200One = {
+	total_orders: string;
+	total_workers: string;
+	total_trucks: string;
+	total_shipments: string;
+	total_sales_value: string;
+	total_trips: string;
+	total_hours_worked: string;
+};
+
+export type GetAdminDashboardStats200Two = {
+	total_orders: string;
+	total_workers: string;
+	total_trucks: string;
+	total_shipments: string;
+	total_sales_value: string;
+	total_trips: string;
+	total_hours_worked: string;
+};
+
+export type GetAdminDashboardStats200Three = {
+	total_orders: string;
+	total_workers: string;
+	total_trucks: string;
+	total_shipments: string;
+	total_sales_value: string;
+	total_trips: string;
+	total_hours_worked: string;
+};
+
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export const getAuthValidate = (
@@ -2506,6 +2578,25 @@ export const getApiOrdersByOrderId = (
 };
 
 /**
+ * Retrieves various statistics for the admin dashboard.
+ * @summary Get dashboard statistics
+ */
+export const getAdminDashboardStats = (
+	options?: SecondParameter<
+		typeof customInstance<
+			GetAdminDashboardStats200One | Blob | GetAdminDashboardStats200Three
+		>
+	>,
+) => {
+	return customInstance<
+		GetAdminDashboardStats200One | Blob | GetAdminDashboardStats200Three
+	>(
+		{ url: `http://localhost:2000/admin/dashboard/stats`, method: "GET" },
+		options,
+	);
+};
+
+/**
  * Retrieves a report of sales aggregated quarterly.
  * @summary Get sales report
  */
@@ -2689,6 +2780,9 @@ export type GetApiOrdersResult = NonNullable<
 >;
 export type GetApiOrdersByOrderIdResult = NonNullable<
 	Awaited<ReturnType<typeof getApiOrdersByOrderId>>
+>;
+export type GetAdminDashboardStatsResult = NonNullable<
+	Awaited<ReturnType<typeof getAdminDashboardStats>>
 >;
 export type GetAdminReportSalesResult = NonNullable<
 	Awaited<ReturnType<typeof getAdminReportSales>>
