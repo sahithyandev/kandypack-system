@@ -165,6 +165,8 @@ CREATE TABLE IF NOT EXISTS Truck_Trip (
     shipment_id varchar(50) UNIQUE REFERENCES Shipment(id),
     scheduled_start TIMESTAMP NOT NULL,
     scheduled_end TIMESTAMP,
+    -- distance for the trip in kilometers (optional at creation)
+    distance_km numeric(10, 2),
     actual_start TIMESTAMP,
     actual_end TIMESTAMP,
     status trip_status NOT NULL DEFAULT 'Scheduled',

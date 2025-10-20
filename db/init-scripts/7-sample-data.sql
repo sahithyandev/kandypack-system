@@ -537,23 +537,23 @@ ON CONFLICT (id) DO NOTHING;
 -- ============================================================================
 
 -- Scheduled Truck Trips
-INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, actual_start, actual_end, status) VALUES
+INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, distance_km, actual_start, actual_end, status) VALUES
 -- Scheduled Truck Trips
-('trip-sched-001', 'truck-001', 'route-cmb-01', 'driver-001', 'assistant-001', 'ship-store-001', CURRENT_TIMESTAMP + INTERVAL '2 hours', CURRENT_TIMESTAMP + INTERVAL '6 hours', NULL, NULL, 'Scheduled'),
-('trip-sched-002', 'truck-002', 'route-cmb-02', 'driver-002', 'assistant-002', 'ship-store-002', CURRENT_TIMESTAMP + INTERVAL '3 hours', CURRENT_TIMESTAMP + INTERVAL '8 hours', NULL, NULL, 'Scheduled'),
-('trip-sched-003', 'truck-003', 'route-cmb-03', 'driver-003', 'assistant-003', 'ship-store-003', CURRENT_TIMESTAMP + INTERVAL '4 hours', CURRENT_TIMESTAMP + INTERVAL '8 hours', NULL, NULL, 'Scheduled'),
-('trip-sched-004', 'truck-004', 'route-kdy-01', 'driver-004', NULL, 'ship-store-005', CURRENT_TIMESTAMP + INTERVAL '5 hours', CURRENT_TIMESTAMP + INTERVAL '8 hours', NULL, NULL, 'Scheduled'),
-('trip-sched-005', 'truck-005', 'route-gal-01', 'driver-005', 'assistant-004', 'ship-store-007', CURRENT_TIMESTAMP + INTERVAL '6 hours', CURRENT_TIMESTAMP + INTERVAL '12 hours', NULL, NULL, 'Scheduled'),
+('trip-sched-001', 'truck-001', 'route-cmb-01', 'driver-001', 'assistant-001', 'ship-store-001', CURRENT_TIMESTAMP + INTERVAL '2 hours', CURRENT_TIMESTAMP + INTERVAL '6 hours', 42.5, NULL, NULL, 'Scheduled'),
+('trip-sched-002', 'truck-002', 'route-cmb-02', 'driver-002', 'assistant-002', 'ship-store-002', CURRENT_TIMESTAMP + INTERVAL '3 hours', CURRENT_TIMESTAMP + INTERVAL '8 hours', 35.2, NULL, NULL, 'Scheduled'),
+('trip-sched-003', 'truck-003', 'route-cmb-03', 'driver-003', 'assistant-003', 'ship-store-003', CURRENT_TIMESTAMP + INTERVAL '4 hours', CURRENT_TIMESTAMP + INTERVAL '8 hours', 28.7, NULL, NULL, 'Scheduled'),
+('trip-sched-004', 'truck-004', 'route-kdy-01', 'driver-004', NULL, 'ship-store-005', CURRENT_TIMESTAMP + INTERVAL '5 hours', CURRENT_TIMESTAMP + INTERVAL '8 hours', 18.0, NULL, NULL, 'Scheduled'),
+('trip-sched-005', 'truck-005', 'route-gal-01', 'driver-005', 'assistant-004', 'ship-store-007', CURRENT_TIMESTAMP + INTERVAL '6 hours', CURRENT_TIMESTAMP + INTERVAL '12 hours', 55.1, NULL, NULL, 'Scheduled'),
 
 -- In Progress Truck Trips
-('trip-prog-001', 'truck-006', 'route-cmb-01', 'driver-003', 'assistant-002', 'ship-truck-001', CURRENT_TIMESTAMP - INTERVAL '1 hour', CURRENT_TIMESTAMP + INTERVAL '3 hours', CURRENT_TIMESTAMP - INTERVAL '1 hour', NULL, 'In_Progress'),
-('trip-prog-002', 'truck-007', 'route-kdy-01', 'driver-004', NULL, 'ship-truck-002', CURRENT_TIMESTAMP - INTERVAL '2 hours', CURRENT_TIMESTAMP + INTERVAL '1 hour', CURRENT_TIMESTAMP - INTERVAL '2 hours', NULL, 'In_Progress'),
-('trip-prog-003', 'truck-008', 'route-gal-01', 'driver-005', 'assistant-003', 'ship-truck-003', CURRENT_TIMESTAMP - INTERVAL '3 hours', CURRENT_TIMESTAMP + INTERVAL '3 hours', CURRENT_TIMESTAMP - INTERVAL '3 hours', NULL, 'In_Progress'),
+('trip-prog-001', 'truck-006', 'route-cmb-01', 'driver-003', 'assistant-002', 'ship-truck-001', CURRENT_TIMESTAMP - INTERVAL '1 hour', CURRENT_TIMESTAMP + INTERVAL '3 hours', 12.4, CURRENT_TIMESTAMP - INTERVAL '1 hour', NULL, 'In_Progress'),
+('trip-prog-002', 'truck-007', 'route-kdy-01', 'driver-004', NULL, 'ship-truck-002', CURRENT_TIMESTAMP - INTERVAL '2 hours', CURRENT_TIMESTAMP + INTERVAL '1 hour', 21.0, CURRENT_TIMESTAMP - INTERVAL '2 hours', NULL, 'In_Progress'),
+('trip-prog-003', 'truck-008', 'route-gal-01', 'driver-005', 'assistant-003', 'ship-truck-003', CURRENT_TIMESTAMP - INTERVAL '3 hours', CURRENT_TIMESTAMP + INTERVAL '3 hours', 33.6, CURRENT_TIMESTAMP - INTERVAL '3 hours', NULL, 'In_Progress'),
 
 -- Completed Truck Trips
-('trip-comp-001', 'truck-001', 'route-cmb-02', 'driver-001', 'assistant-001', 'ship-deliv-001', CURRENT_TIMESTAMP - INTERVAL '2 days 6 hours', CURRENT_TIMESTAMP - INTERVAL '2 days 2 hours', CURRENT_TIMESTAMP - INTERVAL '2 days 6 hours', CURRENT_TIMESTAMP - INTERVAL '2 days 2 hours', 'Completed'),
-('trip-comp-002', 'truck-002', 'route-kdy-02', 'driver-002', 'assistant-002', 'ship-deliv-002', CURRENT_TIMESTAMP - INTERVAL '3 days 5 hours', CURRENT_TIMESTAMP - INTERVAL '3 days', CURRENT_TIMESTAMP - INTERVAL '3 days 5 hours', CURRENT_TIMESTAMP - INTERVAL '3 days', 'Completed'),
-('trip-comp-003', 'truck-003', 'route-gal-02', 'driver-003', NULL, 'ship-deliv-003', CURRENT_TIMESTAMP - INTERVAL '1 day 6 hours', CURRENT_TIMESTAMP - INTERVAL '1 day 1 hour', CURRENT_TIMESTAMP - INTERVAL '1 day 6 hours', CURRENT_TIMESTAMP - INTERVAL '1 day 1 hour', 'Completed')
+('trip-comp-001', 'truck-001', 'route-cmb-02', 'driver-001', 'assistant-001', 'ship-deliv-001', CURRENT_TIMESTAMP - INTERVAL '2 days 6 hours', CURRENT_TIMESTAMP - INTERVAL '2 days 2 hours', 48.3, CURRENT_TIMESTAMP - INTERVAL '2 days 6 hours', CURRENT_TIMESTAMP - INTERVAL '2 days 2 hours', 'Completed'),
+('trip-comp-002', 'truck-002', 'route-kdy-02', 'driver-002', 'assistant-002', 'ship-deliv-002', CURRENT_TIMESTAMP - INTERVAL '3 days 5 hours', CURRENT_TIMESTAMP - INTERVAL '3 days', 62.7, CURRENT_TIMESTAMP - INTERVAL '3 days 5 hours', CURRENT_TIMESTAMP - INTERVAL '3 days', 'Completed'),
+('trip-comp-003', 'truck-003', 'route-gal-02', 'driver-003', NULL, 'ship-deliv-003', CURRENT_TIMESTAMP - INTERVAL '1 day 6 hours', CURRENT_TIMESTAMP - INTERVAL '1 day 1 hour', 27.8, CURRENT_TIMESTAMP - INTERVAL '1 day 6 hours', CURRENT_TIMESTAMP - INTERVAL '1 day 1 hour', 'Completed')
 ON CONFLICT (id) DO NOTHING;
 
 -- Update worker statuses for in-progress trips

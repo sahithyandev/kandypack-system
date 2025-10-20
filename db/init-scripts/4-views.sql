@@ -33,6 +33,7 @@ SELECT
     w.status AS worker_status,
     tt.id AS truck_trip_id,
     tt.status AS trip_status,
+    tt.distance_km,
     tt.scheduled_start,
     tt.scheduled_end
 FROM Worker w
@@ -94,7 +95,8 @@ SELECT
     EXTRACT(YEAR FROM tt.actual_start) AS trip_year,
     EXTRACT(MONTH FROM tt.actual_start) AS trip_month,
     COUNT(tt.id) AS number_of_trips,
-    SUM(EXTRACT(EPOCH FROM (tt.actual_end - tt.actual_start)) / 3600) AS total_hours_in_use
+    SUM(EXTRACT(EPOCH FROM (tt.actual_end - tt.actual_start)) / 3600) AS total_hours_in_use,
+    SUM(COALESCE(tt.distance_km, 0)) AS total_distance_km
 FROM Truck_Trip tt
     JOIN Truck t ON tt.truck_id = t.id
 WHERE tt.status = 'Completed'

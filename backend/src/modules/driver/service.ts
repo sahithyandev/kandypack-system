@@ -71,6 +71,7 @@ export abstract class DriverService {
 				SELECT tt.id,
 							 tt.truck_id,
 							 tt.route_id,
+						 (tt.distance_km)::float8 AS distance_km,
 							 tt.status,
 							 to_char(tt.scheduled_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_start,
 							 to_char(tt.scheduled_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_end,
@@ -116,7 +117,7 @@ export abstract class DriverService {
 					SET status = 'In_Progress',
 							actual_start = NOW()
 				WHERE id = $1
-				RETURNING id, truck_id, route_id, status, 
+				RETURNING id, truck_id, route_id, (distance_km)::float8 AS distance_km, status, 
 									to_char(scheduled_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_start,
 									to_char(scheduled_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_end,
 									to_char(actual_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_start,
@@ -130,33 +131,68 @@ export abstract class DriverService {
 		username: string,
 		tripId: string,
 	): Promise<DriverModel.trip> {
+		// Verify ownership and that trip is in-progress
 		const verify = await client.query(
-			`SELECT tt.id
-				 FROM Truck_Trip tt
-				 JOIN Driver d ON d.id = tt.driver_id
-				 JOIN Worker w ON w.id = d.id
-				 JOIN "User" u ON u.id = w.id
-				WHERE u.username = $1
-					AND tt.id = $2
-					AND tt.status = 'In_Progress'
-				LIMIT 1`,
+			`SELECT tt.id, tt.driver_id
+			 FROM Truck_Trip tt
+			 JOIN Driver d ON d.id = tt.driver_id
+			 JOIN Worker w ON w.id = d.id
+			 JOIN "User" u ON u.id = w.id
+			WHERE u.username = $1
+			  AND tt.id = $2
+			  AND tt.status = 'In_Progress'
+			LIMIT 1`,
 			[username, tripId],
 		);
 		if (verify.rowCount === 0) throw status(403, "Trip not found or not allowed");
 
-		const updated = await client.query<DriverModel.trip>(
-			`UPDATE Truck_Trip
-					SET status = 'Completed',
-							actual_end = NOW()
-				WHERE id = $1
-				RETURNING id, truck_id, route_id, status,
-									to_char(scheduled_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_start,
-									to_char(scheduled_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_end,
-									to_char(actual_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_start,
-									to_char(actual_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_end`,
-			[tripId],
-		);
-		return updated.rows[0];
+		const driverId = verify.rows[0].driver_id as string;
+
+		try {
+			// Wrap in transaction to avoid races
+			await client.query("BEGIN");
+
+			// Use stored procedure which performs bookkeeping and frees the worker(s)
+			await client.query("CALL complete_truck_trip($1)", [tripId]);
+
+			// Fetch the completed trip to return
+			const completedRes = await client.query<DriverModel.trip>(
+				`SELECT id, truck_id, route_id, status,
+					(distance_km)::float8 AS distance_km,
+					to_char(scheduled_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_start,
+					to_char(scheduled_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_end,
+					to_char(actual_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_start,
+					to_char(actual_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_end
+				FROM Truck_Trip
+				WHERE id = $1`,
+				[tripId],
+			);
+
+			// Find the next scheduled trip for the same driver (if any)
+			const nextTripRes = await client.query<{ id: string }>(
+				`SELECT id
+				 FROM Truck_Trip
+				 WHERE driver_id = $1 AND status = 'Scheduled'
+				 ORDER BY scheduled_start ASC
+				 LIMIT 1`,
+				[driverId],
+			);
+			if (nextTripRes && nextTripRes.rowCount && nextTripRes.rows[0]) {
+				const nextTripId = nextTripRes.rows[0].id;
+				// Start the next trip (use stored procedure to set actual_start and worker status)
+				await client.query("CALL start_truck_trip($1)", [nextTripId]);
+			}
+
+			await client.query("COMMIT");
+
+			if (!completedRes || !completedRes.rowCount || !completedRes.rows[0]) {
+				throw status(404, "Trip not found after completion");
+			}
+			return completedRes.rows[0];
+		} catch (err) {
+			await client.query("ROLLBACK");
+			throw err;
+		}
 	}
 
 	/**
@@ -324,7 +360,8 @@ export abstract class DriverService {
 			`SELECT id,
 							truck_id,
 							route_id,
-							status,
+						status,
+						(distance_km)::float8 AS distance_km,
 							to_char(scheduled_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_start,
 							to_char(scheduled_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_end,
 							to_char(actual_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_start,

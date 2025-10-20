@@ -15,6 +15,8 @@ export namespace DriverModel {
 		id: t.String(),
 		truck_id: t.String(),
 		route_id: t.String(),
+		// distance in kilometers (optional)
+		distance_km: t.Optional(t.Number()),
 		status: tripStatus,
 		scheduled_start: t.String(),
 		scheduled_end: t.Nullable(t.String()),

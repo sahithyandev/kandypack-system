@@ -350,9 +350,9 @@ export abstract class DispatcherService {
 			await client.query(
 				`INSERT INTO Truck_Trip (
 					id, truck_id, route_id, driver_id, assistant_id, 
-					shipment_id, scheduled_start, scheduled_end, status
+					shipment_id, scheduled_start, scheduled_end, distance_km, status
 				)
-				VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'Scheduled')`,
+				VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'Scheduled')`,
 				[
 					truckTripId,
 					data.truckId,
@@ -362,6 +362,7 @@ export abstract class DispatcherService {
 					data.shipmentId,
 					data.scheduledStart,
 					data.scheduledEnd,
+					typeof data.distanceKm === 'number' ? data.distanceKm : null,
 				],
 			);
 

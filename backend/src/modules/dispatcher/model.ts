@@ -113,6 +113,7 @@ export namespace DispatcherModel {
 		assistantId: t.Optional(t.String()),
 		scheduledStart: t.String(),
 		scheduledEnd: t.String(),
+		distanceKm: t.Optional(t.Number()),
 	});
 	export type CreateTruckTripBody = typeof createTruckTripBody.static;
 

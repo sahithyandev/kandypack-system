@@ -67,6 +67,8 @@ export type DriverTrip = {
   id: string;
   truck_id: string;
   route_id: string;
+  // optional distance in kilometers
+  distance_km?: number;
   status: "Scheduled" | "In_Progress" | "Completed" | "Cancelled";
   scheduled_start: string; // ISO string from backend formatter
   scheduled_end: string | null;
