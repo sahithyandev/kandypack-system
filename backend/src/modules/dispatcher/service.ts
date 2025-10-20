@@ -309,7 +309,8 @@ export abstract class DispatcherService {
 		}>(
 			`SELECT t.id AS truck_id, t.vehicle_no
 			FROM Truck t
-			WHERE t.id NOT IN (
+			WHERE t.status = 'available'
+			AND t.id NOT IN (
 				SELECT truck_id 
 				FROM Truck_Trip 
 				WHERE status IN ('Scheduled', 'In_Progress')
