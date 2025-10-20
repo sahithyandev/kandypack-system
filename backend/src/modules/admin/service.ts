@@ -2,6 +2,26 @@ import { client } from "../../utils/db";
 import type { AdminModel } from "./model";
 
 export abstract class AdminService {
+	static async getDashboardStats(): Promise<AdminModel.DashboardStats> {
+		const result = await client.query(
+			`SELECT * FROM admin_dashboard_summary();`,
+		);
+		if (!result.rows || result.rows.length === 0) {
+			return {
+				total_orders: "0",
+				total_workers: "0",
+				total_trucks: "0",
+				total_shipments: "0",
+				total_sales_value: "0",
+				total_trips: "0",
+			} satisfies AdminModel.DashboardStats;
+		}
+		return result.rows[0];
+	}
+
+	// ===============
+	// REPORTS
+	// ===============
 	static async generateSalesReport(): Promise<
 		Array<AdminModel.SalesReportItem>
 	> {

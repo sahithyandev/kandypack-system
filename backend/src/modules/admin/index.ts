@@ -7,6 +7,23 @@ import { AdminModel } from "./model";
 export const admin = new Elysia({ prefix: "/admin" })
 	.use(authMiddleware)
 	.get(
+		"/dashboard/stats",
+		async () => {
+			const stats = await AdminService.getDashboardStats();
+			return stats;
+		},
+		{
+			response: {
+				200: AdminModel.dashboardStats,
+			},
+			detail: {
+				tags: ["Admin - Dashboard"],
+				summary: "Get dashboard statistics",
+				description: "Retrieves various statistics for the admin dashboard.",
+			},
+		},
+	)
+	.get(
 		"/report/sales",
 		async ({ set }) => {
 			const result = await AdminService.generateSalesReport();

@@ -1,6 +1,16 @@
 import { t } from "elysia";
 
 export namespace AdminModel {
+	export const dashboardStats = t.Object({
+		total_orders: t.String(),
+		total_workers: t.String(),
+		total_trucks: t.String(),
+		total_shipments: t.String(),
+		total_sales_value: t.String(),
+		total_trips: t.String(),
+	});
+	export type DashboardStats = typeof dashboardStats.static;
+
 	export const salesReportItem = t.Object({
 		year: t.Number(),
 		quarter: t.Number(),

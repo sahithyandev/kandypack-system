@@ -2001,7 +2001,6 @@ export type GetAdminDashboardStats200One = {
 	total_shipments: string;
 	total_sales_value: string;
 	total_trips: string;
-	total_hours_worked: string;
 };
 
 export type GetAdminDashboardStats200Two = {
@@ -2011,7 +2010,6 @@ export type GetAdminDashboardStats200Two = {
 	total_shipments: string;
 	total_sales_value: string;
 	total_trips: string;
-	total_hours_worked: string;
 };
 
 export type GetAdminDashboardStats200Three = {
@@ -2021,7 +2019,6 @@ export type GetAdminDashboardStats200Three = {
 	total_shipments: string;
 	total_sales_value: string;
 	total_trips: string;
-	total_hours_worked: string;
 };
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
