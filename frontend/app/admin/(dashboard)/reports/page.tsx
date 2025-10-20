@@ -16,23 +16,27 @@ export default function AdminReports() {
 				<ReportGeneratorControl
 					title="Quarterly Sales Report"
 					description="Generate a report for sales data."
+					downloadUrl={`${process.env.NEXT_PUBLIC_API_URL_CLIENT}/admin/report/sales`}
 				/>
 				<ReportGeneratorControl
-					title="Most Purchased Products"
-					description="Generate a report of most purchased products per quarter."
-					downloadUrl={`${process.env.NEXT_PUBLIC_API_URL_CLIENT}/admin/report/most-purchased-products`}
+					title="Most Ordered Products"
+					description="Generate a report of most ordered products per quarter."
+					downloadUrl={`${process.env.NEXT_PUBLIC_API_URL_CLIENT}/admin/report/most-ordered-products`}
 				/>
 				<ReportGeneratorControl
 					title="City-wise Sales Breakdown"
 					description="Generate a report for customer data."
+					downloadUrl={`${process.env.NEXT_PUBLIC_API_URL_CLIENT}/admin/report/sales/city-wise`}
 				/>
 				<ReportGeneratorControl
 					title="Route-wise Sales Breakdown"
 					description="Generate a report for product data."
+					downloadUrl={`${process.env.NEXT_PUBLIC_API_URL_CLIENT}/admin/report/sales/route-wise`}
 				/>
 				<ReportGeneratorControl
 					title="Driver & Assistant Working Hours Report"
 					description="Generate a report for order data."
+					downloadUrl={`${process.env.NEXT_PUBLIC_API_URL_CLIENT}/admin/report/working-hours`}
 				/>
 				<ReportGeneratorControl
 					title="Truck Usage Analysis"
@@ -42,6 +46,7 @@ export default function AdminReports() {
 				<ReportGeneratorControl
 					title="Customer Order History"
 					description="Retrieve past orders of a customer."
+					downloadUrl={`${process.env.NEXT_PUBLIC_API_URL_CLIENT}/admin/report/customer-order-history`}
 				/>
 			</div>
 		</section>

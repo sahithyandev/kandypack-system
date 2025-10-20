@@ -632,6 +632,16 @@ INSERT INTO truck_trip (id, truck_id, route_id, driver_id, assistant_id, shipmen
 VALUES ('trucktrip-2', 'truck-2', 'route-2', 'user-driver-3', NULL, NULL, now() + INTERVAL '3 days', now() + INTERVAL '3 days' + INTERVAL '3 hours', 'Scheduled') ON CONFLICT (id) DO NOTHING;
 
 
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_sales_report_quarterly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_most_ordered_products_quarterly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_order_summary_by_city_quarterly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_order_summary_by_route_quarterly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_worker_hours_summary_monthly;
+
 REFRESH MATERIALIZED VIEW CONCURRENTLY v_truck_usage_monthly;
 
-REFRESH MATERIALIZED VIEW CONCURRENTLY v_most_ordered_products;
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_customer_order_history;
