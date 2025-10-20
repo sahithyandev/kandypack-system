@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default function DriverHome() {
 	return (
 		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-			<section className="lg:col-span-2 flex flex-col gap-6">
+			<section className="lg:col-span-3 flex flex-col gap-6">
 				<div>
 					<h2 className="text-3xl font-bold tracking-tight">Overview</h2>
 					<p className="text-muted-foreground">
@@ -51,7 +51,6 @@ export default function DriverHome() {
 				</Card>
 				</div>
 
-			</section>
 			<aside className="flex flex-col gap-6">
 				<Card>
 					<CardHeader>
@@ -79,6 +78,7 @@ export default function DriverHome() {
 					</CardContent>
 				</Card> */}
 			</aside>
+			</section>
 
 		</div>
 	);

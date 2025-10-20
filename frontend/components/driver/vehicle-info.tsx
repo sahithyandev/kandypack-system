@@ -78,7 +78,7 @@ export default function VehicleInfo() {
 
 	return (
 		<div className="flex flex-col gap-3">
-			<div className="font-medium">Assigned Vehicle</div>
+			{/* <div className="font-medium">Assigned Vehicle</div> */}
 			<div className="rounded-md border p-3 flex flex-col gap-2">
 				<div className="flex items-center justify-between">
 					<div className="font-medium">{vehicle.vehicle_no}</div>

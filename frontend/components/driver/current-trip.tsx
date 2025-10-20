@@ -46,7 +46,7 @@ export default function CurrentTrip({ trip }: CurrentTripProps) {
 	if (loading) {
 		return (
 			<div className="rounded-md border p-3">
-				<div className="text-sm text-muted-foreground">Current trip</div>
+				{/* <div className="text-sm text-muted-foreground">Current trip</div> */}
 				<div className="mt-2 text-sm">Loading...</div>
 			</div>
 		);
@@ -55,7 +55,7 @@ export default function CurrentTrip({ trip }: CurrentTripProps) {
 	if (error) {
 		return (
 			<div className="rounded-md border p-3">
-				<div className="text-sm text-muted-foreground">Current trip</div>
+				{/* <div className="text-sm text-muted-foreground">Current trip</div> */}
 				<div className="mt-2 text-sm text-red-600">Error: {error}</div>
 			</div>
 		);
@@ -64,7 +64,7 @@ export default function CurrentTrip({ trip }: CurrentTripProps) {
 	if (!displayTrip) {
 		return (
 			<div className="rounded-md border p-3">
-				<div className="text-sm text-muted-foreground">Current trip</div>
+				{/* <div className="text-sm text-muted-foreground">Current trip</div> */}
 				<div className="mt-2 text-sm">No current trip</div>
 			</div>
 		);
@@ -72,7 +72,7 @@ export default function CurrentTrip({ trip }: CurrentTripProps) {
 
 	return (
 		<div className="rounded-md border p-3">
-			<div className="text-sm text-muted-foreground">Current trip</div>
+			{/* <div className="text-sm text-muted-foreground">Current trip</div> */}
 			<div className="mt-2">
 				<div className="font-medium">
 					{displayTrip.id} — {displayTrip.status}
