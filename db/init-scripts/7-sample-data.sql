@@ -25,18 +25,18 @@ VALUES (
 -- ============================================================================
 -- 1. USERS (All passwords are: password123)
 -- ============================================================================
--- Customer User
-INSERT INTO "User" (id, username, name, password, role) VALUES
-('0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 'customer1', 'Test Customer', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Customer')
-ON CONFLICT (id) DO NOTHING;
+
 
 -- Worker Users
 INSERT INTO "User" (id, username, name, password, role) VALUES
+('0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 'customer1', 'Test Customer', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Customer'),
+('cust-retail-001', 'retailcust1', 'Retail Customer 1', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Customer'),
+('cust-wholesale-001', 'wholesalecust1', 'Wholesale Customer 1', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Customer'),
 ('0199e825-4ae5-7000-9d86-8be81708d4f1', 'manager2', 'Test Store Manager 2', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('worker-mgr-001', 'manager1', 'Test Store Manager', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('0199e825-7df3-7000-ab6f-71669cef9383', 'driver1', 'Test Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('0199e824-f514-7000-87e6-1bf03af11985', 'assistant1', 'Test Assistant', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
-('0199e7bd-d5f8-7000-9fd6-f2a853034f88', 'dispatcher1', 'Test Dispatcher', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker')
+('0199e7bd-d5f8-7000-9fd6-f2a853034f88', 'dispatcher1', 'Test Dispatcher', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('driver-002', 'driver2', 'Second Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('driver-003', 'driver3', 'Third Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('driver-004', 'driver4', 'Fourth Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
@@ -89,7 +89,7 @@ INSERT INTO Product (id, name, unit_price, space_consumption_rate) VALUES
 ('prod-005', 'Cooking Oil 1L', 650.00, 1.2),
 ('prod-006', 'Tea 200g', 420.00, 0.5),
 ('prod-007', 'Biscuits Pack', 250.00, 0.6),
-('prod-008', 'Soap Bar', 120.00, 0.3)
+('prod-008', 'Soap Bar', 120.00, 0.3),
 ('prod-det-01', 'Sunlight Soap 100g', 80.00, 0.2),
 ('prod-bev-01', 'Coca-Cola 500ml', 150.00, 0.5),
 ('prod-snk-01', 'Potato Chips 100g', 200.00, 0.4),
@@ -156,7 +156,7 @@ ON CONFLICT (id) DO NOTHING;
 -- 6. CUSTOMER DATA
 -- ============================================================================
 INSERT INTO Customer (id, type, street_name, city, postal_code, phone_no) VALUES
-('0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 'Wholesale', 'Main Street', 'Colombo', '00100', '+94771234567')
+('0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 'Wholesale', 'Main Street', 'Colombo', '00100', '+94771234567'),
 ('cust-retail-001', 'Retail', '45 Main Street', 'Matara', '81000', '+94771112222'),
 ('cust-wholesale-001', 'Wholesale', '123 Galle Road', 'Galle', '80000', '+94773334444')
 ON CONFLICT (id) DO NOTHING;
