@@ -9,6 +9,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 
 type OptionType = "select";
 
@@ -23,17 +24,19 @@ interface Option {
 interface ReportGeneratorControlProps {
 	title: string;
 	description?: string;
+	downloadUrl?: string;
 	options?: Option[];
 }
 
 export default function ReportGeneratorControl({
 	title,
 	description,
+	downloadUrl,
 	options,
 }: ReportGeneratorControlProps) {
 	const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
-	let isDisabled = false;
+	let isDisabled = !downloadUrl;
 	if (options && options.length > 0) {
 		for (const option of options) {
 			if (option.required && !selectedOption) {
@@ -74,6 +77,42 @@ export default function ReportGeneratorControl({
 			<Button
 				className="cursor-pointer col-start-2 row-span-full my-auto"
 				disabled={isDisabled}
+				onClick={() => {
+					console.log("Download button clicked");
+					if (!downloadUrl) {
+						return;
+					}
+					toast.loading("Downloading...");
+
+					let fileName: string = "";
+					fetch(downloadUrl)
+						.then((response) => {
+							if (!response.ok) {
+								throw new Error("Network response was not ok");
+							}
+
+							fileName = response.headers
+								.get("content-disposition")
+								?.split("filename=")[1]
+								?.replace(/['"]/g, "") as string;
+							return response.blob();
+						})
+						.then((blob) => {
+							toast.dismiss();
+							const url = window.URL.createObjectURL(blob);
+							const a = document.createElement("a");
+							a.style.display = "none";
+							a.href = url;
+							a.download = fileName || "report.csv";
+							document.body.appendChild(a);
+							a.click();
+							window.URL.revokeObjectURL(url);
+						})
+						.catch((error) => {
+							toast.dismiss();
+							toast.error("There was a problem with the download:", error);
+						});
+				}}
 			>
 				Download
 			</Button>

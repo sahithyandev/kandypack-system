@@ -2,6 +2,16 @@ import { client } from "../../utils/db";
 import type { AdminModel } from "./model";
 
 export abstract class AdminService {
+	static async generateMostOrderedProductsReport(): Promise<
+		Array<AdminModel.MostOrderedProductItem>
+	> {
+		const result = await client.query(`SELECT * FROM v_most_ordered_products;`);
+		if (!result.rows) {
+			return [];
+		}
+		return result.rows;
+	}
+
 	static async generateTruckUsageReport(): Promise<
 		Array<AdminModel.TruckUsageReportItem>
 	> {
