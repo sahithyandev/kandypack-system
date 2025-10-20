@@ -22,6 +22,7 @@ ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO "User" (id, username, name, password, role)
 VALUES 
+    ('0199e825-4ae5-7000-9d86-8be81708d4f4', 'admin1', 'Admin 1', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
     ('0199e825-4ae5-7000-9d86-8be81708d4f1', 'manager2', 'Test Store Manager 2', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
     ('worker-mgr-001', 'manager1', 'Test Store Manager', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
     ('0199e825-7df3-7000-ab6f-71669cef9383', 'driver1', 'Test Driver 2', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
@@ -94,6 +95,14 @@ ON CONFLICT (id) DO NOTHING;
 -- ============================================================================
 -- 7. WORKER DATA
 -- ============================================================================
+
+-- Super Admin
+INSERT INTO worker (id, type, hourly_pay, status, weekly_hours)
+VALUES 
+    ('0199e7bd-d5f8-7000-9fd6-f2a853034f88', 'Dispatcher', 2500.00, 'Free', 0),
+    ('0199e825-4ae5-7000-9d86-8be81708d4f4', 'Admin', 5000.00, 'Free', 0)
+ON CONFLICT (id) DO NOTHING;
+
 -- Dispatcher
 
 INSERT INTO worker (id, type, hourly_pay, status, weekly_hours)

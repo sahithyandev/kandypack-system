@@ -16,6 +16,7 @@ CREATE TYPE customer_type AS ENUM (
 );
 
 CREATE TYPE worker_type AS ENUM (
+    'Admin',
     'Driver',
     'Assistant',
     'Store_Manager',
