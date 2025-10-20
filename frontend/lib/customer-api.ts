@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getToken } from "./auth";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL_CLIENT || "http://localhost:2000";
 
@@ -8,7 +9,7 @@ const customerApi = axios.create({
 
 // Add auth token to requests
 customerApi.interceptors.request.use((config) => {
-	const token = localStorage.getItem("authToken");
+	const token = getToken();
 	if (token) {
 		config.headers.Authorization = `Bearer ${token}`;
 	}

@@ -23,6 +23,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { getUserFromToken, removeToken } from "@/lib/auth";
+import { postAuthSignOut } from "@/lib/api-client";
 
 const navigation = [
 	{
@@ -179,10 +180,16 @@ export default function DispatcherLayout({
 						<Button
 							variant="ghost"
 							className="w-full justify-start gap-3 text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950"
-							onClick={() => {
-								// Handle logout
+							onClick={async () => {
+								try {
+									// Attempt server-side sign out to clear auth cookies
+									await postAuthSignOut();
+								} catch (err) {
+									// Ignore API errors; proceed with client cleanup
+								}
+								// Remove client token and redirect to landing page
 								removeToken();
-								router.push("/login");
+								router.push("/");
 							}}
 						>
 							<LogOut className="h-5 w-5" />

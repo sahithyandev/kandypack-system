@@ -13,6 +13,8 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { removeToken } from "@/lib/auth";
+import { postAuthSignOut } from "@/lib/api-client";
 
 const navigationItems = [
 	{
@@ -36,11 +38,16 @@ export function CustomerSidebar() {
 	const pathname = usePathname();
 	const router = useRouter();
 
-	const handleLogout = () => {
-		// Clear auth token from localStorage
-		localStorage.removeItem("authToken");
-		// Redirect to login
-		router.push("/login");
+	const handleLogout = async () => {
+		try {
+			// Attempt server-side sign out to clear auth cookies
+			await postAuthSignOut();
+		} catch (err) {
+			// Ignore API errors; proceed with client cleanup
+		}
+		// Remove client token and redirect to landing page
+		removeToken();
+		router.push("/");
 	};
 
 	return (

@@ -23,9 +23,9 @@ export default function DriverSidebarFooter() {
 		} catch (err) {
 			// Ignore API errors; proceed with client cleanup
 		}
-		// Remove client token and redirect to login
+		// Remove client token and redirect to landing page
 		removeToken();
-		router.push("/login");
+		router.push("/");
 	}
 
 	return (
