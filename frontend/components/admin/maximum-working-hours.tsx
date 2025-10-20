@@ -123,7 +123,7 @@ const editSchema = z.object({
 function Edit({ isOpen, selectedItem, onClose }: EditProps) {
 	const [isLoading, _setIsLoading] = useState(false);
 	const form = useForm<z.infer<typeof editSchema>>({
-		resolver: zodResolver(editSchema),
+		resolver: zodResolver(editSchema as any),
 		defaultValues: { weeklyMax: selectedItem?.weeklyMax || 40 },
 	});
 
