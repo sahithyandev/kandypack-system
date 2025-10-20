@@ -1,6 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { getDriverProfile, type DriverProfile } from "@/lib/driver-api";
 
 // Types
 type Color = "blue" | "green" | "amber";
@@ -140,18 +142,69 @@ export default function DashboardStats({ data }: { data?: any }) {
 	//   today?: { distanceKm?: number, drivingMinutes?: number }
 	// }
 
-	const stats = data ?? {
-		totalTrips: 342,
-		distanceKm: 48230,
-		drivingHours: 1240,
-		today: { distanceKm: 32.4, drivingMinutes: 145 },
-	};
+	const [profile, setProfile] = useState<DriverProfile | null>(null);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+
+	useEffect(() => {
+		let alive = true;
+		// Only fetch if no data prop provided
+		if (data) return;
+		(async () => {
+			try {
+				setLoading(true);
+				setError(null);
+				const p = await getDriverProfile();
+				if (!alive) return;
+				setProfile(p);
+			} catch (e: unknown) {
+				if (!alive) return;
+				const msg = e instanceof Error ? e.message : "Failed to load stats";
+				setError(msg);
+			} finally {
+				if (alive) setLoading(false);
+			}
+		})();
+		return () => {
+			alive = false;
+		};
+	}, [data]);
+
+	const stats = useMemo(() => {
+		if (data) return data;
+		if (!profile) return null;
+		return {
+			totalTrips: profile.total_trips,
+			distanceKm: profile.cumulative_distance,
+			drivingHours: profile.cumulative_time, // see component note: treated as minutes if > 24
+			today: {
+				distanceKm: profile.daily_driving_distance,
+				drivingMinutes: profile.daily_driving_time,
+			},
+		} as const;
+	}, [data, profile]);
+
+	if (!data && loading && !stats) {
+		return (
+			<div className="grid grid-cols-3 gap-4">
+				<div className="rounded-md border p-3 text-sm text-muted-foreground">Loading stats…</div>
+			</div>
+		);
+	}
+
+	if (!data && error && !stats) {
+		return (
+			<div className="grid grid-cols-3 gap-4">
+				<div className="rounded-md border p-3 text-sm text-red-600">{error}</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="grid grid-cols-3 gap-4">
-			<TripsStatCard totalTrips={stats.totalTrips} color="blue" />
-			<DistanceStatCard todayKm={stats.today?.distanceKm} cumulativeKm={stats.distanceKm} color="green" />
-			<DrivingTimeStatCard todayMinutes={stats.today?.drivingMinutes} cumulative={stats.drivingHours} color="amber" />
+			<TripsStatCard totalTrips={stats?.totalTrips} color="blue" />
+			<DistanceStatCard todayKm={stats?.today?.distanceKm} cumulativeKm={stats?.distanceKm} color="green" />
+			<DrivingTimeStatCard todayMinutes={stats?.today?.drivingMinutes} cumulative={stats?.drivingHours} color="amber" />
 		</div>
 	);
 }

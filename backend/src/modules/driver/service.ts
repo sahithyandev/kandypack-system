@@ -11,28 +11,28 @@ export abstract class DriverService {
 			name: string;
 			worker_id: string;
 			status: "Busy" | "Free" | "On_Leave";
-			consecutive_deliveries: number;
-			total_trips: number;
-			daily_driving_distance: number;
-			daily_driving_time: number;
-			cumulative_distance: number;
-			cumulative_time: number;
-				hourly_pay: number;
-				weekly_hours: number;
+			consecutive_deliveries: any;
+			total_trips: any;
+			daily_driving_distance: any;
+			daily_driving_time: any;
+			cumulative_distance: any;
+			cumulative_time: any;
+				hourly_pay: any;
+				weekly_hours: any;
 		}>(
 			`SELECT u.id,
 							u.username,
 							u.name,
 							w.id AS worker_id,
 							w.status,
-					d.consecutive_deliveries,
-					d.total_trips,
-					(d.daily_driving_distance)::float8 AS daily_driving_distance,
-					(d.daily_driving_time)::float8 AS daily_driving_time,
-					(d.cumulative_distance)::float8 AS cumulative_distance,
-					(d.cumulative_time)::float8 AS cumulative_time,
-					(w.hourly_pay)::float8 AS hourly_pay,
-					(w.weekly_hours)::float8 AS weekly_hours
+				d.consecutive_deliveries,
+				d.total_trips,
+				(d.daily_driving_distance)::float8 AS daily_driving_distance,
+				(d.daily_driving_time)::float8 AS daily_driving_time,
+				(d.cumulative_distance)::float8 AS cumulative_distance,
+				(d.cumulative_time)::float8 AS cumulative_time,
+				(w.hourly_pay)::float8 AS hourly_pay,
+				(w.weekly_hours)::float8 AS weekly_hours
 				 FROM "User" u
 				 JOIN Worker w ON w.id = u.id
 				 JOIN Driver d ON d.id = w.id
@@ -44,7 +44,23 @@ export abstract class DriverService {
 		if (result.rowCount === 0 || !result.rows[0])
 			throw status(404, "Driver profile not found");
 
-		return result.rows[0];
+		// Coerce numeric-like fields to actual numbers to satisfy response schema
+		const row = result.rows[0];
+		return {
+			id: row.id,
+			username: row.username,
+			name: row.name,
+			worker_id: row.worker_id,
+			status: row.status,
+			consecutive_deliveries: Number(row.consecutive_deliveries ?? 0),
+			total_trips: Number(row.total_trips ?? 0),
+			daily_driving_distance: Number(row.daily_driving_distance ?? 0),
+			daily_driving_time: Number(row.daily_driving_time ?? 0),
+			cumulative_distance: Number(row.cumulative_distance ?? 0),
+			cumulative_time: Number(row.cumulative_time ?? 0),
+			hourly_pay: Number(row.hourly_pay ?? 0),
+			weekly_hours: Number(row.weekly_hours ?? 0),
+		};
 	}
 
 	static async getTripsForDriver(
