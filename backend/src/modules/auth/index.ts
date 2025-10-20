@@ -14,6 +14,7 @@ export const auth = new Elysia({ prefix: "/auth" })
 		async ({ currentUser }) => {
 			return {
 				valid: currentUser !== null,
+				user: currentUser || null,
 			};
 		},
 		{

@@ -22,6 +22,7 @@ ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO "User" (id, username, name, password, role)
 VALUES 
+    ('0199e825-4ae5-7000-9d86-8be81708d4f4', 'admin1', 'Admin 1', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
     ('0199e825-4ae5-7000-9d86-8be81708d4f1', 'manager2', 'Test Store Manager 2', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
     ('worker-mgr-001', 'manager1', 'Test Store Manager', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
     ('0199e825-7df3-7000-ab6f-71669cef9383', 'driver1', 'Test Driver 2', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
@@ -94,6 +95,14 @@ ON CONFLICT (id) DO NOTHING;
 -- ============================================================================
 -- 7. WORKER DATA
 -- ============================================================================
+
+-- Super Admin
+INSERT INTO worker (id, type, hourly_pay, status, weekly_hours)
+VALUES 
+    ('0199e7bd-d5f8-7000-9fd6-f2a853034f88', 'Dispatcher', 2500.00, 'Free', 0),
+    ('0199e825-4ae5-7000-9d86-8be81708d4f4', 'Admin', 5000.00, 'Free', 0)
+ON CONFLICT (id) DO NOTHING;
+
 -- Dispatcher
 
 INSERT INTO worker (id, type, hourly_pay, status, weekly_hours)
@@ -630,3 +639,18 @@ VALUES ('user-driver-3', 0) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO truck_trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, status)
 VALUES ('trucktrip-2', 'truck-2', 'route-2', 'user-driver-3', NULL, NULL, now() + INTERVAL '3 days', now() + INTERVAL '3 days' + INTERVAL '3 hours', 'Scheduled') ON CONFLICT (id) DO NOTHING;
+
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_sales_report_quarterly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_most_ordered_products_quarterly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_order_summary_by_city_quarterly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_order_summary_by_route_quarterly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_worker_hours_summary_monthly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_truck_usage_monthly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_customer_order_history;

@@ -8,10 +8,25 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
+import { removeToken } from "@/lib/auth";
+import { useRouter } from "next/navigation";
+import { postAuthSignOut } from "@/lib/api-client";
+import { toast } from "sonner";
 
 export default function AdminSidebarFooter() {
+	const router = useRouter();
 	const { toggleSidebar } = useSidebar();
-	function logout() {}
+
+	function logout() {
+		postAuthSignOut()
+			.then(() => {
+				removeToken();
+				router.push("/login");
+			})
+			.catch(() => {
+				toast.error("Log out failed. Please try again.");
+			});
+	}
 
 	return (
 		<SidebarFooter>

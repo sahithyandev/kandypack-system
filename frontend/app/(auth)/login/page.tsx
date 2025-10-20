@@ -20,7 +20,25 @@ export default async function LoginPage() {
 		return <div>Failed to validate login status. Please try again later.</div>;
 	}
 	if (response.valid) {
-		redirect("/");
+		const user = response.user;
+		if (!user) {
+			redirect("/login");
+			return;
+		}
+
+		if (user.role === "Worker" && user.workerType === "Dispatcher") {
+			redirect("/dispatcher/overview");
+		} else if (user.role === "Worker" && user.workerType === "Store_Manager") {
+			redirect("/store-manager/incoming");
+		} else if (user && user.role === "Worker" && user.workerType === "Admin") {
+			redirect("/admin");
+		} else if (user.role === "Customer") {
+			redirect("/customer");
+		} else if (user.role === "Worker" && user.workerType === "Driver") {
+			redirect("/driver");
+		} else {
+			redirect("/login");
+		}
 		return;
 	}
 

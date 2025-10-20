@@ -10,6 +10,7 @@ import jwtInstance from "./utils/jwt";
 import { dispatcher } from "./modules/dispatcher";
 import { storeManager } from "./modules/store-manager";
 import { customer } from "./modules/customer";
+import { admin } from "./modules/admin";
 
 await client.connect().catch((error) => {
 	console.error("Failed to connect to the database:", error);
@@ -21,6 +22,7 @@ export const app = new Elysia()
 			// Credentialed requests require a specific allowed origin (not "*")
 			origin: ["http://localhost:3000", "http://127.0.0.1:3000"],
 			credentials: true,
+			exposeHeaders: ["Content-Disposition"],
 		}),
 	)
 	.use(
@@ -75,6 +77,7 @@ export const app = new Elysia()
 	.use(dispatcher)
 	.use(storeManager)
 	.use(customer)
+	.use(admin)
 	.listen(2000);
 
 console.log(

@@ -127,3 +127,60 @@ BEGIN
     END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION admin_dashboard_summary()
+RETURNS TABLE (
+    total_orders BIGINT,
+    total_sales_value NUMERIC(12,2),
+    total_trips BIGINT,
+    active_trucks BIGINT,
+    total_shipments BIGINT,
+    total_workers BIGINT,
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    WITH
+    orders_summary AS (
+        SELECT
+            COUNT(*) AS total_orders,
+            COALESCE(SUM(o.total_value), 0) AS total_sales_value
+        FROM "Order" o
+        WHERE EXTRACT(YEAR FROM o.placed_on) = EXTRACT(YEAR FROM CURRENT_DATE)
+        AND EXTRACT(MONTH FROM o.placed_on) = EXTRACT(MONTH FROM CURRENT_DATE)
+    ),
+    trip_summary AS (
+        SELECT
+            COUNT(*) AS total_trips,
+            COUNT(DISTINCT tt.truck_id) AS active_trucks
+        FROM truck_trip tt
+        WHERE tt.actual_start IS NOT NULL
+        AND EXTRACT(YEAR FROM tt.actual_start) = EXTRACT(YEAR FROM CURRENT_DATE)
+        AND EXTRACT(MONTH FROM tt.actual_start) = EXTRACT(MONTH FROM CURRENT_DATE)
+    ),
+    shipment_summary AS (
+        SELECT
+            COUNT(*) AS total_shipments
+        FROM shipment s
+        WHERE EXTRACT(YEAR FROM s.shipped_at) = EXTRACT(YEAR FROM CURRENT_DATE)
+        AND EXTRACT(MONTH FROM s.shipped_at) = EXTRACT(MONTH FROM CURRENT_DATE)
+    ),
+    worker_summary AS (
+        SELECT
+            COUNT(*) AS total_workers
+        FROM worker w
+    )
+    SELECT
+        o.total_orders,
+        o.total_sales_value,
+        t.total_trips,
+        t.active_trucks AS total_trucks,
+        s.total_shipments,
+        w.total_workers
+    FROM orders_summary o
+    CROSS JOIN trip_summary t
+    CROSS JOIN shipment_summary s
+    CROSS JOIN worker_summary w;
+END;
+$$;
