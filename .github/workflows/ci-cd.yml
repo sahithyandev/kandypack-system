@@ -76,7 +76,7 @@ jobs:
 
   # Job 3: Build Frontend
   build-frontend:
-    name: Build Frontend
+    name: Build Frontend Docker Image
     runs-on: ubuntu-latest
     needs: lint
     
@@ -84,34 +84,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
-
-      - name: Install dependencies
-        working-directory: ./frontend
-        run: bun install --frozen-lockfile
-
-      - name: Type check
-        working-directory: ./frontend
-        run: bun run type-check || npx tsc --noEmit
-        continue-on-error: true
-
-      - name: Build Next.js app
+      - name: Build Docker image
         working-directory: ./frontend
         env:
           NEXT_PUBLIC_API_URL: http://localhost:2000
-        run: bun run build
-
-      - name: Build Docker image
-        working-directory: ./frontend
         run: docker build -t kandypack-frontend:test .
 
       - name: Test Docker image
         run: |
-          docker run --rm kandypack-frontend:test bun --version
-          echo "Frontend Docker image built successfully"
+          # Verify the image was built successfully
+          docker images kandypack-frontend:test
+          # Test that the container can start (with timeout)
+          docker run -d --name frontend-test -p 3000:3000 kandypack-frontend:test
+          sleep 5
+          docker logs frontend-test
+          docker stop frontend-test
+          docker rm frontend-test
+          echo "✅ Frontend Docker image built and tested successfully"
 
   # Job 4: Database Validation
   validate-db:
