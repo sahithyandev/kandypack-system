@@ -127,3 +127,31 @@ BEGIN
     END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE PROCEDURE cancel_truck_trip(p_trip_id VARCHAR) AS $$
+DECLARE
+    trip_record RECORD;
+BEGIN
+    UPDATE Truck_Trip
+    SET
+        status = 'Cancelled'
+    WHERE id = p_trip_id
+    RETURNING * INTO trip_record;
+
+    -- Set driver and assistant back to Free, but only if they are not assigned to another active trip
+    UPDATE Worker
+    SET status = 'Free'
+    WHERE id = trip_record.driver_id AND NOT EXISTS (
+        SELECT 1 FROM Truck_Trip
+        WHERE driver_id = trip_record.driver_id AND status = 'In_Progress'
+    );
+
+    UPDATE Worker
+    SET status = 'Free'
+    WHERE id = trip_record.assistant_id AND NOT EXISTS (
+        SELECT 1 FROM Truck_Trip
+        WHERE assistant_id = trip_record.assistant_id AND status = 'In_Progress'
+    );
+END;
+$$ LANGUAGE plpgsql;

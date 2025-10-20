@@ -300,5 +300,43 @@ export abstract class DriverService {
 		);
 		return result.rows.map((r) => ({ id: r.id, vehicle_no: r.vehicle_no, status: r.status }));
 	}
+
+	static async cancelTrip(username: string, tripId: string): Promise<DriverModel.trip> {
+		// Verify ownership and status
+		const verify = await client.query(
+			`SELECT tt.id
+			 FROM Truck_Trip tt
+			 JOIN Driver d ON d.id = tt.driver_id
+			 JOIN Worker w ON w.id = d.id
+			 JOIN "User" u ON u.id = w.id
+			 WHERE u.username = $1 AND tt.id = $2`,
+			[username, tripId],
+		);
+		if (verify.rowCount === 0) {
+			throw status(404, "Trip not found or not assigned to this driver");
+		}
+
+		// Call the stored procedure to cancel the trip
+		await client.query("CALL cancel_truck_trip($1)", [tripId]);
+
+		// Fetch and return the updated trip details
+		const result = await client.query<DriverModel.trip>(
+			`SELECT id,
+							truck_id,
+							route_id,
+							status,
+							to_char(scheduled_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_start,
+							to_char(scheduled_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_end,
+							to_char(actual_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_start,
+							to_char(actual_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_end
+			 FROM Truck_Trip
+			 WHERE id = $1`,
+			[tripId],
+		);
+		if (result.rowCount === 0 || !result.rows[0]) {
+			throw status(404, "Trip not found after update");
+		}
+		return result.rows[0];
+	}
 }
 

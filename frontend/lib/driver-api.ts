@@ -88,3 +88,23 @@ export async function getDriverTrips(options?: { status?: DriverTrip["status"]; 
   if (!res.ok) throw new Error(`Failed to load trips (${res.status})`);
   return res.json();
 }
+
+export async function cancelDriverTrip(tripId: string, init?: RequestInit): Promise<DriverTrip> {
+	const res = await fetch(`${BACKEND_BASE}/driver/trips/${tripId}/cancel`, {
+		method: "POST",
+		credentials: "include",
+		...init,
+	});
+	if (!res.ok) throw new Error(`Failed to cancel trip (${res.status})`);
+	return res.json();
+}
+
+export async function completeDriverTrip(tripId: string, init?: RequestInit): Promise<DriverTrip> {
+	const res = await fetch(`${BACKEND_BASE}/driver/trips/${tripId}/complete`, {
+		method: "POST",
+		credentials: "include",
+		...init,
+	});
+	if (!res.ok) throw new Error(`Failed to complete trip (${res.status})`);
+	return res.json();
+}

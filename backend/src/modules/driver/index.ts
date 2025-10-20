@@ -117,4 +117,19 @@ export const driver = new Elysia({ prefix: "/driver" })
 			response: DriverModel.trip,
 		},
 	)
+	// Cancel a trip
+	.post(
+		"/trips/:id/cancel",
+		async ({ currentUser, params }) => {
+			if (!currentUser) throw status(401, "Unauthorized");
+			const username = (currentUser as any)?.username as string | undefined;
+			if (!username) throw status(401, "Unauthorized");
+			return DriverService.cancelTrip(username, params.id);
+		},
+		{
+			currentUser: true,
+			params: DriverModel.tripIdParam,
+			response: DriverModel.trip,
+		},
+	)
 

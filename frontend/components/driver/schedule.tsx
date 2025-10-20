@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { getDriverTrips, type DriverTrip } from "@/lib/driver-api";
+import { getDriverTrips, type DriverTrip, cancelDriverTrip } from "@/lib/driver-api";
+import { Button } from "../ui/button";
 
 function formatTime(iso: string) {
 	const d = new Date(iso);
@@ -47,27 +48,48 @@ export default function Schedule() {
 		});
 	}, [trips]);
 
-	return (
-		<div className="rounded-md border p-3">
-			<div className="text-sm text-muted-foreground">Upcoming schedule</div>
+	const handleCancel = async (tripId: string) => {
+		// Optimistically remove from UI
+		setTrips((prev) => prev.filter((t) => t.id !== tripId));
+		try {
+			await cancelDriverTrip(tripId);
+		} catch (err) {
+			setError(err instanceof Error ? err.message : "Failed to cancel trip");
+			// Re-fetch to get the correct state back on failure
+			getDriverTrips({}).then(setTrips);
+		}
+	};
 
-			{loading && <div className="mt-2 text-sm text-muted-foreground">Loading…</div>}
-			{error && <div className="mt-2 text-sm text-red-600">{error}</div>}
+	return (
+		<div className="rounded-md border">
+			{/* <div className="p-3 text-sm text-muted-foreground">Upcoming schedule</div> */}
+
+			{loading && <div className="mt-2 p-3 text-sm text-muted-foreground">Loading…</div>}
+			{error && <div className="mt-2 p-3 text-sm text-red-600">{error}</div>}
 
 			{!loading && !error && (
-				<ul className="mt-2 space-y-2 text-sm">
+				<div className="text-sm">
 					{upcoming.length === 0 && (
-						<li className="text-muted-foreground">No upcoming trips</li>
+						<div className="p-3 text-muted-foreground">No upcoming trips</div>
 					)}
 					{upcoming.map((t) => (
-						<li key={t.id} className="flex justify-between">
-							<span className="font-medium">{t.id}</span>
-							<span className="text-muted-foreground">
-								{formatTime(t.scheduled_start)} — Route {t.route_id}
-							</span>
-						</li>
+						<div key={t.id} className="border-t p-3">
+							<div className="flex justify-between">
+								<span className="font-medium">{t.id}</span>
+								<span className="text-muted-foreground">
+									{formatTime(t.scheduled_start)} — Route {t.route_id}
+								</span>
+							</div>
+						
+								<div className="mt-2 flex justify-end">
+									<Button variant="outline" size="sm" onClick={() => handleCancel(t.id)}>
+										Cancel
+									</Button>
+								</div>
+							
+						</div>
 					))}
-				</ul>
+				</div>
 			)}
 		</div>
 	);
