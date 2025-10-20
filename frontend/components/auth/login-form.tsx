@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { postAuthSignIn } from "@/lib/api-client";
-import { saveToken, decodeJWT } from "@/lib/auth";
+import { saveToken, getCurrentUser } from "@/lib/auth";
 import { isAPIError } from "@/lib/types";
 
 const loginSchema = z.object({
@@ -53,8 +53,8 @@ export default function LoginForm() {
 
 			saveToken(r.token);
 
-			// Decode JWT to check role and workerType
-			const user = decodeJWT(r.token);
+			// Get user info from backend to check role and workerType
+			const user = await getCurrentUser();
 
 			if (user && user.role === "Worker" && user.workerType === "Dispatcher") {
 				router.push("/dispatcher/overview");

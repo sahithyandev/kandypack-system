@@ -25,6 +25,28 @@ export const auth = new Elysia({ prefix: "/auth" })
 			},
 		},
 	)
+	.get(
+		"/me",
+		async ({ currentUser, status }) => {
+			if (!currentUser) {
+				return status(401, {
+					message: "Not authenticated",
+				});
+			}
+
+			const user = await Auth.getMe(currentUser);
+			return user;
+		},
+		{
+			currentUser: true,
+			type: "application/json",
+			response: {
+				200: AuthModel.meResponse,
+				401: AuthModel.signInInvalid,
+				404: AuthModel.signInInvalid,
+			},
+		},
+	)
 	.post("/sign-out", async ({ cookie: { logged_in }, status }) => {
 		logged_in.value = "";
 		logged_in.maxAge = 0;

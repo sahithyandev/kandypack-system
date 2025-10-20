@@ -13,6 +13,7 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { removeToken } from "@/lib/auth";
 
 const navigationItems = [
 	{
@@ -36,9 +37,9 @@ export function CustomerSidebar() {
 	const pathname = usePathname();
 	const router = useRouter();
 
-	const handleLogout = () => {
-		// Clear auth token from localStorage
-		localStorage.removeItem("authToken");
+	const handleLogout = async () => {
+		// Clear auth token and cookies, send sign-out request
+		await removeToken();
 		// Redirect to login
 		router.push("/login");
 	};
