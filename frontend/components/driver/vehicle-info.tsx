@@ -82,13 +82,13 @@ export default function VehicleInfo() {
 			<div className="rounded-md border p-3 flex flex-col gap-2">
 				<div className="flex items-center justify-between">
 					<div className="font-medium">{vehicle.vehicle_no}</div>
-					<StatusBadge status={vehicle.truck_status} />
+					{/* <StatusBadge status={vehicle.truck_status} /> */}
 				</div>
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
 					<div className="text-muted-foreground">Truck ID</div>
 					<div className="font-medium">{vehicle.id}</div>
 
-					<div className="text-muted-foreground">Total trips with this vehicle</div>
+					{/* <div className="text-muted-foreground">Total trips with this vehicle</div>
 					<div className="font-medium">{vehicle.total_trips_with_vehicle}</div>
 
 					<div className="text-muted-foreground">Next trip</div>
@@ -107,10 +107,10 @@ export default function VehicleInfo() {
 						) : (
 							<span className="text-muted-foreground">None</span>
 						)}
-					</div>
+					</div> 
 
 					<div className="text-muted-foreground">Last completed trip end</div>
-					<div className="font-medium">{formatDateTime(vehicle.last_completed_trip_end)}</div>
+					<div className="font-medium">{formatDateTime(vehicle.last_completed_trip_end)}</div>*/}
 				</div>
 			</div>
 		</div>

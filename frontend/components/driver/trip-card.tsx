@@ -1,23 +1,21 @@
-"use client";
+import type { DriverTrip } from "@/lib/driver-api";
 import { Button } from "@/components/ui/button";
 
-export default function TripCard({ trip }: { trip: any }) {
+export default function TripCard({ trip }: { trip: DriverTrip }) {
 	return (
 		<div className="flex items-center justify-between gap-4 rounded-md border p-3">
 			<div>
-				<div className="font-medium">
-					{trip.id} — {trip.cargo}
-				</div>
+				<div className="font-medium">{trip.id}</div>
 				<div className="text-sm text-muted-foreground">
-					{trip.origin} → {trip.destination}
+					Route: {trip.route_id}
 				</div>
 				<div className="text-xs text-muted-foreground">
-					ETA: {new Date(trip.eta).toISOString()}
+					Scheduled: {new Date(trip.scheduled_start).toLocaleString()}
 				</div>
 			</div>
 			<div className="flex items-center gap-2">
 				<Button
-					variant={trip.status === "enroute" ? "destructive" : "secondary"}
+					variant={trip.status === "In_Progress" ? "destructive" : "secondary"}
 					size="sm"
 				>
 					{trip.status}

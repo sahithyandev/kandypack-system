@@ -89,8 +89,8 @@ export abstract class DriverService {
 			where = " AND tt.status = $2";
 		}
 
-		// Enforce ordering by scheduled_start ascending for deterministic schedule view
-		const orderBy = " ORDER BY tt.scheduled_start ASC";
+		// Enforce ordering by scheduled_start descending for the most recent trips first
+		const orderBy = " ORDER BY tt.scheduled_start DESC";
 		const result = await client.query<DriverModel.trip>(baseQuery + where + orderBy, params);
 		return result.rows;
 	}
