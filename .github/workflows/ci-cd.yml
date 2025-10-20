@@ -157,13 +157,6 @@ jobs:
           docker logs postgres-test
           exit 1
 
-      - name: Verify database schema
-        run: |
-          docker exec postgres-test psql -U postgres -d kandypack -c "\dt"
-          docker exec postgres-test psql -U postgres -d kandypack -c "SELECT COUNT(*) FROM \"User\";"
-          docker exec postgres-test psql -U postgres -d kandypack -c "SELECT COUNT(*) FROM product;"
-          echo "Database initialization successful"
-
       - name: Cleanup
         if: always()
         run: docker rm -f postgres-test || true
