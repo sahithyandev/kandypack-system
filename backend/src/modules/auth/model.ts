@@ -52,6 +52,14 @@ export namespace AuthModel {
 	});
 	export type validateResponse = typeof validateResponse.static;
 
+	export const meResponse = t.Object({
+		username: t.String(),
+		name: t.String(),
+		role: t.String(),
+		workerType: t.Optional(t.String()),
+	});
+	export type meResponse = typeof meResponse.static;
+
 	export function isJwtData(obj: unknown): obj is AuthModel.JWTData {
 		return (
 			obj !== null &&

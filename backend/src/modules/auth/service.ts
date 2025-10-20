@@ -116,4 +116,47 @@ export abstract class Auth {
 			token: "",
 		} satisfies AuthModel.signInResponse;
 	}
+
+	static async getMe(jwtData: AuthModel.JWTData): Promise<AuthModel.meResponse> {
+		const result = await client.query<{
+			id: string;
+			name: string;
+			role: string;
+		}>(
+			`SELECT id, name, role
+			FROM "User"
+			WHERE username = $1
+			LIMIT 1`,
+			[jwtData.username],
+		);
+
+		if (result.rowCount === 0)
+			throw status(404, {
+				message: "User not found",
+			});
+		
+		const user = result.rows[0];
+
+		// Fetch worker type if user is a worker
+		let workerType: string | undefined = undefined;
+		if (user.role === "Worker") {
+			const workerResult = await client.query<{ type: string }>(
+				`SELECT type
+				FROM Worker
+				WHERE id = $1
+				LIMIT 1`,
+				[user.id],
+			);
+			if (workerResult.rowCount !== null && workerResult.rowCount > 0) {
+				workerType = workerResult.rows[0].type;
+			}
+		}
+
+		return {
+			username: jwtData.username,
+			name: user.name,
+			role: user.role,
+			workerType,
+		} satisfies AuthModel.meResponse;
+	}
 }

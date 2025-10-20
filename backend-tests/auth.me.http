@@ -1,0 +1,16 @@
+### Test auth/me endpoint
+
+# First, sign in to get a token
+POST http://localhost:2000/auth/sign-in
+Content-Type: application/json
+
+{
+  "username": "dispatcher1",
+  "password": "password123"
+}
+
+###
+
+# Test the new /auth/me endpoint
+GET http://localhost:2000/auth/me
+Authorization: Bearer {{token}}
