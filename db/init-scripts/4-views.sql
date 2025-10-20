@@ -86,19 +86,33 @@ SELECT
 FROM worker_record wr
     JOIN worker w ON wr.worker_id = w.id
     JOIN "User" u ON w.id = u.id;
-
-
-CREATE OR REPLACE VIEW v_truckutilization AS
-SELECT 
+    
+CREATE MATERIALIZED VIEW v_truck_usage_monthly AS
+SELECT
+    tt.truck_id,
     t.vehicle_no,
-    EXTRACT(YEAR FROM tt.actual_start) AS trip_year,
-    EXTRACT(MONTH FROM tt.actual_start) AS trip_month,
-    COUNT(tt.id) AS number_of_trips,
-    SUM(EXTRACT(EPOCH FROM (tt.actual_end - tt.actual_start)) / 3600) AS total_hours_in_use
+    EXTRACT(YEAR FROM tt.actual_start) AS year,
+    EXTRACT(MONTH FROM tt.actual_start) AS month,
+    COUNT(tt.id) AS total_trips,
+    SUM(EXTRACT(EPOCH FROM (tt.actual_end - tt.actual_start)) / 3600) AS total_hours_used,
+    ROUND(
+        AVG(EXTRACT(EPOCH FROM (tt.actual_end - tt.actual_start)) / 3600),
+        2
+    ) AS avg_hours_per_trip,
+    COUNT(DISTINCT tt.route_id) AS unique_routes,
+    COUNT(DISTINCT tt.driver_id) AS unique_drivers,
+    COUNT(DISTINCT tt.shipment_id) AS total_shipments,
+    SUM(o.total_value) AS total_revenue
 FROM truck_trip tt
-    JOIN truck t ON tt.truck_id = t.id
-WHERE tt.status = 'Completed'
-GROUP BY 
-    t.vehicle_no,
-    trip_year,
-    trip_month;
+LEFT JOIN truck t ON tt.truck_id = t.id
+LEFT JOIN shipment s ON tt.shipment_id = s.id
+LEFT JOIN "Order" o ON s.order_id = o.id
+WHERE tt.actual_start IS NOT NULL
+  AND tt.actual_end IS NOT NULL
+GROUP BY tt.truck_id, t.vehicle_no, year, month
+ORDER BY tt.truck_id, t.vehicle_no, year, month;
+
+CREATE UNIQUE INDEX idx_v_truck_usage_monthly_key
+ON v_truck_usage_monthly (truck_id, year, month);
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_truck_usage_monthly;
