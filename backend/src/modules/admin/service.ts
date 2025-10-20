@@ -5,7 +5,9 @@ export abstract class AdminService {
 	static async generateMostOrderedProductsReport(): Promise<
 		Array<AdminModel.MostOrderedProductItem>
 	> {
-		const result = await client.query(`SELECT * FROM v_most_ordered_products;`);
+		const result = await client.query(
+			`SELECT * FROM v_most_ordered_products_quarterly;`,
+		);
 		if (!result.rows) {
 			return [];
 		}

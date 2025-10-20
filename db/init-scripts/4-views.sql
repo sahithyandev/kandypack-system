@@ -63,7 +63,7 @@ GROUP BY
     sales_quarter;
 
 
-CREATE MATERIALIZED VIEW v_most_ordered_products AS
+CREATE MATERIALIZED VIEW v_most_ordered_products_quarterly AS
 WITH ranked_items AS (
     SELECT
         EXTRACT(YEAR FROM o.placed_on) AS year,
@@ -94,8 +94,8 @@ FROM ranked_items
 WHERE rn <= 3
 ORDER BY year, quarter, total_quantity DESC;
 
-CREATE UNIQUE INDEX idx_v_most_ordered_products_key
-ON v_most_ordered_products (year, quarter, product_id);
+CREATE UNIQUE INDEX idx_v_most_ordered_products_quarterly_key
+ON v_most_ordered_products_quarterly (year, quarter, product_id);
 
 CREATE OR REPLACE VIEW v_workerhoursreport AS
 SELECT 

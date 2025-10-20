@@ -8,7 +8,7 @@ SELECT cron.schedule(
 );
 
 SELECT cron.schedule(
-  'refresh_v_most_ordered_products',
+  'refresh_v_most_ordered_products_quarterly',
   '0 0 1 * *',   -- Runs every month's 1st day at midnight
-  $$ REFRESH MATERIALIZED VIEW CONCURRENTLY v_most_ordered_products; $$
+  $$ REFRESH MATERIALIZED VIEW CONCURRENTLY v_most_ordered_products_quarterly; $$
 );
