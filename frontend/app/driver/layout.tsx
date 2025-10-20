@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getUserFromToken, removeToken } from "@/lib/auth";
+import { getDriverProfile } from "@/lib/driver-api";
 
 const navigation = [
 	{
@@ -55,6 +56,7 @@ export default function DriverLayout({
 }: { children: React.ReactNode }) {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [driverStatus, setDriverStatus] = useState<"Busy" | "Free" | "On_Leave">("Free");
 	const pathname = usePathname();
 	const router = useRouter();
 
@@ -75,10 +77,45 @@ export default function DriverLayout({
 		}
 
 		setIsAuthenticated(true);
+
+		// Fetch driver status
+		const fetchDriverStatus = async () => {
+			try {
+				const profile = await getDriverProfile();
+				setDriverStatus(profile.status);
+			} catch (error) {
+				console.error("Failed to fetch driver status:", error);
+				// Keep default status on error
+			}
+		};
+
+		fetchDriverStatus();
 	}, [router]);
 
 	const isActive = (href: string) => {
 		return pathname === href;
+	};
+
+	const getStatusColor = (status: "Busy" | "Free" | "On_Leave") => {
+		switch (status) {
+			case "Busy":
+				return "bg-red-500";
+			case "Free":
+				return "bg-green-500";
+			case "On_Leave":
+				return "bg-yellow-500";
+			default:
+				return "bg-gray-500";
+		}
+	};
+
+	const formatStatus = (status: "Busy" | "Free" | "On_Leave") => {
+		switch (status) {
+			case "On_Leave":
+				return "On Leave";
+			default:
+				return status;
+		}
 	};
 
 	// Show loading state while checking authentication
@@ -203,8 +240,8 @@ export default function DriverLayout({
 					{/* Quick stats */}
 					<div className="hidden md:flex items-center gap-4">
 						<div className="flex items-center gap-2">
-							<div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-							<span className="text-sm text-muted-foreground">System Online</span>
+							<div className={`h-2 w-2 rounded-full ${getStatusColor(driverStatus)} animate-pulse`} />
+							<span className="text-sm text-muted-foreground">{formatStatus(driverStatus)}</span>
 						</div>
 					</div>
 				</header>

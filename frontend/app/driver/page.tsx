@@ -10,8 +10,11 @@ export default function DriverHome() {
 	return (
 		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 			<section className="lg:col-span-2 flex flex-col gap-6">
-				<div className="mt-2">
-					<h2 className="text-2xl font-bold">Overview</h2>
+				<div>
+					<h2 className="text-3xl font-bold tracking-tight">Overview</h2>
+					<p className="text-muted-foreground">
+						Welcome back! Here's what's happening with your trips today.
+					</p>
 				</div>
 
 				<Card>
