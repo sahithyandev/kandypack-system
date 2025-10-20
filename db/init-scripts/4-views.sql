@@ -63,17 +63,41 @@ GROUP BY
     sales_quarter;
 
 
-CREATE OR REPLACE VIEW v_productpopularity AS
-SELECT 
-    p.name AS product_name,
-    SUM(oi.quantity) AS total_quantity_ordered,
-    COUNT(DISTINCT o.id) AS number_of_orders
-FROM order_item oi
+CREATE OR REPLACE VIEW v_most_ordered_products AS
+WITH ranked_items AS (
+    SELECT
+        EXTRACT(YEAR FROM o.placed_on) AS year,
+        EXTRACT(QUARTER FROM o.placed_on) AS quarter,
+        p.id AS product_id,
+        p.name AS product_name,
+        SUM(oi.quantity) AS total_quantity,
+        SUM(oi.quantity * p.unit_price) AS total_revenue,
+        -- assigns a rank based on ordered quantity within each year and quarter
+        ROW_NUMBER() OVER (
+            PARTITION BY EXTRACT(YEAR FROM o.placed_on),
+                         EXTRACT(QUARTER FROM o.placed_on)
+            ORDER BY SUM(oi.quantity) DESC
+        ) AS rn
+    FROM "Order" o
+    JOIN Order_Item oi ON o.id = oi.order_id
     JOIN product p ON oi.product_id = p.id
-    JOIN "Order" o ON oi.order_id = o.id
-GROUP BY p.name
-ORDER BY total_quantity_ordered DESC;
+    GROUP BY year, quarter, p.id, p.name
+)
+SELECT
+    year,
+    quarter,
+    product_id,
+    product_name,
+    total_quantity,
+    total_revenue
+FROM ranked_items
+WHERE rn <= 3
+ORDER BY year, quarter, total_quantity DESC;
 
+CREATE UNIQUE INDEX idx_v_most_ordered_products_key
+ON v_most_ordered_products (year, quarter, product_id);
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_most_ordered_products;
 
 CREATE OR REPLACE VIEW v_workerhoursreport AS
 SELECT 

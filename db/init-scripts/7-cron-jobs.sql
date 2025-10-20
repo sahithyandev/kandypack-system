@@ -6,3 +6,9 @@ SELECT cron.schedule(
   '0 0 1 * *',   -- Runs every month's 1st day at midnight
   $$ REFRESH MATERIALIZED VIEW CONCURRENTLY v_truck_usage_monthly; $$
 );
+
+SELECT cron.schedule(
+  'refresh_v_most_ordered_products',
+  '0 0 1 * *',   -- Runs every month's 1st day at midnight
+  $$ REFRESH MATERIALIZED VIEW CONCURRENTLY v_most_ordered_products; $$
+);
