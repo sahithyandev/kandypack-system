@@ -135,7 +135,7 @@ RETURNS TABLE (
     total_trips BIGINT,
     active_trucks BIGINT,
     total_shipments BIGINT,
-    total_workers BIGINT,
+    total_workers BIGINT
 )
 LANGUAGE plpgsql
 AS $$
