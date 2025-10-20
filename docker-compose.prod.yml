@@ -41,8 +41,9 @@ services:
       retries: 3
 
   db:
-    image: postgres:17
-    restart: unless-stopped
+    build:
+      context: ./db
+    restart: always
     ports:
       - "5432:5432"
     environment:
