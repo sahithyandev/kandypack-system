@@ -8,10 +8,25 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
+import { useRouter } from "next/navigation";
+import { removeToken } from "@/lib/auth";
+import { postAuthSignOut } from "@/lib/api-client";
 
 export default function DriverSidebarFooter() {
 	const { toggleSidebar } = useSidebar();
-	function logout() {}
+	const router = useRouter();
+
+	async function logout() {
+		try {
+			// Attempt server-side sign out to clear auth cookies
+			await postAuthSignOut();
+		} catch (err) {
+			// Ignore API errors; proceed with client cleanup
+		}
+		// Remove client token and redirect to landing page
+		removeToken();
+		router.push("/");
+	}
 
 	return (
 		<SidebarFooter>

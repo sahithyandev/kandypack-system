@@ -23,27 +23,55 @@ export abstract class Auth {
 				message: "Username already exists",
 			} satisfies AuthModel.signUpFailed);
 
-		return client
-			.query<{ username: string }>(
+		const userId = Bun.randomUUIDv7();
+		const hashedPassword = await Bun.password.hash(body.password);
+
+		try {
+			// Start transaction
+			await client.query('BEGIN');
+
+			// Create User record
+			await client.query(
 				`INSERT INTO "User" (id, name, username, password, role)
-			VALUES ($1, $2, $3, $4, 'Customer')
-			RETURNING username`,
-				[
-					Bun.randomUUIDv7(),
-					body.name,
-					body.username,
-					await Bun.password.hash(body.password),
-				],
-			)
-			.then((result) => result.rows[0]);
+				VALUES ($1, $2, $3, $4, 'Customer')`,
+				[userId, body.name, body.username, hashedPassword],
+			);
+
+			// Create Customer record if customer-specific fields are provided
+			if (body.type && body.phone_no) {
+				await client.query(
+					`INSERT INTO Customer (id, type, street_name, city, postal_code, phone_no)
+					VALUES ($1, $2, $3, $4, $5, $6)`,
+					[
+						userId,
+						body.type,
+						body.street_name || null,
+						body.city || null,
+						body.postal_code || null,
+						body.phone_no,
+					],
+				);
+			}
+
+			await client.query('COMMIT');
+
+			return { username: body.username, userId };
+		} catch (error) {
+			await client.query('ROLLBACK');
+			console.error('Signup error:', error);
+			throw status(500, {
+				message: "Failed to create customer account",
+			} satisfies AuthModel.signUpFailed);
+		}
 	}
 	static async signIn({ username, password }: AuthModel.signInBody) {
 		const result = await client.query<{
 			id: string;
+			name: string;
 			password: string;
 			role: string;
 		}>(
-			`SELECT id, password, role
+			`SELECT id, name, password, role
 			FROM "User"
 			WHERE username = $1
 			LIMIT 1`,
@@ -82,6 +110,7 @@ export abstract class Auth {
 
 		return {
 			username,
+			name: user.name,
 			role: user.role,
 			workerType,
 			token: "",

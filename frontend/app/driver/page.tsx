@@ -10,12 +10,14 @@ export default function DriverHome() {
 	return (
 		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 			<section className="lg:col-span-2 flex flex-col gap-6">
-				<h2 className="text-2xl font-bold mt-2">Driver Dashboard</h2>
+				<div>
+					<h2 className="text-3xl font-bold tracking-tight">Overview</h2>
+					<p className="text-muted-foreground">
+						Welcome back! Here's what's happening with your trips today.
+					</p>
+				</div>
 
 				<Card>
-					<CardHeader>
-						<CardTitle>Overview</CardTitle>
-					</CardHeader>
 					<CardContent>
 						<DashboardStats />
 					</CardContent>
@@ -31,16 +33,26 @@ export default function DriverHome() {
 						</CardContent>
 					</Card>
 
-					<Card>
+					{/* <Card>
 						<CardHeader>
 							<CardTitle>Map</CardTitle>
 						</CardHeader>
 						<CardContent>
 							<MapPlaceholder />
 						</CardContent>
-					</Card>
+					</Card> */}
+									<Card>
+					<CardHeader>
+						<CardTitle>Current Vehicle</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<VehicleInfo />
+					</CardContent>
+				</Card>
 				</div>
 
+			</section>
+			<aside className="flex flex-col gap-6">
 				<Card>
 					<CardHeader>
 						<CardTitle>Schedule</CardTitle>
@@ -49,10 +61,7 @@ export default function DriverHome() {
 						<Schedule />
 					</CardContent>
 				</Card>
-			</section>
-
-			<aside className="flex flex-col gap-6">
-				<Card>
+				{/* <Card>
 					<CardHeader>
 						<CardTitle>Calendar</CardTitle>
 					</CardHeader>
@@ -68,8 +77,9 @@ export default function DriverHome() {
 					<CardContent>
 						<VehicleInfo />
 					</CardContent>
-				</Card>
+				</Card> */}
 			</aside>
+
 		</div>
 	);
 }

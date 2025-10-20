@@ -1,26 +1,10 @@
-INSERT INTO System_Configuration (config_key, config_value, description)
-VALUES (
-		'DRIVER_WEEKLY_HOUR_LIMIT',
-		'40',
-		'Maximum weekly working hours for a driver.'
-	),
-	(
-		'ASSISTANT_WEEKLY_HOUR_LIMIT',
-		'60',
-		'Maximum weekly working hours for an assistant.'
-	),
-	(
-		'DRIVER_CONSECUTIVE_TRIP_LIMIT',
-		'1',
-		'Maximum consecutive trips for a driver before a break is required.'
-	),
-	(
-		'ASSISTANT_CONSECUTIVE_TRIP_LIMIT',
-		'2',
-		'Maximum consecutive routes for an assistant before a break is required.'
-	) ON CONFLICT (config_key) DO NOTHING;
-
-
+INSERT INTO system_configuration (config_key, config_value, description)
+VALUES 
+    ('DRIVER_WEEKLY_HOUR_LIMIT', '40', 'Maximum weekly working hours for a driver.'),
+    ('ASSISTANT_WEEKLY_HOUR_LIMIT', '60', 'Maximum weekly working hours for an assistant.'),
+    ('DRIVER_CONSECUTIVE_TRIP_LIMIT', '1', 'Maximum consecutive trips for a driver before a break is required.'),
+    ('ASSISTANT_CONSECUTIVE_TRIP_LIMIT', '2', 'Maximum consecutive routes for an assistant before a break is required.') 
+ON CONFLICT (config_key) DO NOTHING;
 
 -- ============================================================================
 -- 1. USERS (All passwords are: password123)
@@ -50,6 +34,7 @@ INSERT INTO "User" (id, username, name, password, role) VALUES
 ('assistant-004', 'assistant4', 'Fourth Assistant', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('dispatcher-001', 'dispatcher1', 'Test Dispatcher', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker')
 ON CONFLICT (id) DO NOTHING;
+
 -- ============================================================================
 -- 1. CITIES
 -- ============================================================================
