@@ -186,9 +186,9 @@ ON CONFLICT (id) DO NOTHING;
 INSERT INTO Customer (id, type, street_name, city, postal_code, phone_no) VALUES
 ('customer-001', 'Wholesale', 'Main Street', 'Colombo', '00100', '+94771234567'),
 ('customer-002', 'Wholesale', 'Galle Road', 'Colombo', '00300', '+94772345678'),
-('customer-003', 'End_Customer', 'Beach Road', 'Galle', '80000', '+94773456789'),
+('customer-003', 'Retail', 'Beach Road', 'Galle', '80000', '+94773456789'),
 ('customer-004', 'Wholesale', 'Hospital Road', 'Jaffna', '40000', '+94774567890'),
-('customer-005', 'End_Customer', 'Temple Street', 'Kandy', '20000', '+94775678901')
+('customer-005', 'Retail', 'Temple Street', 'Kandy', '20000', '+94775678901')
 ON CONFLICT (id) DO NOTHING;
 
 -- ============================================================================
@@ -226,7 +226,7 @@ INSERT INTO Train_Trip (id, train_id, from_city_id, to_city_id, scheduled_depart
     CURRENT_TIMESTAMP + INTERVAL '1 day 6 hours', 
     CURRENT_TIMESTAMP + INTERVAL '1 day 9 hours', 
     500.0, 0.0),
-('tt-cmb-gdy-002', 'train-001', 'city-cmb', 'city-kdy', 
+('tt-cmb-kdy-002', 'train-001', 'city-cmb', 'city-kdy', 
     CURRENT_TIMESTAMP + INTERVAL '2 days 14 hours', 
     CURRENT_TIMESTAMP + INTERVAL '2 days 17 hours', 
     500.0, 0.0),
@@ -324,7 +324,7 @@ VALUES
 ('ord-pend-006', 'store-gal-01', 'customer-003', 'Sathosa, Galle Fort', 'route-gal-02', NOW() - INTERVAL '4 hours', CURRENT_DATE + INTERVAL '9 days', 'Pending', 8900.00, 48.0),
 ('ord-pend-007', 'store-kdy-01', 'customer-005', 'Lanka Sathosa, Kandy City', 'route-kdy-01', NOW() - INTERVAL '8 hours', CURRENT_DATE + INTERVAL '7 days', 'Pending', 9500.00, 52.0),
 ('ord-pend-008', 'store-kdy-01', 'customer-005', 'Cargills, Kandy', 'route-kdy-02', NOW() - INTERVAL '12 hours', CURRENT_DATE + INTERVAL '11 days', 'Pending', 11200.00, 60.0),
-('ord-pend-009', 'store-neg-01', 'customer-002', 'Fish Market Store, Negombo', 'route-neg-01', NOW() - INTERVAL '2 hours', CURRENT_DATE + INTERVAL '6 days', 'Pending', 5600.00, 30.0),
+('ord-pend-009', 'store-neg-01', 'customer-002', 'Fish Market Store, Negombo', 'route-neg-01', NOW() - INTERVAL '2 hours', CURRENT_DATE + INTERVAL '7 days', 'Pending', 5600.00, 30.0),
 ('ord-pend-010', 'store-neg-01', 'customer-001', 'Negombo Town Center', 'route-neg-02', NOW() - INTERVAL '10 hours', CURRENT_DATE + INTERVAL '12 days', 'Pending', 7200.00, 39.0),
 ('ord-pend-011', 'store-jaf-01', 'customer-004', 'Jaffna Central Market', 'route-jaf-01', NOW() - INTERVAL '1 day', CURRENT_DATE + INTERVAL '14 days', 'Pending', 13500.00, 72.0),
 ('ord-pend-012', 'store-cmb-01', 'customer-002', 'Wellawatte Market', 'route-cmb-02', NOW() - INTERVAL '15 hours', CURRENT_DATE + INTERVAL '8 days', 'Pending', 8800.00, 47.0),
@@ -333,12 +333,12 @@ VALUES
 ('ord-pend-015', 'store-cmb-01', 'customer-001', 'Mount Lavinia Store', 'route-cmb-03', NOW() - INTERVAL '11 hours', CURRENT_DATE + INTERVAL '13 days', 'Pending', 9700.00, 53.0),
 
 -- IN_TRAIN_TRANSIT ORDERS (10 orders)
-('ord-transit-001', 'store-cmb-01', 'customer-002', 'Dehiwala Market', 'route-cmb-01', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '5 days', 'In_Train_Transit', 7500.00, 40.0),
-('ord-transit-002', 'store-cmb-01', 'customer-001', 'Nugegoda Super', 'route-cmb-02', NOW() - INTERVAL '3 days', CURRENT_DATE + INTERVAL '6 days', 'In_Train_Transit', 8900.00, 48.0),
+('ord-transit-001', 'store-cmb-01', 'customer-002', 'Dehiwala Market', 'route-cmb-01', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '6 days', 'In_Train_Transit', 7500.00, 40.0),
+('ord-transit-002', 'store-cmb-01', 'customer-001', 'Nugegoda Super', 'route-cmb-02', NOW() - INTERVAL '3 days', CURRENT_DATE + INTERVAL '8 days', 'In_Train_Transit', 8900.00, 48.0),
 ('ord-transit-003', 'store-kdy-01', 'customer-005', 'Ampitiya Store', 'route-kdy-01', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '7 days', 'In_Train_Transit', 6200.00, 33.0),
 ('ord-transit-004', 'store-gal-01', 'customer-003', 'Hikkaduwa Beach Shop', 'route-gal-02', NOW() - INTERVAL '1 day', CURRENT_DATE + INTERVAL '8 days', 'In_Train_Transit', 5800.00, 31.0),
-('ord-transit-005', 'store-neg-01', 'customer-002', 'Wattala Store', 'route-neg-02', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '6 days', 'In_Train_Transit', 7100.00, 38.0),
-('ord-transit-006', 'store-cmb-01', 'customer-002', 'Bambalapitiya Market', 'route-cmb-04', NOW() - INTERVAL '3 days', CURRENT_DATE + INTERVAL '5 days', 'In_Train_Transit', 9300.00, 50.0),
+('ord-transit-005', 'store-neg-01', 'customer-002', 'Wattala Store', 'route-neg-02', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '8 days', 'In_Train_Transit', 7100.00, 38.0),
+('ord-transit-006', 'store-cmb-01', 'customer-002', 'Bambalapitiya Market', 'route-cmb-04', NOW() - INTERVAL '3 days', CURRENT_DATE + INTERVAL '8 days', 'In_Train_Transit', 9300.00, 50.0),
 ('ord-transit-007', 'store-kdy-01', 'customer-005', 'Gampola Store', 'route-kdy-02', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '9 days', 'In_Train_Transit', 8600.00, 46.0),
 ('ord-transit-008', 'store-gal-01', 'customer-003', 'Unawatuna Shop', 'route-gal-01', NOW() - INTERVAL '1 day', CURRENT_DATE + INTERVAL '7 days', 'In_Train_Transit', 6800.00, 36.0),
 ('ord-transit-009', 'store-jaf-01', 'customer-004', 'Nallur Market', 'route-jaf-01', NOW() - INTERVAL '4 days', CURRENT_DATE + INTERVAL '10 days', 'In_Train_Transit', 12500.00, 67.0),
@@ -348,22 +348,22 @@ VALUES
 ('ord-store-001', 'store-cmb-01', 'customer-002', 'Kollupitiya Market', 'route-cmb-01', NOW() - INTERVAL '3 days', CURRENT_DATE + INTERVAL '5 days', 'At_Store', 6500.00, 35.0),
 ('ord-store-002', 'store-cmb-01', 'customer-001', 'Borella Junction Store', 'route-cmb-02', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '6 days', 'At_Store', 7800.00, 42.0),
 ('ord-store-003', 'store-cmb-01', 'customer-002', 'Maradana Market', 'route-cmb-03', NOW() - INTERVAL '1 day', CURRENT_DATE + INTERVAL '7 days', 'At_Store', 8200.00, 44.0),
-('ord-store-004', 'store-cmb-01', 'customer-001', 'Rajagiriya Store', 'route-cmb-04', NOW() - INTERVAL '4 days', CURRENT_DATE + INTERVAL '4 days', 'At_Store', 9100.00, 49.0),
-('ord-store-005', 'store-kdy-01', 'customer-005', 'Katugastota Market', 'route-kdy-01', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '6 days', 'At_Store', 7200.00, 39.0),
-('ord-store-006', 'store-kdy-01', 'customer-005', 'Matale Road Store', 'route-kdy-02', NOW() - INTERVAL '3 days', CURRENT_DATE + INTERVAL '5 days', 'At_Store', 8500.00, 46.0),
+('ord-store-004', 'store-cmb-01', 'customer-001', 'Rajagiriya Store', 'route-cmb-04', NOW() - INTERVAL '4 days', CURRENT_DATE + INTERVAL '8 days', 'At_Store', 9100.00, 49.0),
+('ord-store-005', 'store-kdy-01', 'customer-005', 'Katugastota Market', 'route-kdy-01', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '8 days', 'At_Store', 7200.00, 39.0),
+('ord-store-006', 'store-kdy-01', 'customer-005', 'Matale Road Store', 'route-kdy-02', NOW() - INTERVAL '3 days', CURRENT_DATE + INTERVAL '8 days', 'At_Store', 8500.00, 46.0),
 ('ord-store-007', 'store-gal-01', 'customer-003', 'Karapitiya Store', 'route-gal-01', NOW() - INTERVAL '1 day', CURRENT_DATE + INTERVAL '8 days', 'At_Store', 6200.00, 33.0),
 ('ord-store-008', 'store-gal-01', 'customer-003', 'Ahangama Shop', 'route-gal-02', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '7 days', 'At_Store', 7600.00, 41.0),
-('ord-store-009', 'store-neg-01', 'customer-002', 'Katunayake Store', 'route-neg-01', NOW() - INTERVAL '1 day', CURRENT_DATE + INTERVAL '6 days', 'At_Store', 5900.00, 32.0),
-('ord-store-010', 'store-neg-01', 'customer-001', 'Ja-Ela Market', 'route-neg-02', NOW() - INTERVAL '3 days', CURRENT_DATE + INTERVAL '5 days', 'At_Store', 6700.00, 36.0),
-('ord-store-011', 'store-cmb-01', 'customer-002', 'Kotte Municipal Store', 'route-cmb-01', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '6 days', 'At_Store', 8900.00, 48.0),
+('ord-store-009', 'store-neg-01', 'customer-002', 'Katunayake Store', 'route-neg-01', NOW() - INTERVAL '1 day', CURRENT_DATE + INTERVAL '8 days', 'At_Store', 5900.00, 32.0),
+('ord-store-010', 'store-neg-01', 'customer-001', 'Ja-Ela Market', 'route-neg-02', NOW() - INTERVAL '3 days', CURRENT_DATE + INTERVAL '8 days', 'At_Store', 6700.00, 36.0),
+('ord-store-011', 'store-cmb-01', 'customer-002', 'Kotte Municipal Store', 'route-cmb-01', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '8 days', 'At_Store', 8900.00, 48.0),
 ('ord-store-012', 'store-cmb-01', 'customer-001', 'Maharagama Shop', 'route-cmb-02', NOW() - INTERVAL '1 day', CURRENT_DATE + INTERVAL '7 days', 'At_Store', 7400.00, 40.0),
 
 -- IN_TRUCK_TRANSIT ORDERS (5 orders)
-('ord-truck-001', 'store-cmb-01', 'customer-002', 'Pettah Market Center', 'route-cmb-01', NOW() - INTERVAL '4 days', CURRENT_DATE + INTERVAL '3 days', 'In_Truck_Transit', 9500.00, 51.0),
-('ord-truck-002', 'store-kdy-01', 'customer-005', 'Kandy Central Market', 'route-kdy-01', NOW() - INTERVAL '3 days', CURRENT_DATE + INTERVAL '4 days', 'In_Truck_Transit', 8700.00, 47.0),
-('ord-truck-003', 'store-gal-01', 'customer-003', 'Galle Fort Store', 'route-gal-01', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '5 days', 'In_Truck_Transit', 7300.00, 39.0),
-('ord-truck-004', 'store-neg-01', 'customer-002', 'Negombo Fish Market', 'route-neg-01', NOW() - INTERVAL '1 day', CURRENT_DATE + INTERVAL '6 days', 'In_Truck_Transit', 6400.00, 34.0),
-('ord-truck-005', 'store-cmb-01', 'customer-001', 'Wellawatte Station Store', 'route-cmb-03', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '5 days', 'In_Truck_Transit', 8100.00, 43.0),
+('ord-truck-001', 'store-cmb-01', 'customer-002', 'Pettah Market Center', 'route-cmb-01', NOW() - INTERVAL '4 days', CURRENT_DATE + INTERVAL '8 days', 'In_Truck_Transit', 9500.00, 51.0),
+('ord-truck-002', 'store-kdy-01', 'customer-005', 'Kandy Central Market', 'route-kdy-01', NOW() - INTERVAL '3 days', CURRENT_DATE + INTERVAL '8 days', 'In_Truck_Transit', 8700.00, 47.0),
+('ord-truck-003', 'store-gal-01', 'customer-003', 'Galle Fort Store', 'route-gal-01', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '8 days', 'In_Truck_Transit', 7300.00, 39.0),
+('ord-truck-004', 'store-neg-01', 'customer-002', 'Negombo Fish Market', 'route-neg-01', NOW() - INTERVAL '1 day', CURRENT_DATE + INTERVAL '8 days', 'In_Truck_Transit', 6400.00, 34.0),
+('ord-truck-005', 'store-cmb-01', 'customer-001', 'Wellawatte Station Store', 'route-cmb-03', NOW() - INTERVAL '2 days', CURRENT_DATE + INTERVAL '8 days', 'In_Truck_Transit', 8100.00, 43.0),
 
 -- DELIVERED ORDERS (3 orders)
 ('ord-deliv-001', 'store-cmb-01', 'customer-002', 'Union Place Market', 'route-cmb-01', NOW() - INTERVAL '10 days', CURRENT_DATE - INTERVAL '2 days', 'Delivered', 7800.00, 42.0),
@@ -537,22 +537,23 @@ ON CONFLICT (id) DO NOTHING;
 -- ============================================================================
 
 -- Scheduled Truck Trips
-INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, status) VALUES
-('trip-sched-001', 'truck-001', 'route-cmb-01', 'driver-001', 'assistant-001', 'ship-store-001', CURRENT_TIMESTAMP + INTERVAL '2 hours', CURRENT_TIMESTAMP + INTERVAL '6 hours', 'Scheduled'),
-('trip-sched-002', 'truck-002', 'route-cmb-02', 'driver-002', 'assistant-002', 'ship-store-002', CURRENT_TIMESTAMP + INTERVAL '3 hours', CURRENT_TIMESTAMP + INTERVAL '8 hours', 'Scheduled'),
-('trip-sched-003', 'truck-003', 'route-cmb-03', 'driver-003', 'assistant-003', 'ship-store-003', CURRENT_TIMESTAMP + INTERVAL '4 hours', CURRENT_TIMESTAMP + INTERVAL '8 hours', 'Scheduled'),
-('trip-sched-004', 'truck-004', 'route-kdy-01', 'driver-004', NULL, 'ship-store-005', CURRENT_TIMESTAMP + INTERVAL '5 hours', CURRENT_TIMESTAMP + INTERVAL '8 hours', 'Scheduled'),
-('trip-sched-005', 'truck-005', 'route-gal-01', 'driver-005', 'assistant-004', 'ship-store-007', CURRENT_TIMESTAMP + INTERVAL '6 hours', CURRENT_TIMESTAMP + INTERVAL '12 hours', 'Scheduled'),
+INSERT INTO Truck_Trip (id, truck_id, route_id, driver_id, assistant_id, shipment_id, scheduled_start, scheduled_end, actual_start, actual_end, status) VALUES
+-- Scheduled Truck Trips
+('trip-sched-001', 'truck-001', 'route-cmb-01', 'driver-001', 'assistant-001', 'ship-store-001', CURRENT_TIMESTAMP + INTERVAL '2 hours', CURRENT_TIMESTAMP + INTERVAL '6 hours', NULL, NULL, 'Scheduled'),
+('trip-sched-002', 'truck-002', 'route-cmb-02', 'driver-002', 'assistant-002', 'ship-store-002', CURRENT_TIMESTAMP + INTERVAL '3 hours', CURRENT_TIMESTAMP + INTERVAL '8 hours', NULL, NULL, 'Scheduled'),
+('trip-sched-003', 'truck-003', 'route-cmb-03', 'driver-003', 'assistant-003', 'ship-store-003', CURRENT_TIMESTAMP + INTERVAL '4 hours', CURRENT_TIMESTAMP + INTERVAL '8 hours', NULL, NULL, 'Scheduled'),
+('trip-sched-004', 'truck-004', 'route-kdy-01', 'driver-004', NULL, 'ship-store-005', CURRENT_TIMESTAMP + INTERVAL '5 hours', CURRENT_TIMESTAMP + INTERVAL '8 hours', NULL, NULL, 'Scheduled'),
+('trip-sched-005', 'truck-005', 'route-gal-01', 'driver-005', 'assistant-004', 'ship-store-007', CURRENT_TIMESTAMP + INTERVAL '6 hours', CURRENT_TIMESTAMP + INTERVAL '12 hours', NULL, NULL, 'Scheduled'),
 
 -- In Progress Truck Trips
-('trip-prog-001', 'truck-006', 'route-cmb-01', 'driver-003', 'assistant-002', 'ship-truck-001', CURRENT_TIMESTAMP - INTERVAL '1 hour', CURRENT_TIMESTAMP + INTERVAL '3 hours', CURRENT_TIMESTAMP - INTERVAL '1 hour', 'In_Progress'),
-('trip-prog-002', 'truck-007', 'route-kdy-01', 'driver-004', NULL, 'ship-truck-002', CURRENT_TIMESTAMP - INTERVAL '2 hours', CURRENT_TIMESTAMP + INTERVAL '1 hour', CURRENT_TIMESTAMP - INTERVAL '2 hours', 'In_Progress'),
-('trip-prog-003', 'truck-008', 'route-gal-01', 'driver-005', 'assistant-003', 'ship-truck-003', CURRENT_TIMESTAMP - INTERVAL '3 hours', CURRENT_TIMESTAMP + INTERVAL '3 hours', CURRENT_TIMESTAMP - INTERVAL '3 hours', 'In_Progress'),
+('trip-prog-001', 'truck-006', 'route-cmb-01', 'driver-003', 'assistant-002', 'ship-truck-001', CURRENT_TIMESTAMP - INTERVAL '1 hour', CURRENT_TIMESTAMP + INTERVAL '3 hours', CURRENT_TIMESTAMP - INTERVAL '1 hour', NULL, 'In_Progress'),
+('trip-prog-002', 'truck-007', 'route-kdy-01', 'driver-004', NULL, 'ship-truck-002', CURRENT_TIMESTAMP - INTERVAL '2 hours', CURRENT_TIMESTAMP + INTERVAL '1 hour', CURRENT_TIMESTAMP - INTERVAL '2 hours', NULL, 'In_Progress'),
+('trip-prog-003', 'truck-008', 'route-gal-01', 'driver-005', 'assistant-003', 'ship-truck-003', CURRENT_TIMESTAMP - INTERVAL '3 hours', CURRENT_TIMESTAMP + INTERVAL '3 hours', CURRENT_TIMESTAMP - INTERVAL '3 hours', NULL, 'In_Progress'),
 
 -- Completed Truck Trips
-('trip-comp-001', 'truck-001', 'route-cmb-02', 'driver-001', 'assistant-001', 'ship-deliv-001', CURRENT_TIMESTAMP - INTERVAL '2 days 6 hours', CURRENT_TIMESTAMP - INTERVAL '2 days 2 hours', CURRENT_TIMESTAMP - INTERVAL '2 days 6 hours', 'Completed'),
-('trip-comp-002', 'truck-002', 'route-kdy-02', 'driver-002', 'assistant-002', 'ship-deliv-002', CURRENT_TIMESTAMP - INTERVAL '3 days 5 hours', CURRENT_TIMESTAMP - INTERVAL '3 days', CURRENT_TIMESTAMP - INTERVAL '3 days 5 hours', 'Completed'),
-('trip-comp-003', 'truck-003', 'route-gal-02', 'driver-003', NULL, 'ship-deliv-003', CURRENT_TIMESTAMP - INTERVAL '1 day 6 hours', CURRENT_TIMESTAMP - INTERVAL '1 day 1 hour', CURRENT_TIMESTAMP - INTERVAL '1 day 6 hours', 'Completed')
+('trip-comp-001', 'truck-001', 'route-cmb-02', 'driver-001', 'assistant-001', 'ship-deliv-001', CURRENT_TIMESTAMP - INTERVAL '2 days 6 hours', CURRENT_TIMESTAMP - INTERVAL '2 days 2 hours', CURRENT_TIMESTAMP - INTERVAL '2 days 6 hours', CURRENT_TIMESTAMP - INTERVAL '2 days 2 hours', 'Completed'),
+('trip-comp-002', 'truck-002', 'route-kdy-02', 'driver-002', 'assistant-002', 'ship-deliv-002', CURRENT_TIMESTAMP - INTERVAL '3 days 5 hours', CURRENT_TIMESTAMP - INTERVAL '3 days', CURRENT_TIMESTAMP - INTERVAL '3 days 5 hours', CURRENT_TIMESTAMP - INTERVAL '3 days', 'Completed'),
+('trip-comp-003', 'truck-003', 'route-gal-02', 'driver-003', NULL, 'ship-deliv-003', CURRENT_TIMESTAMP - INTERVAL '1 day 6 hours', CURRENT_TIMESTAMP - INTERVAL '1 day 1 hour', CURRENT_TIMESTAMP - INTERVAL '1 day 6 hours', CURRENT_TIMESTAMP - INTERVAL '1 day 1 hour', 'Completed')
 ON CONFLICT (id) DO NOTHING;
 
 -- Update worker statuses for in-progress trips
