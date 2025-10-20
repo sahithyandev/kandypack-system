@@ -3,11 +3,12 @@ import { t } from "elysia";
 import { APIError } from "../../utils/error";
 
 export namespace AuthModel {
-	export type JWTData = {
-		username: string;
-		role: string;
-		workerType?: string; // Worker type if user is a worker, undefined for customers
-	};
+	export const jwtData = t.Object({
+		username: t.String(),
+		role: t.String(),
+		workerType: t.Optional(t.String()),
+	});
+	export type JWTData = typeof jwtData.static;
 
 	export const signInBody = t.Object({
 		username: t.String(),
@@ -47,6 +48,7 @@ export namespace AuthModel {
 
 	export const validateResponse = t.Object({
 		valid: t.Boolean(),
+		user: t.Nullable(jwtData),
 	});
 	export type validateResponse = typeof validateResponse.static;
 
@@ -58,7 +60,9 @@ export namespace AuthModel {
 			"role" in obj &&
 			typeof obj.role === "string" &&
 			typeof obj.username === "string" &&
-			(!("workerType" in obj) || typeof (obj as any).workerType === "string" || (obj as any).workerType === undefined)
+			(!("workerType" in obj) ||
+				typeof (obj as any).workerType === "string" ||
+				(obj as any).workerType === undefined)
 		);
 	}
 }

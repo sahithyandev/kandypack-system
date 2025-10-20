@@ -8,6 +8,7 @@ import {
 	Home,
 	MapPin,
 	Truck,
+	User,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -35,6 +36,11 @@ const linkGroups: Array<LinkGroup> = [
 				label: "Dashboard",
 				icon: <Home />,
 			},
+			// {
+			// 	href: "/driver/profile",
+			// 	label: "Profile",
+			// 	icon: <User />,
+			// },
 			{
 				href: "/driver/trips",
 				label: "Trips",
@@ -45,15 +51,10 @@ const linkGroups: Array<LinkGroup> = [
 				label: "Schedule",
 				icon: <Cog />,
 			},
-			{
-				href: "/driver/messages",
-				label: "Messages",
-				icon: <Cog />,
-			},
 			{ href: "/driver/analytics", label: "Analytics", icon: <BarChart2 /> },
 			{ href: "/driver/vehicles", label: "Vehicles", icon: <Truck /> },
-			{ href: "/driver/reports", label: "Reports", icon: <FileText /> },
-			{ href: "/driver/support", label: "Support", icon: <HelpCircle /> },
+			// { href: "/driver/reports", label: "Reports", icon: <FileText /> },
+			// { href: "/driver/support", label: "Support", icon: <HelpCircle /> },
 		],
 	},
 ];
