@@ -123,16 +123,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Start PostgreSQL
+      - name: Build and Start PostgreSQL
         run: |
+          docker build -t kandypack-db:test ./db
           docker run -d \
             --name postgres-test \
             -e POSTGRES_USER=postgres \
             -e POSTGRES_PASSWORD=postgres \
             -e POSTGRES_DB=kandypack \
-            -v ${{ github.workspace }}/db/init-scripts:/docker-entrypoint-initdb.d \
             -p 5432:5432 \
-            postgres:17
+            kandypack-db:test
 
       - name: Wait for PostgreSQL
         run: |
