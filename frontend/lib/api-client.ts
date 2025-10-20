@@ -20,39 +20,66 @@ export type GetAuthValidate200Three = {
 	valid: boolean;
 };
 
+export type PostAuthSignUpBodyOneType = "Retail" | "Wholesale";
+
 export type PostAuthSignUpBodyOne = {
 	name: string;
 	username: string;
 	password: string;
+	type?: PostAuthSignUpBodyOneType;
+	street_name?: string;
+	city?: string;
+	postal_code?: string;
+	phone_no?: string;
 };
+
+export type PostAuthSignUpBodyTwoType = "Retail" | "Wholesale";
 
 export type PostAuthSignUpBodyTwo = {
 	name: string;
 	username: string;
 	password: string;
+	type?: PostAuthSignUpBodyTwoType;
+	street_name?: string;
+	city?: string;
+	postal_code?: string;
+	phone_no?: string;
 };
+
+export type PostAuthSignUpBodyThreeType = "Retail" | "Wholesale";
 
 export type PostAuthSignUpBodyThree = {
 	name: string;
 	username: string;
 	password: string;
+	type?: PostAuthSignUpBodyThreeType;
+	street_name?: string;
+	city?: string;
+	postal_code?: string;
+	phone_no?: string;
 };
 
 export type PostAuthSignUp200One = {
 	username: string;
+	name: string;
 	role: string;
+	workerType?: string;
 	token: string;
 };
 
 export type PostAuthSignUp200Two = {
 	username: string;
+	name: string;
 	role: string;
+	workerType?: string;
 	token: string;
 };
 
 export type PostAuthSignUp200Three = {
 	username: string;
+	name: string;
 	role: string;
+	workerType?: string;
 	token: string;
 };
 
@@ -97,19 +124,25 @@ export type PostAuthSignInBodyThree = {
 
 export type PostAuthSignIn200One = {
 	username: string;
+	name: string;
 	role: string;
+	workerType?: string;
 	token: string;
 };
 
 export type PostAuthSignIn200Two = {
 	username: string;
+	name: string;
 	role: string;
+	workerType?: string;
 	token: string;
 };
 
 export type PostAuthSignIn200Three = {
 	username: string;
+	name: string;
 	role: string;
+	workerType?: string;
 	token: string;
 };
 
@@ -125,6 +158,559 @@ export type PostAuthSignIn400Three = {
 	message: string;
 };
 
+export type GetDriverVechicles200OneItem = {
+	id: string;
+	vehicle_no: string;
+	status: string;
+};
+
+export type GetDriverVechicles200TwoItem = {
+	id: string;
+	vehicle_no: string;
+	status: string;
+};
+
+export type GetDriverVechicles200ThreeItem = {
+	id: string;
+	vehicle_no: string;
+	status: string;
+};
+
+export type GetDriverVehicles200OneItem = {
+	id: string;
+	vehicle_no: string;
+	status: string;
+};
+
+export type GetDriverVehicles200TwoItem = {
+	id: string;
+	vehicle_no: string;
+	status: string;
+};
+
+export type GetDriverVehicles200ThreeItem = {
+	id: string;
+	vehicle_no: string;
+	status: string;
+};
+
+export type GetDriverVehicle200OneNextTripAnyOfStatus =
+	| "Scheduled"
+	| "In_Progress"
+	| "Completed"
+	| "Cancelled";
+
+/**
+ * @nullable
+ */
+export type GetDriverVehicle200OneNextTripAnyOfScheduledEnd =
+	| string
+	| null
+	| null;
+
+export type GetDriverVehicle200OneNextTripAnyOf = {
+	id: string;
+	status: GetDriverVehicle200OneNextTripAnyOfStatus;
+	scheduled_start: string;
+	/** @nullable */
+	scheduled_end: GetDriverVehicle200OneNextTripAnyOfScheduledEnd;
+};
+
+/**
+ * @nullable
+ */
+export type GetDriverVehicle200OneNextTrip =
+	GetDriverVehicle200OneNextTripAnyOf | null | null;
+
+/**
+ * @nullable
+ */
+export type GetDriverVehicle200OneLastCompletedTripEnd = string | null | null;
+
+export type GetDriverVehicle200One = {
+	id: string;
+	vehicle_no: string;
+	truck_status: string;
+	/** @nullable */
+	next_trip: GetDriverVehicle200OneNextTrip;
+	/** @nullable */
+	last_completed_trip_end: GetDriverVehicle200OneLastCompletedTripEnd;
+	total_trips_with_vehicle: number;
+};
+
+export type GetDriverVehicle200TwoNextTripAnyOfStatus =
+	| "Scheduled"
+	| "In_Progress"
+	| "Completed"
+	| "Cancelled";
+
+/**
+ * @nullable
+ */
+export type GetDriverVehicle200TwoNextTripAnyOfScheduledEnd =
+	| string
+	| null
+	| null;
+
+export type GetDriverVehicle200TwoNextTripAnyOf = {
+	id: string;
+	status: GetDriverVehicle200TwoNextTripAnyOfStatus;
+	scheduled_start: string;
+	/** @nullable */
+	scheduled_end: GetDriverVehicle200TwoNextTripAnyOfScheduledEnd;
+};
+
+/**
+ * @nullable
+ */
+export type GetDriverVehicle200TwoNextTrip =
+	GetDriverVehicle200TwoNextTripAnyOf | null | null;
+
+/**
+ * @nullable
+ */
+export type GetDriverVehicle200TwoLastCompletedTripEnd = string | null | null;
+
+export type GetDriverVehicle200Two = {
+	id: string;
+	vehicle_no: string;
+	truck_status: string;
+	/** @nullable */
+	next_trip: GetDriverVehicle200TwoNextTrip;
+	/** @nullable */
+	last_completed_trip_end: GetDriverVehicle200TwoLastCompletedTripEnd;
+	total_trips_with_vehicle: number;
+};
+
+export type GetDriverVehicle200ThreeNextTripAnyOfStatus =
+	| "Scheduled"
+	| "In_Progress"
+	| "Completed"
+	| "Cancelled";
+
+/**
+ * @nullable
+ */
+export type GetDriverVehicle200ThreeNextTripAnyOfScheduledEnd =
+	| string
+	| null
+	| null;
+
+export type GetDriverVehicle200ThreeNextTripAnyOf = {
+	id: string;
+	status: GetDriverVehicle200ThreeNextTripAnyOfStatus;
+	scheduled_start: string;
+	/** @nullable */
+	scheduled_end: GetDriverVehicle200ThreeNextTripAnyOfScheduledEnd;
+};
+
+/**
+ * @nullable
+ */
+export type GetDriverVehicle200ThreeNextTrip =
+	GetDriverVehicle200ThreeNextTripAnyOf | null | null;
+
+/**
+ * @nullable
+ */
+export type GetDriverVehicle200ThreeLastCompletedTripEnd = string | null | null;
+
+export type GetDriverVehicle200Three = {
+	id: string;
+	vehicle_no: string;
+	truck_status: string;
+	/** @nullable */
+	next_trip: GetDriverVehicle200ThreeNextTrip;
+	/** @nullable */
+	last_completed_trip_end: GetDriverVehicle200ThreeLastCompletedTripEnd;
+	total_trips_with_vehicle: number;
+};
+
+export type GetDriverProfile200OneStatus = "Busy" | "Free" | "On_Leave";
+
+export type GetDriverProfile200One = {
+	id: string;
+	username: string;
+	name: string;
+	worker_id: string;
+	status: GetDriverProfile200OneStatus;
+	consecutive_deliveries: number;
+	total_trips: number;
+	daily_driving_distance: number;
+	daily_driving_time: number;
+	cumulative_distance: number;
+	cumulative_time: number;
+	hourly_pay: number;
+	weekly_hours: number;
+};
+
+export type GetDriverProfile200TwoStatus = "Busy" | "Free" | "On_Leave";
+
+export type GetDriverProfile200Two = {
+	id: string;
+	username: string;
+	name: string;
+	worker_id: string;
+	status: GetDriverProfile200TwoStatus;
+	consecutive_deliveries: number;
+	total_trips: number;
+	daily_driving_distance: number;
+	daily_driving_time: number;
+	cumulative_distance: number;
+	cumulative_time: number;
+	hourly_pay: number;
+	weekly_hours: number;
+};
+
+export type GetDriverProfile200ThreeStatus = "Busy" | "Free" | "On_Leave";
+
+export type GetDriverProfile200Three = {
+	id: string;
+	username: string;
+	name: string;
+	worker_id: string;
+	status: GetDriverProfile200ThreeStatus;
+	consecutive_deliveries: number;
+	total_trips: number;
+	daily_driving_distance: number;
+	daily_driving_time: number;
+	cumulative_distance: number;
+	cumulative_time: number;
+	hourly_pay: number;
+	weekly_hours: number;
+};
+
+export type GetDriverTripsParams = {
+	status?: "Scheduled" | "In_Progress" | "Completed" | "Cancelled";
+};
+
+export type GetDriverTrips200OneItemStatus =
+	| "Scheduled"
+	| "In_Progress"
+	| "Completed"
+	| "Cancelled";
+
+/**
+ * @nullable
+ */
+export type GetDriverTrips200OneItemScheduledEnd = string | null | null;
+
+/**
+ * @nullable
+ */
+export type GetDriverTrips200OneItemActualStart = string | null | null;
+
+/**
+ * @nullable
+ */
+export type GetDriverTrips200OneItemActualEnd = string | null | null;
+
+export type GetDriverTrips200OneItem = {
+	id: string;
+	truck_id: string;
+	route_id: string;
+	status: GetDriverTrips200OneItemStatus;
+	scheduled_start: string;
+	/** @nullable */
+	scheduled_end: GetDriverTrips200OneItemScheduledEnd;
+	/** @nullable */
+	actual_start: GetDriverTrips200OneItemActualStart;
+	/** @nullable */
+	actual_end: GetDriverTrips200OneItemActualEnd;
+};
+
+export type GetDriverTrips200TwoItemStatus =
+	| "Scheduled"
+	| "In_Progress"
+	| "Completed"
+	| "Cancelled";
+
+/**
+ * @nullable
+ */
+export type GetDriverTrips200TwoItemScheduledEnd = string | null | null;
+
+/**
+ * @nullable
+ */
+export type GetDriverTrips200TwoItemActualStart = string | null | null;
+
+/**
+ * @nullable
+ */
+export type GetDriverTrips200TwoItemActualEnd = string | null | null;
+
+export type GetDriverTrips200TwoItem = {
+	id: string;
+	truck_id: string;
+	route_id: string;
+	status: GetDriverTrips200TwoItemStatus;
+	scheduled_start: string;
+	/** @nullable */
+	scheduled_end: GetDriverTrips200TwoItemScheduledEnd;
+	/** @nullable */
+	actual_start: GetDriverTrips200TwoItemActualStart;
+	/** @nullable */
+	actual_end: GetDriverTrips200TwoItemActualEnd;
+};
+
+export type GetDriverTrips200ThreeItemStatus =
+	| "Scheduled"
+	| "In_Progress"
+	| "Completed"
+	| "Cancelled";
+
+/**
+ * @nullable
+ */
+export type GetDriverTrips200ThreeItemScheduledEnd = string | null | null;
+
+/**
+ * @nullable
+ */
+export type GetDriverTrips200ThreeItemActualStart = string | null | null;
+
+/**
+ * @nullable
+ */
+export type GetDriverTrips200ThreeItemActualEnd = string | null | null;
+
+export type GetDriverTrips200ThreeItem = {
+	id: string;
+	truck_id: string;
+	route_id: string;
+	status: GetDriverTrips200ThreeItemStatus;
+	scheduled_start: string;
+	/** @nullable */
+	scheduled_end: GetDriverTrips200ThreeItemScheduledEnd;
+	/** @nullable */
+	actual_start: GetDriverTrips200ThreeItemActualStart;
+	/** @nullable */
+	actual_end: GetDriverTrips200ThreeItemActualEnd;
+};
+
+export type PostDriverTripsByIdStart200OneStatus =
+	| "Scheduled"
+	| "In_Progress"
+	| "Completed"
+	| "Cancelled";
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdStart200OneScheduledEnd = string | null | null;
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdStart200OneActualStart = string | null | null;
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdStart200OneActualEnd = string | null | null;
+
+export type PostDriverTripsByIdStart200One = {
+	id: string;
+	truck_id: string;
+	route_id: string;
+	status: PostDriverTripsByIdStart200OneStatus;
+	scheduled_start: string;
+	/** @nullable */
+	scheduled_end: PostDriverTripsByIdStart200OneScheduledEnd;
+	/** @nullable */
+	actual_start: PostDriverTripsByIdStart200OneActualStart;
+	/** @nullable */
+	actual_end: PostDriverTripsByIdStart200OneActualEnd;
+};
+
+export type PostDriverTripsByIdStart200TwoStatus =
+	| "Scheduled"
+	| "In_Progress"
+	| "Completed"
+	| "Cancelled";
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdStart200TwoScheduledEnd = string | null | null;
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdStart200TwoActualStart = string | null | null;
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdStart200TwoActualEnd = string | null | null;
+
+export type PostDriverTripsByIdStart200Two = {
+	id: string;
+	truck_id: string;
+	route_id: string;
+	status: PostDriverTripsByIdStart200TwoStatus;
+	scheduled_start: string;
+	/** @nullable */
+	scheduled_end: PostDriverTripsByIdStart200TwoScheduledEnd;
+	/** @nullable */
+	actual_start: PostDriverTripsByIdStart200TwoActualStart;
+	/** @nullable */
+	actual_end: PostDriverTripsByIdStart200TwoActualEnd;
+};
+
+export type PostDriverTripsByIdStart200ThreeStatus =
+	| "Scheduled"
+	| "In_Progress"
+	| "Completed"
+	| "Cancelled";
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdStart200ThreeScheduledEnd = string | null | null;
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdStart200ThreeActualStart = string | null | null;
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdStart200ThreeActualEnd = string | null | null;
+
+export type PostDriverTripsByIdStart200Three = {
+	id: string;
+	truck_id: string;
+	route_id: string;
+	status: PostDriverTripsByIdStart200ThreeStatus;
+	scheduled_start: string;
+	/** @nullable */
+	scheduled_end: PostDriverTripsByIdStart200ThreeScheduledEnd;
+	/** @nullable */
+	actual_start: PostDriverTripsByIdStart200ThreeActualStart;
+	/** @nullable */
+	actual_end: PostDriverTripsByIdStart200ThreeActualEnd;
+};
+
+export type PostDriverTripsByIdComplete200OneStatus =
+	| "Scheduled"
+	| "In_Progress"
+	| "Completed"
+	| "Cancelled";
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdComplete200OneScheduledEnd =
+	| string
+	| null
+	| null;
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdComplete200OneActualStart = string | null | null;
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdComplete200OneActualEnd = string | null | null;
+
+export type PostDriverTripsByIdComplete200One = {
+	id: string;
+	truck_id: string;
+	route_id: string;
+	status: PostDriverTripsByIdComplete200OneStatus;
+	scheduled_start: string;
+	/** @nullable */
+	scheduled_end: PostDriverTripsByIdComplete200OneScheduledEnd;
+	/** @nullable */
+	actual_start: PostDriverTripsByIdComplete200OneActualStart;
+	/** @nullable */
+	actual_end: PostDriverTripsByIdComplete200OneActualEnd;
+};
+
+export type PostDriverTripsByIdComplete200TwoStatus =
+	| "Scheduled"
+	| "In_Progress"
+	| "Completed"
+	| "Cancelled";
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdComplete200TwoScheduledEnd =
+	| string
+	| null
+	| null;
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdComplete200TwoActualStart = string | null | null;
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdComplete200TwoActualEnd = string | null | null;
+
+export type PostDriverTripsByIdComplete200Two = {
+	id: string;
+	truck_id: string;
+	route_id: string;
+	status: PostDriverTripsByIdComplete200TwoStatus;
+	scheduled_start: string;
+	/** @nullable */
+	scheduled_end: PostDriverTripsByIdComplete200TwoScheduledEnd;
+	/** @nullable */
+	actual_start: PostDriverTripsByIdComplete200TwoActualStart;
+	/** @nullable */
+	actual_end: PostDriverTripsByIdComplete200TwoActualEnd;
+};
+
+export type PostDriverTripsByIdComplete200ThreeStatus =
+	| "Scheduled"
+	| "In_Progress"
+	| "Completed"
+	| "Cancelled";
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdComplete200ThreeScheduledEnd =
+	| string
+	| null
+	| null;
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdComplete200ThreeActualStart =
+	| string
+	| null
+	| null;
+
+/**
+ * @nullable
+ */
+export type PostDriverTripsByIdComplete200ThreeActualEnd = string | null | null;
+
+export type PostDriverTripsByIdComplete200Three = {
+	id: string;
+	truck_id: string;
+	route_id: string;
+	status: PostDriverTripsByIdComplete200ThreeStatus;
+	scheduled_start: string;
+	/** @nullable */
+	scheduled_end: PostDriverTripsByIdComplete200ThreeScheduledEnd;
+	/** @nullable */
+	actual_start: PostDriverTripsByIdComplete200ThreeActualStart;
+	/** @nullable */
+	actual_end: PostDriverTripsByIdComplete200ThreeActualEnd;
+};
+
 export type GetIndex200One = {
 	message: string;
 	time: string;
@@ -138,6 +724,1232 @@ export type GetIndex200Two = {
 export type GetIndex200Three = {
 	message: string;
 	time: string;
+};
+
+export type GetApiOrdersPending200OneItem = {
+	orderId: string;
+	customerName: string;
+	destinationCity: string;
+	placedOn: string;
+	requiredDeliveryDate: string;
+	totalValue: number;
+	totalSpaceUnits: number;
+};
+
+export type GetApiOrdersPending200TwoItem = {
+	orderId: string;
+	customerName: string;
+	destinationCity: string;
+	placedOn: string;
+	requiredDeliveryDate: string;
+	totalValue: number;
+	totalSpaceUnits: number;
+};
+
+export type GetApiOrdersPending200ThreeItem = {
+	orderId: string;
+	customerName: string;
+	destinationCity: string;
+	placedOn: string;
+	requiredDeliveryDate: string;
+	totalValue: number;
+	totalSpaceUnits: number;
+};
+
+export type GetApiOrdersPending401One = {
+	error: string;
+};
+
+export type GetApiOrdersPending401Two = {
+	error: string;
+};
+
+export type GetApiOrdersPending401Three = {
+	error: string;
+};
+
+export type GetApiOrdersPending403One = {
+	error: string;
+};
+
+export type GetApiOrdersPending403Two = {
+	error: string;
+};
+
+export type GetApiOrdersPending403Three = {
+	error: string;
+};
+
+export type GetApiTrainTripsParams = {
+	destinationCityId?: string;
+};
+
+export type GetApiTrainTrips200OneItem = {
+	trainTripId: string;
+	trainName: string;
+	fromCity: string;
+	toCity: string;
+	scheduledDeparture: string;
+	scheduledArrival: string;
+	capacityUnits: number;
+	allocatedUnits: number;
+	availableUnits: number;
+};
+
+export type GetApiTrainTrips200TwoItem = {
+	trainTripId: string;
+	trainName: string;
+	fromCity: string;
+	toCity: string;
+	scheduledDeparture: string;
+	scheduledArrival: string;
+	capacityUnits: number;
+	allocatedUnits: number;
+	availableUnits: number;
+};
+
+export type GetApiTrainTrips200ThreeItem = {
+	trainTripId: string;
+	trainName: string;
+	fromCity: string;
+	toCity: string;
+	scheduledDeparture: string;
+	scheduledArrival: string;
+	capacityUnits: number;
+	allocatedUnits: number;
+	availableUnits: number;
+};
+
+export type GetApiTrainTrips401One = {
+	error: string;
+};
+
+export type GetApiTrainTrips401Two = {
+	error: string;
+};
+
+export type GetApiTrainTrips401Three = {
+	error: string;
+};
+
+export type GetApiTrainTrips403One = {
+	error: string;
+};
+
+export type GetApiTrainTrips403Two = {
+	error: string;
+};
+
+export type GetApiTrainTrips403Three = {
+	error: string;
+};
+
+export type PostApiShipmentsBodyOne = {
+	orderId: string;
+	trainTripId: string;
+};
+
+export type PostApiShipmentsBodyTwo = {
+	orderId: string;
+	trainTripId: string;
+};
+
+export type PostApiShipmentsBodyThree = {
+	orderId: string;
+	trainTripId: string;
+};
+
+export type PostApiShipments201One = {
+	shipmentId: string;
+	orderId: string;
+	trainTripId: string;
+	status: string;
+	message: string;
+};
+
+export type PostApiShipments201Two = {
+	shipmentId: string;
+	orderId: string;
+	trainTripId: string;
+	status: string;
+	message: string;
+};
+
+export type PostApiShipments201Three = {
+	shipmentId: string;
+	orderId: string;
+	trainTripId: string;
+	status: string;
+	message: string;
+};
+
+export type PostApiShipments400One = {
+	error: string;
+};
+
+export type PostApiShipments400Two = {
+	error: string;
+};
+
+export type PostApiShipments400Three = {
+	error: string;
+};
+
+export type PostApiShipments401One = {
+	error: string;
+};
+
+export type PostApiShipments401Two = {
+	error: string;
+};
+
+export type PostApiShipments401Three = {
+	error: string;
+};
+
+export type PostApiShipments403One = {
+	error: string;
+};
+
+export type PostApiShipments403Two = {
+	error: string;
+};
+
+export type PostApiShipments403Three = {
+	error: string;
+};
+
+export type PostApiShipments404One = {
+	error: string;
+};
+
+export type PostApiShipments404Two = {
+	error: string;
+};
+
+export type PostApiShipments404Three = {
+	error: string;
+};
+
+export type GetApiShipmentsAtStoreParams = {
+	storeId?: string;
+};
+
+export type GetApiShipmentsAtStore200OneItem = {
+	shipmentId: string;
+	orderId: string;
+	customerName: string;
+	deliveryAddress: string;
+	routeId: string;
+	routeName: string;
+};
+
+export type GetApiShipmentsAtStore200TwoItem = {
+	shipmentId: string;
+	orderId: string;
+	customerName: string;
+	deliveryAddress: string;
+	routeId: string;
+	routeName: string;
+};
+
+export type GetApiShipmentsAtStore200ThreeItem = {
+	shipmentId: string;
+	orderId: string;
+	customerName: string;
+	deliveryAddress: string;
+	routeId: string;
+	routeName: string;
+};
+
+export type GetApiShipmentsAtStore401One = {
+	error: string;
+};
+
+export type GetApiShipmentsAtStore401Two = {
+	error: string;
+};
+
+export type GetApiShipmentsAtStore401Three = {
+	error: string;
+};
+
+export type GetApiShipmentsAtStore403One = {
+	error: string;
+};
+
+export type GetApiShipmentsAtStore403Two = {
+	error: string;
+};
+
+export type GetApiShipmentsAtStore403Three = {
+	error: string;
+};
+
+export type GetApiResourcesAvailable200OneDriversItem = {
+	workerId: string;
+	name: string;
+};
+
+export type GetApiResourcesAvailable200OneAssistantsItem = {
+	workerId: string;
+	name: string;
+};
+
+export type GetApiResourcesAvailable200OneTrucksItem = {
+	truckId: string;
+	vehicleNo: string;
+};
+
+export type GetApiResourcesAvailable200One = {
+	drivers: GetApiResourcesAvailable200OneDriversItem[];
+	assistants: GetApiResourcesAvailable200OneAssistantsItem[];
+	trucks: GetApiResourcesAvailable200OneTrucksItem[];
+};
+
+export type GetApiResourcesAvailable200TwoDriversItem = {
+	workerId: string;
+	name: string;
+};
+
+export type GetApiResourcesAvailable200TwoAssistantsItem = {
+	workerId: string;
+	name: string;
+};
+
+export type GetApiResourcesAvailable200TwoTrucksItem = {
+	truckId: string;
+	vehicleNo: string;
+};
+
+export type GetApiResourcesAvailable200Two = {
+	drivers: GetApiResourcesAvailable200TwoDriversItem[];
+	assistants: GetApiResourcesAvailable200TwoAssistantsItem[];
+	trucks: GetApiResourcesAvailable200TwoTrucksItem[];
+};
+
+export type GetApiResourcesAvailable200ThreeDriversItem = {
+	workerId: string;
+	name: string;
+};
+
+export type GetApiResourcesAvailable200ThreeAssistantsItem = {
+	workerId: string;
+	name: string;
+};
+
+export type GetApiResourcesAvailable200ThreeTrucksItem = {
+	truckId: string;
+	vehicleNo: string;
+};
+
+export type GetApiResourcesAvailable200Three = {
+	drivers: GetApiResourcesAvailable200ThreeDriversItem[];
+	assistants: GetApiResourcesAvailable200ThreeAssistantsItem[];
+	trucks: GetApiResourcesAvailable200ThreeTrucksItem[];
+};
+
+export type GetApiResourcesAvailable401One = {
+	error: string;
+};
+
+export type GetApiResourcesAvailable401Two = {
+	error: string;
+};
+
+export type GetApiResourcesAvailable401Three = {
+	error: string;
+};
+
+export type GetApiResourcesAvailable403One = {
+	error: string;
+};
+
+export type GetApiResourcesAvailable403Two = {
+	error: string;
+};
+
+export type GetApiResourcesAvailable403Three = {
+	error: string;
+};
+
+export type PostApiTruckTripsBodyOne = {
+	shipmentId: string;
+	truckId: string;
+	routeId: string;
+	driverId: string;
+	assistantId?: string;
+	scheduledStart: string;
+	scheduledEnd: string;
+};
+
+export type PostApiTruckTripsBodyTwo = {
+	shipmentId: string;
+	truckId: string;
+	routeId: string;
+	driverId: string;
+	assistantId?: string;
+	scheduledStart: string;
+	scheduledEnd: string;
+};
+
+export type PostApiTruckTripsBodyThree = {
+	shipmentId: string;
+	truckId: string;
+	routeId: string;
+	driverId: string;
+	assistantId?: string;
+	scheduledStart: string;
+	scheduledEnd: string;
+};
+
+export type PostApiTruckTrips201One = {
+	truckTripId: string;
+	status: string;
+	message: string;
+};
+
+export type PostApiTruckTrips201Two = {
+	truckTripId: string;
+	status: string;
+	message: string;
+};
+
+export type PostApiTruckTrips201Three = {
+	truckTripId: string;
+	status: string;
+	message: string;
+};
+
+export type PostApiTruckTrips400One = {
+	error: string;
+};
+
+export type PostApiTruckTrips400Two = {
+	error: string;
+};
+
+export type PostApiTruckTrips400Three = {
+	error: string;
+};
+
+export type PostApiTruckTrips401One = {
+	error: string;
+};
+
+export type PostApiTruckTrips401Two = {
+	error: string;
+};
+
+export type PostApiTruckTrips401Three = {
+	error: string;
+};
+
+export type PostApiTruckTrips403One = {
+	error: string;
+};
+
+export type PostApiTruckTrips403Two = {
+	error: string;
+};
+
+export type PostApiTruckTrips403Three = {
+	error: string;
+};
+
+export type GetApiSchedulesOverview200OneTrainTripsItem = {
+	trainTripId: string;
+	trainName: string;
+	toCity: string;
+	scheduledDeparture: string;
+	status: string;
+	shipmentCount: number;
+};
+
+export type GetApiSchedulesOverview200OneTruckTripsItem = {
+	truckTripId: string;
+	vehicleNo: string;
+	routeName: string;
+	driverName: string;
+	scheduledStart: string;
+	status: string;
+};
+
+export type GetApiSchedulesOverview200One = {
+	trainTrips: GetApiSchedulesOverview200OneTrainTripsItem[];
+	truckTrips: GetApiSchedulesOverview200OneTruckTripsItem[];
+};
+
+export type GetApiSchedulesOverview200TwoTrainTripsItem = {
+	trainTripId: string;
+	trainName: string;
+	toCity: string;
+	scheduledDeparture: string;
+	status: string;
+	shipmentCount: number;
+};
+
+export type GetApiSchedulesOverview200TwoTruckTripsItem = {
+	truckTripId: string;
+	vehicleNo: string;
+	routeName: string;
+	driverName: string;
+	scheduledStart: string;
+	status: string;
+};
+
+export type GetApiSchedulesOverview200Two = {
+	trainTrips: GetApiSchedulesOverview200TwoTrainTripsItem[];
+	truckTrips: GetApiSchedulesOverview200TwoTruckTripsItem[];
+};
+
+export type GetApiSchedulesOverview200ThreeTrainTripsItem = {
+	trainTripId: string;
+	trainName: string;
+	toCity: string;
+	scheduledDeparture: string;
+	status: string;
+	shipmentCount: number;
+};
+
+export type GetApiSchedulesOverview200ThreeTruckTripsItem = {
+	truckTripId: string;
+	vehicleNo: string;
+	routeName: string;
+	driverName: string;
+	scheduledStart: string;
+	status: string;
+};
+
+export type GetApiSchedulesOverview200Three = {
+	trainTrips: GetApiSchedulesOverview200ThreeTrainTripsItem[];
+	truckTrips: GetApiSchedulesOverview200ThreeTruckTripsItem[];
+};
+
+export type GetApiSchedulesOverview401One = {
+	error: string;
+};
+
+export type GetApiSchedulesOverview401Two = {
+	error: string;
+};
+
+export type GetApiSchedulesOverview401Three = {
+	error: string;
+};
+
+export type GetApiSchedulesOverview403One = {
+	error: string;
+};
+
+export type GetApiSchedulesOverview403Two = {
+	error: string;
+};
+
+export type GetApiSchedulesOverview403Three = {
+	error: string;
+};
+
+export type GetApiStoresIncomingDeliveries200OneItem = {
+	shipmentId: string;
+	trainTripId: string;
+	trainName: string;
+	fromCity: string;
+	scheduledArrival: string;
+	orderCount: number;
+	totalUnits: number;
+};
+
+export type GetApiStoresIncomingDeliveries200TwoItem = {
+	shipmentId: string;
+	trainTripId: string;
+	trainName: string;
+	fromCity: string;
+	scheduledArrival: string;
+	orderCount: number;
+	totalUnits: number;
+};
+
+export type GetApiStoresIncomingDeliveries200ThreeItem = {
+	shipmentId: string;
+	trainTripId: string;
+	trainName: string;
+	fromCity: string;
+	scheduledArrival: string;
+	orderCount: number;
+	totalUnits: number;
+};
+
+export type GetApiStoresIncomingDeliveries401One = {
+	error: string;
+};
+
+export type GetApiStoresIncomingDeliveries401Two = {
+	error: string;
+};
+
+export type GetApiStoresIncomingDeliveries401Three = {
+	error: string;
+};
+
+export type GetApiStoresIncomingDeliveries403One = {
+	error: string;
+};
+
+export type GetApiStoresIncomingDeliveries403Two = {
+	error: string;
+};
+
+export type GetApiStoresIncomingDeliveries403Three = {
+	error: string;
+};
+
+export type GetApiStoresIncomingDeliveries404One = {
+	error: string;
+};
+
+export type GetApiStoresIncomingDeliveries404Two = {
+	error: string;
+};
+
+export type GetApiStoresIncomingDeliveries404Three = {
+	error: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetApiTruckTripsScheduledDepartures200OneItemAssistantName =
+	| string
+	| null
+	| null;
+
+export type GetApiTruckTripsScheduledDepartures200OneItem = {
+	truckTripId: string;
+	vehicleNo: string;
+	routeName: string;
+	driverName: string;
+	/** @nullable */
+	assistantName: GetApiTruckTripsScheduledDepartures200OneItemAssistantName;
+	scheduledStart: string;
+	status: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetApiTruckTripsScheduledDepartures200TwoItemAssistantName =
+	| string
+	| null
+	| null;
+
+export type GetApiTruckTripsScheduledDepartures200TwoItem = {
+	truckTripId: string;
+	vehicleNo: string;
+	routeName: string;
+	driverName: string;
+	/** @nullable */
+	assistantName: GetApiTruckTripsScheduledDepartures200TwoItemAssistantName;
+	scheduledStart: string;
+	status: string;
+};
+
+/**
+ * @nullable
+ */
+export type GetApiTruckTripsScheduledDepartures200ThreeItemAssistantName =
+	| string
+	| null
+	| null;
+
+export type GetApiTruckTripsScheduledDepartures200ThreeItem = {
+	truckTripId: string;
+	vehicleNo: string;
+	routeName: string;
+	driverName: string;
+	/** @nullable */
+	assistantName: GetApiTruckTripsScheduledDepartures200ThreeItemAssistantName;
+	scheduledStart: string;
+	status: string;
+};
+
+export type GetApiTruckTripsScheduledDepartures401One = {
+	error: string;
+};
+
+export type GetApiTruckTripsScheduledDepartures401Two = {
+	error: string;
+};
+
+export type GetApiTruckTripsScheduledDepartures401Three = {
+	error: string;
+};
+
+export type GetApiTruckTripsScheduledDepartures403One = {
+	error: string;
+};
+
+export type GetApiTruckTripsScheduledDepartures403Two = {
+	error: string;
+};
+
+export type GetApiTruckTripsScheduledDepartures403Three = {
+	error: string;
+};
+
+export type GetApiTruckTripsScheduledDepartures404One = {
+	error: string;
+};
+
+export type GetApiTruckTripsScheduledDepartures404Two = {
+	error: string;
+};
+
+export type GetApiTruckTripsScheduledDepartures404Three = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch200One = {
+	truckTripId: string;
+	status: string;
+	actualStart: string;
+	message: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch200Two = {
+	truckTripId: string;
+	status: string;
+	actualStart: string;
+	message: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch200Three = {
+	truckTripId: string;
+	status: string;
+	actualStart: string;
+	message: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch400One = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch400Two = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch400Three = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch401One = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch401Two = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch401Three = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch403One = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch403Two = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch403Three = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch404One = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch404Two = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdDispatch404Three = {
+	error: string;
+};
+
+export type GetApiTruckTripsInProgress200OneItem = {
+	truckTripId: string;
+	vehicleNo: string;
+	driverName: string;
+	actualStart: string;
+	status: string;
+};
+
+export type GetApiTruckTripsInProgress200TwoItem = {
+	truckTripId: string;
+	vehicleNo: string;
+	driverName: string;
+	actualStart: string;
+	status: string;
+};
+
+export type GetApiTruckTripsInProgress200ThreeItem = {
+	truckTripId: string;
+	vehicleNo: string;
+	driverName: string;
+	actualStart: string;
+	status: string;
+};
+
+export type GetApiTruckTripsInProgress401One = {
+	error: string;
+};
+
+export type GetApiTruckTripsInProgress401Two = {
+	error: string;
+};
+
+export type GetApiTruckTripsInProgress401Three = {
+	error: string;
+};
+
+export type GetApiTruckTripsInProgress403One = {
+	error: string;
+};
+
+export type GetApiTruckTripsInProgress403Two = {
+	error: string;
+};
+
+export type GetApiTruckTripsInProgress403Three = {
+	error: string;
+};
+
+export type GetApiTruckTripsInProgress404One = {
+	error: string;
+};
+
+export type GetApiTruckTripsInProgress404Two = {
+	error: string;
+};
+
+export type GetApiTruckTripsInProgress404Three = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete200One = {
+	truckTripId: string;
+	status: string;
+	actualEnd: string;
+	message: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete200Two = {
+	truckTripId: string;
+	status: string;
+	actualEnd: string;
+	message: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete200Three = {
+	truckTripId: string;
+	status: string;
+	actualEnd: string;
+	message: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete400One = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete400Two = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete400Three = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete401One = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete401Two = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete401Three = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete403One = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete403Two = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete403Three = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete404One = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete404Two = {
+	error: string;
+};
+
+export type PostApiTruckTripsByTripIdComplete404Three = {
+	error: string;
+};
+
+export type GetApiProducts200OneItem = {
+	productId: string;
+	name: string;
+	unitPrice: number;
+};
+
+export type GetApiProducts200TwoItem = {
+	productId: string;
+	name: string;
+	unitPrice: number;
+};
+
+export type GetApiProducts200ThreeItem = {
+	productId: string;
+	name: string;
+	unitPrice: number;
+};
+
+export type GetApiProducts400One = {
+	error: string;
+};
+
+export type GetApiProducts400Two = {
+	error: string;
+};
+
+export type GetApiProducts400Three = {
+	error: string;
+};
+
+export type GetApiProducts401One = {
+	error: string;
+};
+
+export type GetApiProducts401Two = {
+	error: string;
+};
+
+export type GetApiProducts401Three = {
+	error: string;
+};
+
+export type GetApiProducts403One = {
+	error: string;
+};
+
+export type GetApiProducts403Two = {
+	error: string;
+};
+
+export type GetApiProducts403Three = {
+	error: string;
+};
+
+export type GetApiProducts500One = {
+	error: string;
+};
+
+export type GetApiProducts500Two = {
+	error: string;
+};
+
+export type GetApiProducts500Three = {
+	error: string;
+};
+
+export type PostApiOrdersBodyOneItemsItem = {
+	productId: string;
+	quantity: number;
+};
+
+export type PostApiOrdersBodyOne = {
+	deliveryAddress: string;
+	requiredDeliveryDate: string;
+	items: PostApiOrdersBodyOneItemsItem[];
+};
+
+export type PostApiOrdersBodyTwoItemsItem = {
+	productId: string;
+	quantity: number;
+};
+
+export type PostApiOrdersBodyTwo = {
+	deliveryAddress: string;
+	requiredDeliveryDate: string;
+	items: PostApiOrdersBodyTwoItemsItem[];
+};
+
+export type PostApiOrdersBodyThreeItemsItem = {
+	productId: string;
+	quantity: number;
+};
+
+export type PostApiOrdersBodyThree = {
+	deliveryAddress: string;
+	requiredDeliveryDate: string;
+	items: PostApiOrdersBodyThreeItemsItem[];
+};
+
+export type PostApiOrders201One = {
+	orderId: string;
+	status: string;
+	totalValue: number;
+	message: string;
+};
+
+export type PostApiOrders201Two = {
+	orderId: string;
+	status: string;
+	totalValue: number;
+	message: string;
+};
+
+export type PostApiOrders201Three = {
+	orderId: string;
+	status: string;
+	totalValue: number;
+	message: string;
+};
+
+export type PostApiOrders400One = {
+	error: string;
+};
+
+export type PostApiOrders400Two = {
+	error: string;
+};
+
+export type PostApiOrders400Three = {
+	error: string;
+};
+
+export type PostApiOrders401One = {
+	error: string;
+};
+
+export type PostApiOrders401Two = {
+	error: string;
+};
+
+export type PostApiOrders401Three = {
+	error: string;
+};
+
+export type PostApiOrders403One = {
+	error: string;
+};
+
+export type PostApiOrders403Two = {
+	error: string;
+};
+
+export type PostApiOrders403Three = {
+	error: string;
+};
+
+export type PostApiOrders500One = {
+	error: string;
+};
+
+export type PostApiOrders500Two = {
+	error: string;
+};
+
+export type PostApiOrders500Three = {
+	error: string;
+};
+
+export type GetApiOrders200OneItem = {
+	orderId: string;
+	placedOn: string;
+	totalValue: number;
+	status: string;
+};
+
+export type GetApiOrders200TwoItem = {
+	orderId: string;
+	placedOn: string;
+	totalValue: number;
+	status: string;
+};
+
+export type GetApiOrders200ThreeItem = {
+	orderId: string;
+	placedOn: string;
+	totalValue: number;
+	status: string;
+};
+
+export type GetApiOrders401One = {
+	error: string;
+};
+
+export type GetApiOrders401Two = {
+	error: string;
+};
+
+export type GetApiOrders401Three = {
+	error: string;
+};
+
+export type GetApiOrders403One = {
+	error: string;
+};
+
+export type GetApiOrders403Two = {
+	error: string;
+};
+
+export type GetApiOrders403Three = {
+	error: string;
+};
+
+export type GetApiOrders404One = {
+	error: string;
+};
+
+export type GetApiOrders404Two = {
+	error: string;
+};
+
+export type GetApiOrders404Three = {
+	error: string;
+};
+
+export type GetApiOrders500One = {
+	error: string;
+};
+
+export type GetApiOrders500Two = {
+	error: string;
+};
+
+export type GetApiOrders500Three = {
+	error: string;
+};
+
+export type GetApiOrdersByOrderId200OneItemsItem = {
+	productName: string;
+	quantity: number;
+};
+
+export type GetApiOrdersByOrderId200OneStatusHistoryItem = {
+	status: string;
+	timestamp: string;
+};
+
+export type GetApiOrdersByOrderId200One = {
+	orderId: string;
+	status: string;
+	placedOn: string;
+	deliveryAddress: string;
+	totalValue: number;
+	items: GetApiOrdersByOrderId200OneItemsItem[];
+	statusHistory: GetApiOrdersByOrderId200OneStatusHistoryItem[];
+};
+
+export type GetApiOrdersByOrderId200TwoItemsItem = {
+	productName: string;
+	quantity: number;
+};
+
+export type GetApiOrdersByOrderId200TwoStatusHistoryItem = {
+	status: string;
+	timestamp: string;
+};
+
+export type GetApiOrdersByOrderId200Two = {
+	orderId: string;
+	status: string;
+	placedOn: string;
+	deliveryAddress: string;
+	totalValue: number;
+	items: GetApiOrdersByOrderId200TwoItemsItem[];
+	statusHistory: GetApiOrdersByOrderId200TwoStatusHistoryItem[];
+};
+
+export type GetApiOrdersByOrderId200ThreeItemsItem = {
+	productName: string;
+	quantity: number;
+};
+
+export type GetApiOrdersByOrderId200ThreeStatusHistoryItem = {
+	status: string;
+	timestamp: string;
+};
+
+export type GetApiOrdersByOrderId200Three = {
+	orderId: string;
+	status: string;
+	placedOn: string;
+	deliveryAddress: string;
+	totalValue: number;
+	items: GetApiOrdersByOrderId200ThreeItemsItem[];
+	statusHistory: GetApiOrdersByOrderId200ThreeStatusHistoryItem[];
+};
+
+export type GetApiOrdersByOrderId401One = {
+	error: string;
+};
+
+export type GetApiOrdersByOrderId401Two = {
+	error: string;
+};
+
+export type GetApiOrdersByOrderId401Three = {
+	error: string;
+};
+
+export type GetApiOrdersByOrderId403One = {
+	error: string;
+};
+
+export type GetApiOrdersByOrderId403Two = {
+	error: string;
+};
+
+export type GetApiOrdersByOrderId403Three = {
+	error: string;
+};
+
+export type GetApiOrdersByOrderId404One = {
+	error: string;
+};
+
+export type GetApiOrdersByOrderId404Two = {
+	error: string;
+};
+
+export type GetApiOrdersByOrderId404Three = {
+	error: string;
+};
+
+export type GetApiOrdersByOrderId500One = {
+	error: string;
+};
+
+export type GetApiOrdersByOrderId500Two = {
+	error: string;
+};
+
+export type GetApiOrdersByOrderId500Three = {
+	error: string;
 };
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
@@ -206,6 +2018,109 @@ export const postAuthSignIn = (
 	);
 };
 
+export const getDriverVechicles = (
+	options?: SecondParameter<
+		typeof customInstance<
+			GetDriverVechicles200OneItem[] | Blob | GetDriverVechicles200ThreeItem[]
+		>
+	>,
+) => {
+	return customInstance<
+		GetDriverVechicles200OneItem[] | Blob | GetDriverVechicles200ThreeItem[]
+	>({ url: `http://localhost:2000/driver/vechicles`, method: "GET" }, options);
+};
+
+export const getDriverVehicles = (
+	options?: SecondParameter<
+		typeof customInstance<
+			GetDriverVehicles200OneItem[] | Blob | GetDriverVehicles200ThreeItem[]
+		>
+	>,
+) => {
+	return customInstance<
+		GetDriverVehicles200OneItem[] | Blob | GetDriverVehicles200ThreeItem[]
+	>({ url: `http://localhost:2000/driver/vehicles`, method: "GET" }, options);
+};
+
+export const getDriverVehicle = (
+	options?: SecondParameter<
+		typeof customInstance<
+			GetDriverVehicle200One | Blob | GetDriverVehicle200Three
+		>
+	>,
+) => {
+	return customInstance<
+		GetDriverVehicle200One | Blob | GetDriverVehicle200Three
+	>({ url: `http://localhost:2000/driver/vehicle`, method: "GET" }, options);
+};
+
+export const getDriverProfile = (
+	options?: SecondParameter<
+		typeof customInstance<
+			GetDriverProfile200One | Blob | GetDriverProfile200Three
+		>
+	>,
+) => {
+	return customInstance<
+		GetDriverProfile200One | Blob | GetDriverProfile200Three
+	>({ url: `http://localhost:2000/driver/profile`, method: "GET" }, options);
+};
+
+export const getDriverTrips = (
+	params?: GetDriverTripsParams,
+	options?: SecondParameter<
+		typeof customInstance<
+			GetDriverTrips200OneItem[] | Blob | GetDriverTrips200ThreeItem[]
+		>
+	>,
+) => {
+	return customInstance<
+		GetDriverTrips200OneItem[] | Blob | GetDriverTrips200ThreeItem[]
+	>(
+		{ url: `http://localhost:2000/driver/trips`, method: "GET", params },
+		options,
+	);
+};
+
+export const postDriverTripsByIdStart = (
+	id: string,
+	options?: SecondParameter<
+		typeof customInstance<
+			PostDriverTripsByIdStart200One | Blob | PostDriverTripsByIdStart200Three
+		>
+	>,
+) => {
+	return customInstance<
+		PostDriverTripsByIdStart200One | Blob | PostDriverTripsByIdStart200Three
+	>(
+		{ url: `http://localhost:2000/driver/trips/${id}/start`, method: "POST" },
+		options,
+	);
+};
+
+export const postDriverTripsByIdComplete = (
+	id: string,
+	options?: SecondParameter<
+		typeof customInstance<
+			| PostDriverTripsByIdComplete200One
+			| Blob
+			| PostDriverTripsByIdComplete200Three
+		>
+	>,
+) => {
+	return customInstance<
+		| PostDriverTripsByIdComplete200One
+		| Blob
+		| PostDriverTripsByIdComplete200Three
+	>(
+		{
+			url: `http://localhost:2000/driver/trips/${id}/complete`,
+			method: "POST",
+		},
+		options,
+	);
+};
+
 export const getIndex = (
 	options?: SecondParameter<
 		typeof customInstance<GetIndex200One | Blob | GetIndex200Three>
@@ -213,6 +2128,482 @@ export const getIndex = (
 ) => {
 	return customInstance<GetIndex200One | Blob | GetIndex200Three>(
 		{ url: `http://localhost:2000/`, method: "GET" },
+		options,
+	);
+};
+
+/**
+ * Retrieves all orders with Pending status awaiting scheduling
+ * @summary Get pending orders
+ */
+export const getApiOrdersPending = (
+	options?: SecondParameter<
+		typeof customInstance<
+			GetApiOrdersPending200OneItem[] | Blob | GetApiOrdersPending200ThreeItem[]
+		>
+	>,
+) => {
+	return customInstance<
+		GetApiOrdersPending200OneItem[] | Blob | GetApiOrdersPending200ThreeItem[]
+	>(
+		{ url: `http://localhost:2000/api/orders/pending`, method: "GET" },
+		options,
+	);
+};
+
+/**
+ * Retrieves scheduled train trips with capacity information. Can be filtered by destination city.
+ * @summary Get train trips
+ */
+export const getApiTrainTrips = (
+	params?: GetApiTrainTripsParams,
+	options?: SecondParameter<
+		typeof customInstance<
+			GetApiTrainTrips200OneItem[] | Blob | GetApiTrainTrips200ThreeItem[]
+		>
+	>,
+) => {
+	return customInstance<
+		GetApiTrainTrips200OneItem[] | Blob | GetApiTrainTrips200ThreeItem[]
+	>(
+		{ url: `http://localhost:2000/api/train-trips`, method: "GET", params },
+		options,
+	);
+};
+
+/**
+ * Assigns a pending order to a train trip, creating a shipment and updating order status
+ * @summary Create shipment
+ */
+export const postApiShipments = (
+	postApiShipmentsBody:
+		| BodyType<
+				| PostApiShipmentsBodyOne
+				| PostApiShipmentsBodyTwo
+				| PostApiShipmentsBodyThree
+		  >
+		| PostApiShipmentsBodyTwo
+		| PostApiShipmentsBodyThree,
+	options?: SecondParameter<
+		typeof customInstance<
+			PostApiShipments201One | Blob | PostApiShipments201Three
+		>
+	>,
+) => {
+	return customInstance<
+		PostApiShipments201One | Blob | PostApiShipments201Three
+	>(
+		{
+			url: `http://localhost:2000/api/shipments`,
+			method: "POST",
+			data: postApiShipmentsBody,
+		},
+		options,
+	);
+};
+
+/**
+ * Retrieves shipments that have arrived at a store and are ready for truck delivery
+ * @summary Get shipments at store
+ */
+export const getApiShipmentsAtStore = (
+	params?: GetApiShipmentsAtStoreParams,
+	options?: SecondParameter<
+		typeof customInstance<
+			| GetApiShipmentsAtStore200OneItem[]
+			| Blob
+			| GetApiShipmentsAtStore200ThreeItem[]
+		>
+	>,
+) => {
+	return customInstance<
+		| GetApiShipmentsAtStore200OneItem[]
+		| Blob
+		| GetApiShipmentsAtStore200ThreeItem[]
+	>(
+		{
+			url: `http://localhost:2000/api/shipments/at-store`,
+			method: "GET",
+			params,
+		},
+		options,
+	);
+};
+
+/**
+ * Retrieves all available drivers, assistants, and trucks for scheduling
+ * @summary Get available resources
+ */
+export const getApiResourcesAvailable = (
+	options?: SecondParameter<
+		typeof customInstance<
+			GetApiResourcesAvailable200One | Blob | GetApiResourcesAvailable200Three
+		>
+	>,
+) => {
+	return customInstance<
+		GetApiResourcesAvailable200One | Blob | GetApiResourcesAvailable200Three
+	>(
+		{ url: `http://localhost:2000/api/resources/available`, method: "GET" },
+		options,
+	);
+};
+
+/**
+ * Creates a new truck trip. Business rules are validated by database triggers.
+ * @summary Schedule truck trip
+ */
+export const postApiTruckTrips = (
+	postApiTruckTripsBody:
+		| BodyType<
+				| PostApiTruckTripsBodyOne
+				| PostApiTruckTripsBodyTwo
+				| PostApiTruckTripsBodyThree
+		  >
+		| PostApiTruckTripsBodyTwo
+		| PostApiTruckTripsBodyThree,
+	options?: SecondParameter<
+		typeof customInstance<
+			PostApiTruckTrips201One | Blob | PostApiTruckTrips201Three
+		>
+	>,
+) => {
+	return customInstance<
+		PostApiTruckTrips201One | Blob | PostApiTruckTrips201Three
+	>(
+		{
+			url: `http://localhost:2000/api/truck-trips`,
+			method: "POST",
+			data: postApiTruckTripsBody,
+		},
+		options,
+	);
+};
+
+/**
+ * Retrieves a comprehensive overview of all scheduled train and truck trips
+ * @summary Get schedule overview
+ */
+export const getApiSchedulesOverview = (
+	options?: SecondParameter<
+		typeof customInstance<
+			GetApiSchedulesOverview200One | Blob | GetApiSchedulesOverview200Three
+		>
+	>,
+) => {
+	return customInstance<
+		GetApiSchedulesOverview200One | Blob | GetApiSchedulesOverview200Three
+	>(
+		{ url: `http://localhost:2000/api/schedules/overview`, method: "GET" },
+		options,
+	);
+};
+
+/**
+ * Retrieves all shipments on trains arriving at the manager's store
+ * @summary Get incoming deliveries
+ */
+export const getApiStoresIncomingDeliveries = (
+	options?: SecondParameter<
+		typeof customInstance<
+			| GetApiStoresIncomingDeliveries200OneItem[]
+			| Blob
+			| GetApiStoresIncomingDeliveries200ThreeItem[]
+		>
+	>,
+) => {
+	return customInstance<
+		| GetApiStoresIncomingDeliveries200OneItem[]
+		| Blob
+		| GetApiStoresIncomingDeliveries200ThreeItem[]
+	>(
+		{
+			url: `http://localhost:2000/api/stores/incoming-deliveries`,
+			method: "GET",
+		},
+		options,
+	);
+};
+
+/**
+ * Fetches all truck trips scheduled to depart from the manager's store
+ * @summary Get scheduled departures
+ */
+export const getApiTruckTripsScheduledDepartures = (
+	options?: SecondParameter<
+		typeof customInstance<
+			| GetApiTruckTripsScheduledDepartures200OneItem[]
+			| Blob
+			| GetApiTruckTripsScheduledDepartures200ThreeItem[]
+		>
+	>,
+) => {
+	return customInstance<
+		| GetApiTruckTripsScheduledDepartures200OneItem[]
+		| Blob
+		| GetApiTruckTripsScheduledDepartures200ThreeItem[]
+	>(
+		{
+			url: `http://localhost:2000/api/truck-trips/scheduled-departures`,
+			method: "GET",
+		},
+		options,
+	);
+};
+
+/**
+ * Confirms the actual departure of a truck trip, marking the start of delivery
+ * @summary Dispatch truck trip
+ */
+export const postApiTruckTripsByTripIdDispatch = (
+	tripId: string,
+	options?: SecondParameter<
+		typeof customInstance<
+			| PostApiTruckTripsByTripIdDispatch200One
+			| Blob
+			| PostApiTruckTripsByTripIdDispatch200Three
+		>
+	>,
+) => {
+	return customInstance<
+		| PostApiTruckTripsByTripIdDispatch200One
+		| Blob
+		| PostApiTruckTripsByTripIdDispatch200Three
+	>(
+		{
+			url: `http://localhost:2000/api/truck-trips/${tripId}/dispatch`,
+			method: "POST",
+		},
+		options,
+	);
+};
+
+/**
+ * Retrieves all truck trips currently in progress from the manager's store
+ * @summary Get in-progress trips
+ */
+export const getApiTruckTripsInProgress = (
+	options?: SecondParameter<
+		typeof customInstance<
+			| GetApiTruckTripsInProgress200OneItem[]
+			| Blob
+			| GetApiTruckTripsInProgress200ThreeItem[]
+		>
+	>,
+) => {
+	return customInstance<
+		| GetApiTruckTripsInProgress200OneItem[]
+		| Blob
+		| GetApiTruckTripsInProgress200ThreeItem[]
+	>(
+		{ url: `http://localhost:2000/api/truck-trips/in-progress`, method: "GET" },
+		options,
+	);
+};
+
+/**
+ * Marks a truck trip as completed, finalizing delivery and logging worker hours
+ * @summary Complete truck trip
+ */
+export const postApiTruckTripsByTripIdComplete = (
+	tripId: string,
+	options?: SecondParameter<
+		typeof customInstance<
+			| PostApiTruckTripsByTripIdComplete200One
+			| Blob
+			| PostApiTruckTripsByTripIdComplete200Three
+		>
+	>,
+) => {
+	return customInstance<
+		| PostApiTruckTripsByTripIdComplete200One
+		| Blob
+		| PostApiTruckTripsByTripIdComplete200Three
+	>(
+		{
+			url: `http://localhost:2000/api/truck-trips/${tripId}/complete`,
+			method: "POST",
+		},
+		options,
+	);
+};
+
+/**
+ * Retrieves a list of all products that can be ordered
+ * @summary Get all available products
+ */
+export const getApiProducts = (
+	options?: SecondParameter<
+		typeof customInstance<
+			GetApiProducts200OneItem[] | Blob | GetApiProducts200ThreeItem[]
+		>
+	>,
+) => {
+	return customInstance<
+		GetApiProducts200OneItem[] | Blob | GetApiProducts200ThreeItem[]
+	>({ url: `http://localhost:2000/api/products`, method: "GET" }, options);
+};
+
+/**
+ * Submits a new order. The required delivery date must be at least 7 days in the future.
+ * @summary Create a new order
+ */
+export const postApiOrders = (
+	postApiOrdersBody:
+		| BodyType<
+				PostApiOrdersBodyOne | PostApiOrdersBodyTwo | PostApiOrdersBodyThree
+		  >
+		| PostApiOrdersBodyTwo
+		| PostApiOrdersBodyThree,
+	options?: SecondParameter<
+		typeof customInstance<PostApiOrders201One | Blob | PostApiOrders201Three>
+	>,
+) => {
+	return customInstance<PostApiOrders201One | Blob | PostApiOrders201Three>(
+		{
+			url: `http://localhost:2000/api/orders`,
+			method: "POST",
+			data: postApiOrdersBody,
+		},
+		options,
+	);
+};
+
+/**
+ * Retrieves a summary list of all orders placed by the authenticated customer
+ * @summary Get customer orders
+ */
+export const getApiOrders = (
+	options?: SecondParameter<
+		typeof customInstance<
+			GetApiOrders200OneItem[] | Blob | GetApiOrders200ThreeItem[]
+		>
+	>,
+) => {
+	return customInstance<
+		GetApiOrders200OneItem[] | Blob | GetApiOrders200ThreeItem[]
+	>({ url: `http://localhost:2000/api/orders`, method: "GET" }, options);
+};
+
+/**
+ * Retrieves detailed status and history of a single order
+ * @summary Get order details
+ */
+export const getApiOrdersByOrderId = (
+	orderId: string,
+	options?: SecondParameter<
+		typeof customInstance<
+			GetApiOrdersByOrderId200One | Blob | GetApiOrdersByOrderId200Three
+		>
+	>,
+) => {
+	return customInstance<
+		GetApiOrdersByOrderId200One | Blob | GetApiOrdersByOrderId200Three
+	>(
+		{ url: `http://localhost:2000/api/orders/${orderId}`, method: "GET" },
+		options,
+	);
+};
+
+/**
+ * Retrieves a report of sales aggregated quarterly.
+ * @summary Get sales report
+ */
+export const getAdminReportSales = (
+	options?: SecondParameter<typeof customInstance<void>>,
+) => {
+	return customInstance<void>(
+		{ url: `http://localhost:2000/admin/report/sales`, method: "GET" },
+		options,
+	);
+};
+
+/**
+ * Retrieves a report of most ordered products aggregated quarterly.
+ * @summary Get most ordered products report
+ */
+export const getAdminReportMostOrderedProducts = (
+	options?: SecondParameter<typeof customInstance<void>>,
+) => {
+	return customInstance<void>(
+		{
+			url: `http://localhost:2000/admin/report/most-ordered-products`,
+			method: "GET",
+		},
+		options,
+	);
+};
+
+/**
+ * Retrieves a report of sales aggregated by city quarterly.
+ * @summary Download city wise sales report
+ */
+export const getAdminReportSalesCityWise = (
+	options?: SecondParameter<typeof customInstance<void>>,
+) => {
+	return customInstance<void>(
+		{
+			url: `http://localhost:2000/admin/report/sales/city-wise`,
+			method: "GET",
+		},
+		options,
+	);
+};
+
+/**
+ * Retrieves a report of sales aggregated by route quarterly.
+ * @summary Download route wise sales report
+ */
+export const getAdminReportSalesRouteWise = (
+	options?: SecondParameter<typeof customInstance<void>>,
+) => {
+	return customInstance<void>(
+		{
+			url: `http://localhost:2000/admin/report/sales/route-wise`,
+			method: "GET",
+		},
+		options,
+	);
+};
+
+/**
+ * Retrieves a report of worker hours aggregated monthly.
+ * @summary Download worker hours report
+ */
+export const getAdminReportWorkingHours = (
+	options?: SecondParameter<typeof customInstance<void>>,
+) => {
+	return customInstance<void>(
+		{ url: `http://localhost:2000/admin/report/working-hours`, method: "GET" },
+		options,
+	);
+};
+
+/**
+ * Retrieves a report of truck usage aggregated quarterly.
+ * @summary Download truck usage report
+ */
+export const getAdminReportTruckUsage = (
+	options?: SecondParameter<typeof customInstance<string>>,
+) => {
+	return customInstance<string>(
+		{ url: `http://localhost:2000/admin/report/truck-usage`, method: "GET" },
+		options,
+	);
+};
+
+/**
+ * Retrieves a report of customer order history.
+ * @summary Get customer order history report
+ */
+export const getAdminReportCustomerOrderHistory = (
+	options?: SecondParameter<typeof customInstance<void>>,
+) => {
+	return customInstance<void>(
+		{
+			url: `http://localhost:2000/admin/report/customer-order-history`,
+			method: "GET",
+		},
 		options,
 	);
 };
@@ -229,4 +2620,94 @@ export type PostAuthSignUpResult = NonNullable<
 export type PostAuthSignInResult = NonNullable<
 	Awaited<ReturnType<typeof postAuthSignIn>>
 >;
+export type GetDriverVechiclesResult = NonNullable<
+	Awaited<ReturnType<typeof getDriverVechicles>>
+>;
+export type GetDriverVehiclesResult = NonNullable<
+	Awaited<ReturnType<typeof getDriverVehicles>>
+>;
+export type GetDriverVehicleResult = NonNullable<
+	Awaited<ReturnType<typeof getDriverVehicle>>
+>;
+export type GetDriverProfileResult = NonNullable<
+	Awaited<ReturnType<typeof getDriverProfile>>
+>;
+export type GetDriverTripsResult = NonNullable<
+	Awaited<ReturnType<typeof getDriverTrips>>
+>;
+export type PostDriverTripsByIdStartResult = NonNullable<
+	Awaited<ReturnType<typeof postDriverTripsByIdStart>>
+>;
+export type PostDriverTripsByIdCompleteResult = NonNullable<
+	Awaited<ReturnType<typeof postDriverTripsByIdComplete>>
+>;
 export type GetIndexResult = NonNullable<Awaited<ReturnType<typeof getIndex>>>;
+export type GetApiOrdersPendingResult = NonNullable<
+	Awaited<ReturnType<typeof getApiOrdersPending>>
+>;
+export type GetApiTrainTripsResult = NonNullable<
+	Awaited<ReturnType<typeof getApiTrainTrips>>
+>;
+export type PostApiShipmentsResult = NonNullable<
+	Awaited<ReturnType<typeof postApiShipments>>
+>;
+export type GetApiShipmentsAtStoreResult = NonNullable<
+	Awaited<ReturnType<typeof getApiShipmentsAtStore>>
+>;
+export type GetApiResourcesAvailableResult = NonNullable<
+	Awaited<ReturnType<typeof getApiResourcesAvailable>>
+>;
+export type PostApiTruckTripsResult = NonNullable<
+	Awaited<ReturnType<typeof postApiTruckTrips>>
+>;
+export type GetApiSchedulesOverviewResult = NonNullable<
+	Awaited<ReturnType<typeof getApiSchedulesOverview>>
+>;
+export type GetApiStoresIncomingDeliveriesResult = NonNullable<
+	Awaited<ReturnType<typeof getApiStoresIncomingDeliveries>>
+>;
+export type GetApiTruckTripsScheduledDeparturesResult = NonNullable<
+	Awaited<ReturnType<typeof getApiTruckTripsScheduledDepartures>>
+>;
+export type PostApiTruckTripsByTripIdDispatchResult = NonNullable<
+	Awaited<ReturnType<typeof postApiTruckTripsByTripIdDispatch>>
+>;
+export type GetApiTruckTripsInProgressResult = NonNullable<
+	Awaited<ReturnType<typeof getApiTruckTripsInProgress>>
+>;
+export type PostApiTruckTripsByTripIdCompleteResult = NonNullable<
+	Awaited<ReturnType<typeof postApiTruckTripsByTripIdComplete>>
+>;
+export type GetApiProductsResult = NonNullable<
+	Awaited<ReturnType<typeof getApiProducts>>
+>;
+export type PostApiOrdersResult = NonNullable<
+	Awaited<ReturnType<typeof postApiOrders>>
+>;
+export type GetApiOrdersResult = NonNullable<
+	Awaited<ReturnType<typeof getApiOrders>>
+>;
+export type GetApiOrdersByOrderIdResult = NonNullable<
+	Awaited<ReturnType<typeof getApiOrdersByOrderId>>
+>;
+export type GetAdminReportSalesResult = NonNullable<
+	Awaited<ReturnType<typeof getAdminReportSales>>
+>;
+export type GetAdminReportMostOrderedProductsResult = NonNullable<
+	Awaited<ReturnType<typeof getAdminReportMostOrderedProducts>>
+>;
+export type GetAdminReportSalesCityWiseResult = NonNullable<
+	Awaited<ReturnType<typeof getAdminReportSalesCityWise>>
+>;
+export type GetAdminReportSalesRouteWiseResult = NonNullable<
+	Awaited<ReturnType<typeof getAdminReportSalesRouteWise>>
+>;
+export type GetAdminReportWorkingHoursResult = NonNullable<
+	Awaited<ReturnType<typeof getAdminReportWorkingHours>>
+>;
+export type GetAdminReportTruckUsageResult = NonNullable<
+	Awaited<ReturnType<typeof getAdminReportTruckUsage>>
+>;
+export type GetAdminReportCustomerOrderHistoryResult = NonNullable<
+	Awaited<ReturnType<typeof getAdminReportCustomerOrderHistory>>
+>;
