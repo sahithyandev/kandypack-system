@@ -25,13 +25,13 @@ VALUES (
 -- ============================================================================
 -- 1. USERS (All passwords are: password123)
 -- ============================================================================
--- Customer User
-INSERT INTO "User" (id, username, name, password, role) VALUES
-('0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 'customer1', 'Test Customer', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Customer')
-ON CONFLICT (id) DO NOTHING;
+
 
 -- Worker Users
 INSERT INTO "User" (id, username, name, password, role) VALUES
+('0199e745-ca10-7000-b4fe-5f5f56f4f7e4', 'customer1', 'Test Customer', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Customer'),
+('cust-retail-001', 'retailcust1', 'Retail Customer 1', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Customer'),
+('cust-wholesale-001', 'wholesalecust1', 'Wholesale Customer 1', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Customer'),
 ('0199e825-4ae5-7000-9d86-8be81708d4f1', 'manager2', 'Test Store Manager 2', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('worker-mgr-001', 'manager1', 'Test Store Manager', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
 ('0199e825-7df3-7000-ab6f-71669cef9383', 'driver1', 'Test Driver', '$2b$10$kN1v/SrHpzJE9ceRn1RD7eB3/TIXjQ.OPqKcYel9ELXaiflUAjFRa', 'Worker'),
