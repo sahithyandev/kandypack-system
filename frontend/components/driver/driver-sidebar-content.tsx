@@ -51,7 +51,7 @@ const linkGroups: Array<LinkGroup> = [
 				label: "Schedule",
 				icon: <Cog />,
 			},
-			{ href: "/driver/analytics", label: "Analytics", icon: <BarChart2 /> },
+			// { href: "/driver/analytics", label: "Analytics", icon: <BarChart2 /> },
 			{ href: "/driver/vehicles", label: "Vehicles", icon: <Truck /> },
 			// { href: "/driver/reports", label: "Reports", icon: <FileText /> },
 			// { href: "/driver/support", label: "Support", icon: <HelpCircle /> },

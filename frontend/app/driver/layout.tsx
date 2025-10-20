@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getUserFromToken, removeToken } from "@/lib/auth";
-import { getDriverProfile } from "@/lib/driver-api";
+import { getDriverProfile, type DriverProfile } from "@/lib/driver-api";
 import { postAuthSignOut } from "@/lib/api-client";
 
 const navigation = [
@@ -38,12 +38,12 @@ const navigation = [
 		icon: Cog,
 		description: "View your schedule",
 	},
-	{
-		name: "Analytics",
-		href: "/driver/analytics",
-		icon: BarChart2,
-		description: "Performance analytics",
-	},
+	// {
+	// 	name: "Analytics",
+	// 	href: "/driver/analytics",
+	// 	icon: BarChart2,
+	// 	description: "Performance analytics",
+	// },
 	{
 		name: "Vehicles",
 		href: "/driver/vehicles",
@@ -57,6 +57,7 @@ export default function DriverLayout({
 }: { children: React.ReactNode }) {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [driverProfile, setDriverProfile] = useState<DriverProfile | null>(null);
 	const [driverStatus, setDriverStatus] = useState<"Busy" | "Free" | "On_Leave">("Free");
 	const pathname = usePathname();
 	const router = useRouter();
@@ -80,17 +81,18 @@ export default function DriverLayout({
 		setIsAuthenticated(true);
 
 		// Fetch driver status
-		const fetchDriverStatus = async () => {
+		const fetchDriverProfile = async () => {
 			try {
 				const profile = await getDriverProfile();
+				setDriverProfile(profile);
 				setDriverStatus(profile.status);
 			} catch (error) {
-				console.error("Failed to fetch driver status:", error);
+				console.error("Failed to fetch driver profile:", error);
 				// Keep default status on error
 			}
 		};
 
-		fetchDriverStatus();
+		fetchDriverProfile();
 	}, [router]);
 
 	const isActive = (href: string) => {
@@ -120,7 +122,7 @@ export default function DriverLayout({
 	};
 
 	// Show loading state while checking authentication
-	if (!isAuthenticated) {
+	if (!isAuthenticated || !driverProfile) {
 		return (
 			<div className="flex items-center justify-center min-h-screen">
 				<div className="text-center">
@@ -171,8 +173,8 @@ export default function DriverLayout({
 								<User className="h-5 w-5" />
 							</div>
 							<div>
-								<p className="text-sm font-medium">Driver</p>
-								<p className="text-xs text-muted-foreground">driver@kandypack.lk</p>
+								<p className="text-sm font-medium">{driverProfile.name}</p>
+								<p className="text-xs text-muted-foreground">@{driverProfile.username}</p>
 							</div>
 						</div>
 					</div>
