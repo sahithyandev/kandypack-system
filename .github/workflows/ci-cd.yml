@@ -161,7 +161,7 @@ jobs:
         run: |
           docker exec postgres-test psql -U postgres -d kandypack -c "\dt"
           docker exec postgres-test psql -U postgres -d kandypack -c "SELECT COUNT(*) FROM \"User\";"
-          docker exec postgres-test psql -U postgres -d kandypack -c "SELECT COUNT(*) FROM \"Product\";"
+          docker exec postgres-test psql -U postgres -d kandypack -c "SELECT COUNT(*) FROM product;"
           echo "Database initialization successful"
 
       - name: Cleanup
@@ -216,7 +216,8 @@ jobs:
             
             # Stop existing containers
             echo "Stopping existing containers..."
-            docker compose -f docker-compose.prod.yml down || true
+            docker compose -f docker-compose.prod.yml down -v || true
+            docker volume rm kandypack-system_postgres_data 2>/dev/null || echo "Volume already removed or doesn't exist"
             
             # Remove old images to save space (optional)
             echo "Cleaning up old images..."
