@@ -2,7 +2,8 @@
 
 import { Package, ShoppingCart, Home, LogOut, User } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import {
 	Sidebar,
 	SidebarContent,
@@ -13,7 +14,6 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { removeToken } from "@/lib/auth";
 
 const navigationItems = [
 	{
@@ -35,13 +35,9 @@ const navigationItems = [
 
 export function CustomerSidebar() {
 	const pathname = usePathname();
-	const router = useRouter();
 
 	const handleLogout = async () => {
-		// Clear auth token and cookies, send sign-out request
-		await removeToken();
-		// Redirect to login
-		router.push("/login");
+		await signOut({ callbackUrl: "/login" });
 	};
 
 	return (

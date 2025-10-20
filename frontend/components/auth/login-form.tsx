@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -17,9 +18,6 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { postAuthSignIn } from "@/lib/api-client";
-import { saveToken, getCurrentUser } from "@/lib/auth";
-import { isAPIError } from "@/lib/types";
 
 const loginSchema = z.object({
 	username: z.string().min(2, "Username must be at least 2 characters").max(50),
@@ -42,53 +40,25 @@ export default function LoginForm() {
 		setIsLoading(true);
 
 		try {
-			const r = await postAuthSignIn({
+			const result = await signIn("credentials", {
 				username: data.username,
 				password: data.password,
+				redirect: false,
 			});
-			if (!("token" in r)) {
+
+			if (result?.error) {
 				toast.error("Login failed. Please check your credentials.");
 				return;
 			}
 
-			saveToken(r.token);
-
-			// Get user info from backend to check role and workerType
-			const user = await getCurrentUser();
-
-			if (user && user.role === "Worker" && user.workerType === "Dispatcher") {
-				router.push("/dispatcher/overview");
-			} else if (
-				user &&
-				user.role === "Worker" &&
-				user.workerType === "Store_Manager"
-			) {
-				router.push("/store-manager/incoming");
-			} else if (
-				user &&
-				user.role === "Worker" &&
-				user.workerType === "Admin"
-			) {
-				router.push("/admin");
-			} else if (user && user.role === "Customer") {
-				router.push("/customer");
-			} else if (
-				user &&
-				user.role === "Worker" &&
-				user.workerType === "Driver"
-			) {
-				router.push("/driver");
-			} else {
-				router.push("/login");
+			if (result?.ok) {
+				// NextAuth will handle the session, now we just redirect based on role
+				// We'll get the user info from the session
+				window.location.href = "/customer"; // Default redirect, will be handled by middleware
 			}
 		} catch (err) {
-			if (!isAPIError(err)) {
-				console.log(err);
-				toast.error("Login failed. Please try again later.");
-				return;
-			}
-
-			toast.error(err.message);
+			console.error("Login error:", err);
+			toast.error("Login failed. Please try again later.");
 		} finally {
 			setIsLoading(false);
 		}

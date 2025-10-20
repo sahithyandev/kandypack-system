@@ -6,58 +6,50 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Package, MapPin, Calendar, Clock } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { customerAPI, type OrderDetail } from "@/lib/customer-api";
 
 export default function OrderDetailPage() {
 	const params = useParams();
 	const orderId = params.orderId as string;
+	
+	const [orderDetail, setOrderDetail] = useState<OrderDetail | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
-	// Mock data - replace with real API call
-	const orderDetail = {
-		orderId: orderId,
-		status: "In Transit",
-		placedOn: "2024-01-15T10:30:00Z",
-		deliveryAddress: "123 Main St, City, State 12345",
-		totalValue: 245.50,
-		items: [
-			{
-				productName: "Premium Coffee Beans",
-				quantity: 2,
-			},
-			{
-				productName: "Organic Tea Leaves", 
-				quantity: 1,
-			},
-			{
-				productName: "Artisan Honey",
-				quantity: 3,
-			},
-		],
-		statusHistory: [
-			{
-				status: "Order Placed",
-				timestamp: "2024-01-15T10:30:00Z",
-			},
-			{
-				status: "Processing",
-				timestamp: "2024-01-15T14:20:00Z",
-			},
-			{
-				status: "In Transit",
-				timestamp: "2024-01-16T09:15:00Z",
-			},
-		],
-	};
+	useEffect(() => {
+		const fetchOrderDetail = async () => {
+			try {
+				setLoading(true);
+				console.log("Fetching order detail for:", orderId);
+				const orderData = await customerAPI.getOrderDetail(orderId);
+				console.log("Order detail received:", orderData);
+				setOrderDetail(orderData);
+			} catch (err: any) {
+				console.error("Error fetching order detail:", err);
+				setError(err.response?.data?.error || err.message || "Failed to fetch order details");
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		if (orderId) {
+			fetchOrderDetail();
+		}
+	}, [orderId]);
 
 	const getStatusColor = (status: string) => {
 		switch (status) {
 			case "Delivered":
 				return "bg-green-100 text-green-800";
-			case "In Transit":
+			case "In_Transit":
+			case "In_Train_Transit":
+			case "In_Truck_Transit":
 				return "bg-blue-100 text-blue-800";
-			case "Processing":
+			case "Pending":
 				return "bg-yellow-100 text-yellow-800";
-			case "Order Placed":
-				return "bg-gray-100 text-gray-800";
+			case "At_Store":
+				return "bg-purple-100 text-purple-800";
 			default:
 				return "bg-gray-100 text-gray-800";
 		}
@@ -66,6 +58,46 @@ export default function OrderDetailPage() {
 	const formatDate = (dateString: string) => {
 		return new Date(dateString).toLocaleString();
 	};
+
+	if (loading) {
+		return (
+			<div className="space-y-6">
+				<div className="flex items-center gap-4">
+					<Link href="/customer/orders">
+						<Button variant="outline" size="sm">
+							<ArrowLeft className="w-4 h-4 mr-2" />
+							Back to Orders
+						</Button>
+					</Link>
+					<div>
+						<h1 className="text-3xl font-bold">Loading...</h1>
+						<p className="text-muted-foreground">Fetching order details</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	if (error || !orderDetail) {
+		return (
+			<div className="space-y-6">
+				<div className="flex items-center gap-4">
+					<Link href="/customer/orders">
+						<Button variant="outline" size="sm">
+							<ArrowLeft className="w-4 h-4 mr-2" />
+							Back to Orders
+						</Button>
+					</Link>
+					<div>
+						<h1 className="text-3xl font-bold">Error</h1>
+						<p className="text-muted-foreground text-red-600">
+							{error || "Order not found"}
+						</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="space-y-6">
@@ -77,7 +109,7 @@ export default function OrderDetailPage() {
 					</Button>
 				</Link>
 				<div>
-					<h1 className="text-3xl font-bold">Order {orderId}</h1>
+					<h1 className="text-3xl font-bold">Order {orderDetail.orderId}</h1>
 					<p className="text-muted-foreground">Order details and tracking information</p>
 				</div>
 			</div>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getSession } from "next-auth/react";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL_CLIENT || "http://localhost:2000";
 
@@ -6,14 +7,15 @@ const customerApi = axios.create({
 	baseURL: API_BASE_URL,
 });
 
-// Add auth token to requests
-customerApi.interceptors.request.use((config) => {
-	const token = localStorage.getItem("authToken");
-	if (token) {
-		config.headers.Authorization = `Bearer ${token}`;
+// Add auth token to requests from NextAuth session
+customerApi.interceptors.request.use(async (config) => {
+	const session = await getSession();
+	if (session?.accessToken) {
+		config.headers.Authorization = `Bearer ${session.accessToken}`;
 	}
 	return config;
 });
+
 
 export interface Product {
 	productId: string;

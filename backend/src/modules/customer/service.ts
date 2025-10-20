@@ -107,8 +107,10 @@ export abstract class CustomerService {
 		try {
 			await client.query('BEGIN');
 
-			// Create order
-			const orderId = `ord-${Bun.randomUUIDv7().substring(0, 8)}`;
+			// Create order with unique timestamp-based ID to prevent collisions
+			const timestamp = Date.now();
+			const randomSuffix = Math.random().toString(36).substring(2, 8);
+			const orderId = `ord-${timestamp}-${randomSuffix}`;
 			
 			await client.query(
 				`INSERT INTO "Order" (
@@ -126,14 +128,16 @@ export abstract class CustomerService {
 				]
 			);
 
-			// Create order items
+			// Create order items with unique timestamp-based ID to prevent collisions
+			let itemCounter = 1;
 			for (const item of orderData.items) {
-				const orderItemId = `oi-${Bun.randomUUIDv7().substring(0, 8)}`;
+				const orderItemId = `oi-${timestamp}-${randomSuffix}-${itemCounter}`;
 				await client.query(
 					`INSERT INTO Order_Item (id, order_id, product_id, quantity)
 					VALUES ($1, $2, $3, $4)`,
 					[orderItemId, orderId, item.productId, item.quantity]
 				);
+				itemCounter++;
 			}
 
 			await client.query('COMMIT');
