@@ -23,6 +23,12 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { getUserFromToken, removeToken } from "@/lib/auth";
+import { NAME } from "@/lib/consts";
+
+export const metadata = {
+	title: `Dispatcher Dashboard | ${NAME}`,
+	description: "Dashboard for dispatchers - order management and scheduling",
+};
 
 const navigation = [
 	{

@@ -3,11 +3,11 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import DriverSidebar from "@/components/driver/driver-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { SIDEBAR_COOKIE_NAME } from "@/lib/consts";
+import { NAME, SIDEBAR_COOKIE_NAME } from "@/lib/consts";
 import DriverHeader from "@/components/driver/driver-header";
 
 export const metadata: Metadata = {
-	title: "Driver Dashboard",
+	title: `Driver Dashboard | ${NAME}`,
 	description: "Dashboard for drivers - assigned trips, vehicle info and tasks",
 };
 

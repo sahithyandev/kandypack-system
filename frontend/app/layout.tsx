@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { NAME } from "@/lib/consts";
 
 const inter = Inter({
 	variable: "--font-inter",
@@ -11,8 +12,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-	title: "Kandypack Customer Portal",
-	description: "Customer portal for Kandypack logistics system",
+	title: `${NAME}`,
+	description:
+		"Kandypack is a mid-sized FMCG manufacturing company located in Kandy, Sri Lanka.  The company distributes finished goods to wholesale and retail customers across the island using a combination of railway transport and road-based last-mile delivery.",
 };
 
 export default function RootLayout({

@@ -7,6 +7,13 @@ import { Train, Truck, CheckCircle2, Menu, X, LogOut, User } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { getUserFromToken, isStoreManager, removeToken } from "@/lib/auth";
 import { Loader2 } from "lucide-react";
+import { NAME } from "@/lib/consts";
+
+export const metadata = {
+	title: `Store Manager Dashboard | ${NAME}`,
+	description:
+		"Dashboard for store managers - delivery management and confirmations",
+};
 
 const navigation = [
   { name: "Incoming Deliveries", href: "/store-manager/incoming", icon: Train },
