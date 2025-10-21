@@ -62,3 +62,50 @@ export async function getAllTrucks(init?: RequestInit): Promise<TruckSummary[]> 
   if (!res.ok) throw new Error(`Failed to load trucks (${res.status})`);
   return res.json();
 }
+
+export type DriverTrip = {
+  id: string;
+  truck_id: string;
+  route_id: string;
+  status: "Scheduled" | "In_Progress" | "Completed" | "Cancelled";
+  scheduled_start: string; // ISO string from backend formatter
+  scheduled_end: string | null;
+  actual_start: string | null;
+  actual_end: string | null;
+};
+
+/**
+ * Fetch trips assigned to the authenticated driver.
+ * The backend sorts results by scheduled_start ASC already.
+ * Optionally filter by status via query param.
+ */
+export async function getDriverTrips(options?: { status?: DriverTrip["status"]; init?: RequestInit }): Promise<DriverTrip[]> {
+  const params = new URLSearchParams();
+  if (options?.status) params.set("status", options.status);
+  const res = await fetch(`${BACKEND_BASE}/driver/trips${params.toString() ? `?${params.toString()}` : ""}`, {
+    credentials: "include",
+    ...(options?.init || {}),
+  });
+  if (!res.ok) throw new Error(`Failed to load trips (${res.status})`);
+  return res.json();
+}
+
+export async function cancelDriverTrip(tripId: string, init?: RequestInit): Promise<DriverTrip> {
+  const res = await fetch(`${BACKEND_BASE}/driver/trips/${tripId}/cancel`, {
+    method: "POST",
+    credentials: "include",
+    ...init,
+  });
+  if (!res.ok) throw new Error(`Failed to cancel trip (${res.status})`);
+  return res.json();
+}
+
+export async function completeDriverTrip(tripId: string, init?: RequestInit): Promise<DriverTrip> {
+  const res = await fetch(`${BACKEND_BASE}/driver/trips/${tripId}/complete`, {
+    method: "POST",
+    credentials: "include",
+    ...init,
+  });
+  if (!res.ok) throw new Error(`Failed to complete trip (${res.status})`);
+  return res.json();
+}

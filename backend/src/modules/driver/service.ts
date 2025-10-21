@@ -141,6 +141,38 @@ export abstract class DriverService {
 		return updated.rows[0];
 	}
 
+	static async cancelTrip(
+		username: string,
+		tripId: string,
+	): Promise<DriverModel.trip> {
+		const verify = await client.query(
+			`SELECT tt.id
+				 FROM Truck_Trip tt
+				 JOIN Driver d ON d.id = tt.driver_id
+				 JOIN Worker w ON w.id = d.id
+				 JOIN "User" u ON u.id = w.id
+				WHERE u.username = $1
+					AND tt.id = $2
+					AND tt.status = 'Scheduled'
+				LIMIT 1`,
+			[username, tripId],
+		);
+		if (verify.rowCount === 0) throw status(403, "Trip not found or not allowed");
+
+		const updated = await client.query<DriverModel.trip>(
+			`UPDATE Truck_Trip
+					SET status = 'Cancelled'
+				WHERE id = $1
+				RETURNING id, truck_id, route_id, status,
+									to_char(scheduled_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_start,
+									to_char(scheduled_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_end,
+									to_char(actual_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_start,
+									to_char(actual_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_end`,
+			[tripId],
+		);
+		return updated.rows[0];
+	}
+
 	/**
 	 * Get vehicle details for the authenticated driver
 	 * - Returns the truck assigned in the next scheduled or in-progress trip (nearest upcoming)
