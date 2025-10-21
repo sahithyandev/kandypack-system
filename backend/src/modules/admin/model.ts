@@ -103,4 +103,9 @@ export namespace AdminModel {
 
 	export const reportResponse = t.String();
 	export type ReportResponse = typeof reportResponse.static;
+
+	export const errorResponse = t.Object({
+		error: t.String(),
+	});
+	export type ErrorResponse = typeof errorResponse.static;
 }

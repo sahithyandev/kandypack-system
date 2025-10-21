@@ -1,8 +1,8 @@
 import Elysia from "elysia";
-import authMiddleware from "../auth/middleware";
-import { AdminService } from "./service";
 import { convertRecordsToCsv } from "../../utils/common";
+import authMiddleware, { requireAdmin } from "../auth/middleware";
 import { AdminModel } from "./model";
+import { AdminService } from "./service";
 
 export const admin = new Elysia({ prefix: "/admin" })
 	.use(authMiddleware)
@@ -13,8 +13,10 @@ export const admin = new Elysia({ prefix: "/admin" })
 			return stats;
 		},
 		{
+			beforeHandle: requireAdmin,
 			response: {
 				200: AdminModel.dashboardStats,
+				403: AdminModel.errorResponse,
 			},
 			detail: {
 				tags: ["Admin - Dashboard"],
@@ -33,6 +35,11 @@ export const admin = new Elysia({ prefix: "/admin" })
 			return convertRecordsToCsv(result);
 		},
 		{
+			beforeHandle: requireAdmin,
+			response: {
+				200: AdminModel.reportResponse,
+				403: AdminModel.errorResponse,
+			},
 			detail: {
 				tags: ["Admin - Reports"],
 				summary: "Get sales report",
@@ -50,6 +57,12 @@ export const admin = new Elysia({ prefix: "/admin" })
 			return convertRecordsToCsv(result);
 		},
 		{
+			beforeHandle: requireAdmin,
+			response: {
+				200: AdminModel.reportResponse,
+				401: AdminModel.errorResponse,
+				403: AdminModel.errorResponse,
+			},
 			detail: {
 				tags: ["Admin - Reports"],
 				summary: "Get most ordered products report",
@@ -68,6 +81,12 @@ export const admin = new Elysia({ prefix: "/admin" })
 			return convertRecordsToCsv(report);
 		},
 		{
+			beforeHandle: requireAdmin,
+			response: {
+				200: AdminModel.reportResponse,
+				401: AdminModel.errorResponse,
+				403: AdminModel.errorResponse,
+			},
 			detail: {
 				tags: ["Admin - Reports"],
 				summary: "Download city wise sales report",
@@ -86,6 +105,12 @@ export const admin = new Elysia({ prefix: "/admin" })
 			return convertRecordsToCsv(report);
 		},
 		{
+			beforeHandle: requireAdmin,
+			response: {
+				200: AdminModel.reportResponse,
+				401: AdminModel.errorResponse,
+				403: AdminModel.errorResponse,
+			},
 			detail: {
 				tags: ["Admin - Reports"],
 				summary: "Download route wise sales report",
@@ -104,6 +129,12 @@ export const admin = new Elysia({ prefix: "/admin" })
 			return convertRecordsToCsv(report);
 		},
 		{
+			beforeHandle: requireAdmin,
+			response: {
+				200: AdminModel.reportResponse,
+				401: AdminModel.errorResponse,
+				403: AdminModel.errorResponse,
+			},
 			detail: {
 				tags: ["Admin - Reports"],
 				summary: "Download worker hours report",
@@ -121,8 +152,11 @@ export const admin = new Elysia({ prefix: "/admin" })
 			return convertRecordsToCsv(report);
 		},
 		{
+			beforeHandle: requireAdmin,
 			response: {
 				200: AdminModel.reportResponse,
+				401: AdminModel.errorResponse,
+				403: AdminModel.errorResponse,
 			},
 			detail: {
 				tags: ["Admin - Reports"],
@@ -141,6 +175,12 @@ export const admin = new Elysia({ prefix: "/admin" })
 			return convertRecordsToCsv(report);
 		},
 		{
+			beforeHandle: requireAdmin,
+			response: {
+				200: AdminModel.reportResponse,
+				401: AdminModel.errorResponse,
+				403: AdminModel.errorResponse,
+			},
 			detail: {
 				tags: ["Admin - Reports"],
 				summary: "Get customer order history report",

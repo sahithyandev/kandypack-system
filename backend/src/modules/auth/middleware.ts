@@ -3,12 +3,12 @@ import jwtInstance from "../../utils/jwt";
 import { AuthModel } from "./model";
 
 const authMiddleware = new Elysia({
-name: "auth.middleware",
+	name: "auth.middleware",
 })
 	.use(jwtInstance)
 	.macro({
-currentUser: {
-resolve: async ({ headers, jwt, cookie: { logged_in } }) => {
+		currentUser: {
+			resolve: async ({ headers, jwt, cookie: { logged_in } }) => {
 				// Try 1: Get token from Cookie
 				const cookieToken = logged_in.value;
 				if (typeof cookieToken === "string" && cookieToken.length > 0) {
@@ -65,7 +65,7 @@ resolve: async ({ headers, jwt, cookie: { logged_in } }) => {
 export const requireRole = (role: string, type?: string) => {
 	return async (context: any) => {
 		const { headers, jwt, set } = context;
-		
+
 		const authHeader = headers.authorization;
 
 		if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -118,5 +118,7 @@ export const requireStoreManager = requireRole("Worker", "Store_Manager");
  * Customer-specific authentication handler
  */
 export const requireCustomer = requireRole("Customer");
+
+export const requireAdmin = requireRole("Worker", "Admin");
 
 export default authMiddleware;
