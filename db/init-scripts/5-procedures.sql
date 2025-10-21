@@ -133,7 +133,7 @@ RETURNS TABLE (
     total_orders BIGINT,
     total_sales_value NUMERIC(12,2),
     total_trips BIGINT,
-    active_trucks BIGINT,
+    total_trucks BIGINT,
     total_shipments BIGINT,
     total_workers BIGINT
 )

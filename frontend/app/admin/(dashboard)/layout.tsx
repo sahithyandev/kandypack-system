@@ -13,26 +13,26 @@ export default async function Layout({
 	const cookieStore = await cookies();
 	const defaultOpen = cookieStore.get(SIDEBAR_COOKIE_NAME)?.value === "true";
 
-	const loggedInCookie = cookieStore.get("logged_in");
+	// const loggedInCookie = cookieStore.get("logged_in");
 
-	if (!loggedInCookie) {
-		redirect("/login");
-		return;
-	}
+	// if (!loggedInCookie) {
+	// 	redirect("/login");
+	// 	return;
+	// }
 
-	const response = await getAuthValidate({
-		headers: {
-			Authorization: `Bearer ${loggedInCookie.value}`,
-		},
-	});
+	// const response = await getAuthValidate({
+	// 	headers: {
+	// 		Authorization: `Bearer ${loggedInCookie.value}`,
+	// 	},
+	// });
 
-	if (!("valid" in response)) {
-		return <div>Failed to validate login status. Please try again later.</div>;
-	}
-	if (!response.valid) {
-		redirect("/login");
-		return;
-	}
+	// if (!("valid" in response)) {
+	// 	return <div>Failed to validate login status. Please try again later.</div>;
+	// }
+	// if (!response.valid) {
+	// 	redirect("/login");
+	// 	return;
+	// }
 
 	return (
 		<SidebarProvider defaultOpen={defaultOpen}>

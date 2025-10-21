@@ -210,3 +210,17 @@ VALUES
     ('DRIVER_CONSECUTIVE_TRIP_LIMIT', '1', 'Maximum consecutive trips for a driver before a break is required.'),
     ('ASSISTANT_CONSECUTIVE_TRIP_LIMIT', '2', 'Maximum consecutive routes for an assistant before a break is required.') 
 ON CONFLICT (config_key) DO NOTHING;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_sales_report_quarterly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_most_ordered_products_quarterly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_order_summary_by_city_quarterly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_order_summary_by_route_quarterly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_worker_hours_summary_monthly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_truck_usage_monthly;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY v_customer_order_history;
