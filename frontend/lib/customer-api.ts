@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL_CLIENT || "http://localhost:2000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2000";
 
 const customerApi = axios.create({
 	baseURL: API_BASE_URL,
