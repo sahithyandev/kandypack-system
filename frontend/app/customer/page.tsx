@@ -1,54 +1,97 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Package, Clock, Truck, CheckCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Package, Clock, Truck, CheckCircle, Loader2, AlertCircle } from "lucide-react";
+import { customerAPI, type OrderSummary } from "@/lib/customer-api";
 
 export default function CustomerDashboard() {
-	// Mock data - replace with real API calls
-	const stats = {
-		totalOrders: 24,
-		pendingOrders: 3,
-		inTransit: 2,
-		delivered: 19,
+	const [orders, setOrders] = useState<OrderSummary[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+
+	useEffect(() => {
+		fetchOrders();
+	}, []);
+
+	const fetchOrders = async () => {
+		try {
+			setLoading(true);
+			setError(null);
+			const data = await customerAPI.getOrders();
+			setOrders(data);
+		} catch (err) {
+			setError("Failed to load orders. Please try again.");
+			console.error("Error fetching orders:", err);
+		} finally {
+			setLoading(false);
+		}
 	};
 
-	const recentOrders = [
-		{
-			id: "ORD-001",
-			date: "2024-01-15",
-			status: "In Transit",
-			total: 245.50,
-			items: 3,
-		},
-		{
-			id: "ORD-002", 
-			date: "2024-01-12",
-			status: "Delivered",
-			total: 189.25,
-			items: 2,
-		},
-		{
-			id: "ORD-003",
-			date: "2024-01-10",
-			status: "Processing",
-			total: 312.75,
-			items: 5,
-		},
-	];
+	// Calculate statistics from orders
+	const stats = {
+		totalOrders: orders.length,
+		pendingOrders: orders.filter(o => o.status === "Pending").length,
+		inTransit: orders.filter(o => 
+			o.status === "In_Train_Transit" || 
+			o.status === "In_Truck_Transit" || 
+			o.status === "At_Store"
+		).length,
+		delivered: orders.filter(o => o.status === "Delivered").length,
+	};
+
+	// Get recent orders (last 5)
+	const recentOrders = orders
+		.sort((a, b) => new Date(b.placedOn).getTime() - new Date(a.placedOn).getTime())
+		.slice(0, 5);
 
 	const getStatusColor = (status: string) => {
 		switch (status) {
 			case "Delivered":
 				return "bg-green-100 text-green-800";
-			case "In Transit":
+			case "In_Train_Transit":
+			case "In_Truck_Transit":
 				return "bg-blue-100 text-blue-800";
-			case "Processing":
+			case "At_Store":
+				return "bg-purple-100 text-purple-800";
+			case "Pending":
 				return "bg-yellow-100 text-yellow-800";
 			default:
 				return "bg-gray-100 text-gray-800";
 		}
 	};
+
+	const formatStatus = (status: string) => {
+		return status.replace(/_/g, " ");
+	};
+
+	const formatDate = (dateString: string) => {
+		return new Date(dateString).toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric'
+		});
+	};
+
+	if (loading) {
+		return (
+			<div className="flex items-center justify-center h-64">
+				<Loader2 className="h-8 w-8 animate-spin text-primary" />
+			</div>
+		);
+	}
+
+	if (error) {
+		return (
+			<div className="flex flex-col items-center justify-center h-64 space-y-4">
+				<AlertCircle className="h-12 w-12 text-destructive" />
+				<p className="text-lg font-medium">{error}</p>
+				<Button onClick={fetchOrders}>Try Again</Button>
+			</div>
+		);
+	}
 
 	return (
 		<div className="space-y-6">
@@ -108,22 +151,30 @@ export default function CustomerDashboard() {
 				</CardHeader>
 				<CardContent>
 					<div className="space-y-4">
-						{recentOrders.map((order) => (
-							<div key={order.id} className="flex items-center justify-between p-4 border rounded-lg">
-								<div className="space-y-1">
-									<div className="flex items-center gap-2">
-										<span className="font-medium">{order.id}</span>
-										<Badge className={getStatusColor(order.status)}>{order.status}</Badge>
-									</div>
-									<p className="text-sm text-muted-foreground">
-										{order.items} items • Placed on {order.date}
-									</p>
-								</div>
-								<div className="text-right">
-									<p className="font-medium">${order.total.toFixed(2)}</p>
-								</div>
+						{recentOrders.length === 0 ? (
+							<div className="text-center py-8 text-muted-foreground">
+								<Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
+								<p>No orders yet. Start by placing your first order!</p>
 							</div>
-						))}
+						) : (
+							recentOrders.map((order) => (
+								<div key={order.orderId} className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors cursor-pointer"
+									onClick={() => window.location.href = `/customer/orders/${order.orderId}`}>
+									<div className="space-y-1">
+										<div className="flex items-center gap-2">
+											<span className="font-medium">{order.orderId}</span>
+											<Badge className={getStatusColor(order.status)}>{formatStatus(order.status)}</Badge>
+										</div>
+										<p className="text-sm text-muted-foreground">
+											Placed on {formatDate(order.placedOn)}
+										</p>
+									</div>
+									<div className="text-right">
+										<p className="font-medium">LKR {order.totalValue.toFixed(2)}</p>
+									</div>
+								</div>
+							))
+						)}
 					</div>
 				</CardContent>
 			</Card>

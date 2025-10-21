@@ -1,9 +1,11 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Package, MapPin, Calendar, Clock } from "lucide-react";
+import { ArrowLeft, Package, MapPin, Calendar, Clock, Loader2, AlertCircle } from "lucide-react";
+import { customerAPI, type OrderDetail } from "@/lib/customer-api";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
@@ -11,61 +13,82 @@ export default function OrderDetailPage() {
 	const params = useParams();
 	const orderId = params.orderId as string;
 
-	// Mock data - replace with real API call
-	const orderDetail = {
-		orderId: orderId,
-		status: "In Transit",
-		placedOn: "2024-01-15T10:30:00Z",
-		deliveryAddress: "123 Main St, City, State 12345",
-		totalValue: 245.50,
-		items: [
-			{
-				productName: "Premium Coffee Beans",
-				quantity: 2,
-			},
-			{
-				productName: "Organic Tea Leaves", 
-				quantity: 1,
-			},
-			{
-				productName: "Artisan Honey",
-				quantity: 3,
-			},
-		],
-		statusHistory: [
-			{
-				status: "Order Placed",
-				timestamp: "2024-01-15T10:30:00Z",
-			},
-			{
-				status: "Processing",
-				timestamp: "2024-01-15T14:20:00Z",
-			},
-			{
-				status: "In Transit",
-				timestamp: "2024-01-16T09:15:00Z",
-			},
-		],
+	const [orderDetail, setOrderDetail] = useState<OrderDetail | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+
+	useEffect(() => {
+		if (orderId) {
+			fetchOrderDetail();
+		}
+	}, [orderId]);
+
+	const fetchOrderDetail = async () => {
+		try {
+			setLoading(true);
+			setError(null);
+			const data = await customerAPI.getOrderDetail(orderId);
+			setOrderDetail(data);
+		} catch (err) {
+			setError("Failed to load order details. Please try again.");
+			console.error("Error fetching order detail:", err);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	const getStatusColor = (status: string) => {
 		switch (status) {
 			case "Delivered":
 				return "bg-green-100 text-green-800";
-			case "In Transit":
+			case "In_Train_Transit":
+			case "In_Truck_Transit":
 				return "bg-blue-100 text-blue-800";
-			case "Processing":
+			case "At_Store":
+				return "bg-purple-100 text-purple-800";
+			case "Pending":
 				return "bg-yellow-100 text-yellow-800";
-			case "Order Placed":
-				return "bg-gray-100 text-gray-800";
 			default:
 				return "bg-gray-100 text-gray-800";
 		}
 	};
 
-	const formatDate = (dateString: string) => {
-		return new Date(dateString).toLocaleString();
+	const formatStatus = (status: string) => {
+		return status.replace(/_/g, " ");
 	};
+
+	const formatDate = (dateString: string) => {
+		return new Date(dateString).toLocaleString('en-US', {
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit'
+		});
+	};
+
+	if (loading) {
+		return (
+			<div className="flex items-center justify-center h-64">
+				<Loader2 className="h-8 w-8 animate-spin text-primary" />
+			</div>
+		);
+	}
+
+	if (error || !orderDetail) {
+		return (
+			<div className="flex flex-col items-center justify-center h-64 space-y-4">
+				<AlertCircle className="h-12 w-12 text-destructive" />
+				<p className="text-lg font-medium">{error || "Order not found"}</p>
+				<div className="flex gap-2">
+					<Link href="/customer/orders">
+						<Button variant="outline">Back to Orders</Button>
+					</Link>
+					<Button onClick={fetchOrderDetail}>Try Again</Button>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="space-y-6">
@@ -77,7 +100,7 @@ export default function OrderDetailPage() {
 					</Button>
 				</Link>
 				<div>
-					<h1 className="text-3xl font-bold">Order {orderId}</h1>
+					<h1 className="text-3xl font-bold">Order {orderDetail.orderId}</h1>
 					<p className="text-muted-foreground">Order details and tracking information</p>
 				</div>
 			</div>
@@ -89,7 +112,7 @@ export default function OrderDetailPage() {
 						<CardTitle className="flex items-center justify-between">
 							<span>Order Summary</span>
 							<Badge className={getStatusColor(orderDetail.status)}>
-								{orderDetail.status}
+								{formatStatus(orderDetail.status)}
 							</Badge>
 						</CardTitle>
 					</CardHeader>
@@ -111,7 +134,7 @@ export default function OrderDetailPage() {
 						<div className="pt-4 border-t">
 							<div className="flex justify-between items-center text-lg font-bold">
 								<span>Total Value:</span>
-								<span>${orderDetail.totalValue.toFixed(2)}</span>
+								<span>LKR {orderDetail.totalValue.toFixed(2)}</span>
 							</div>
 						</div>
 					</CardContent>
@@ -154,19 +177,24 @@ export default function OrderDetailPage() {
 				</CardHeader>
 				<CardContent>
 					<div className="space-y-4">
-						{orderDetail.statusHistory.map((entry, index) => (
-							<div key={index} className="flex items-start gap-4">
-								<div className="w-3 h-3 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-								<div className="flex-1">
-									<div className="flex items-center justify-between">
-										<h4 className="font-medium">{entry.status}</h4>
-										<span className="text-sm text-muted-foreground">
-											{formatDate(entry.timestamp)}
-										</span>
+						{orderDetail.statusHistory.map((entry, index) => {
+							const isCurrentStatus = entry.status === orderDetail.status;
+							return (
+								<div key={index} className="flex items-start gap-4">
+									<div className={`w-3 h-3 rounded-full mt-2 flex-shrink-0 ${
+										isCurrentStatus ? 'bg-blue-500 ring-4 ring-blue-200' : 'bg-green-500'
+									}`}></div>
+									<div className="flex-1">
+										<div className="flex items-center justify-between">
+											<h4 className="font-medium">{formatStatus(entry.status)}</h4>
+											<span className="text-sm text-muted-foreground">
+												{formatDate(entry.timestamp)}
+											</span>
+										</div>
 									</div>
 								</div>
-							</div>
-						))}
+							);
+						})}
 						
 						{/* Future status placeholder */}
 						{orderDetail.status !== "Delivered" && (
