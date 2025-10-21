@@ -28,8 +28,8 @@ export default function VehicleInfo() {
 				const p = await getDriverProfile();
 				if (!alive) return;
 				setProfile(p);
-				if (p.status === "Free") {
-					// No assigned vehicle expected when driver is Free
+				if (p.status === "Free" || p.status === "On_Leave") {
+					// No assigned vehicle expected when driver is Free or On Leave
 					setVehicle(null);
 					return;
 				}
@@ -58,11 +58,20 @@ export default function VehicleInfo() {
 		);
 	}
 
-	// If driver is explicitly Free, show requested message
-	if (profile && profile.status === "Free") {
+	// If driver is explicitly Free or On Leave, show appropriate message
+	if (profile && (profile.status === "Free" || profile.status === "On_Leave")) {
 		return (
 			<div className="flex flex-col gap-2">
-				<div className="font-medium">You have no any assigned vehicles</div>
+				<div className="font-medium">
+					{profile.status === "On_Leave" 
+						? "You are currently on leave" 
+						: "You have no any assigned vehicles"}
+				</div>
+				{profile.status === "On_Leave" && (
+					<div className="text-sm text-muted-foreground">
+						Contact your supervisor to update your status when you return.
+					</div>
+				)}
 			</div>
 		);
 	}
