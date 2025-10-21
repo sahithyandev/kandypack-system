@@ -32,7 +32,7 @@ export async function removeToken() {
 	const token = getToken();
 	if (token) {
 		try {
-			await fetch("http://localhost:2000/auth/sign-out", {
+			await fetch("https://kp.sahithyan.dev/auth/sign-out", {
 				method: "POST",
 				credentials: "include",
 				headers: {
@@ -97,7 +97,7 @@ export async function getCurrentUser(): Promise<JWTPayload | null> {
 	if (!token) return null;
 
 	try {
-		const response = await fetch("http://localhost:2000/auth/me", {
+		const response = await fetch("https://kp.sahithyan.dev/auth/me", {
 			method: "GET",
 			credentials: "include",
 			headers: {
