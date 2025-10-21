@@ -79,8 +79,8 @@ export abstract class DriverService {
 
 	static async startTrip(username: string, tripId: string): Promise<DriverModel.trip> {
 		// Verify ownership and status
-		const verify = await client.query(
-			`SELECT tt.id
+		const verify = await client.query<{ id: string; driver_id: string; assistant_id: string | null }>(
+			`SELECT tt.id, tt.driver_id, tt.assistant_id
 				 FROM Truck_Trip tt
 				 JOIN Driver d ON d.id = tt.driver_id
 				 JOIN Worker w ON w.id = d.id
@@ -93,27 +93,57 @@ export abstract class DriverService {
 		);
 		if (verify.rowCount === 0) throw status(403, "Trip not found or not allowed");
 
-		const updated = await client.query<DriverModel.trip>(
-			`UPDATE Truck_Trip
-					SET status = 'In_Progress',
-							actual_start = NOW()
-				WHERE id = $1
-				RETURNING id, truck_id, route_id, status, 
-									to_char(scheduled_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_start,
-									to_char(scheduled_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_end,
-									to_char(actual_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_start,
-									to_char(actual_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_end`,
-			[tripId],
-		);
-		return updated.rows[0];
+		const trip = verify.rows[0];
+
+		// Start a transaction to update trip and worker statuses
+		await client.query('BEGIN');
+		try {
+			// Update trip status
+			const updated = await client.query<DriverModel.trip>(
+				`UPDATE Truck_Trip
+						SET status = 'In_Progress',
+								actual_start = NOW()
+					WHERE id = $1
+					RETURNING id, truck_id, route_id, status, 
+										to_char(scheduled_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_start,
+										to_char(scheduled_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_end,
+										to_char(actual_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_start,
+										to_char(actual_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_end`,
+				[tripId],
+			);
+
+			// Set driver status to 'Busy'
+			await client.query(
+				`UPDATE Worker
+				 SET status = 'Busy'
+				 WHERE id = $1`,
+				[trip.driver_id],
+			);
+
+			// Set assistant status to 'Busy' if exists
+			if (trip.assistant_id) {
+				await client.query(
+					`UPDATE Worker
+					 SET status = 'Busy'
+					 WHERE id = $1`,
+					[trip.assistant_id],
+				);
+			}
+
+			await client.query('COMMIT');
+			return updated.rows[0];
+		} catch (error) {
+			await client.query('ROLLBACK');
+			throw error;
+		}
 	}
 
 	static async completeTrip(
 		username: string,
 		tripId: string,
 	): Promise<DriverModel.trip> {
-		const verify = await client.query(
-			`SELECT tt.id
+		const verify = await client.query<{ id: string; driver_id: string; assistant_id: string | null }>(
+			`SELECT tt.id, tt.driver_id, tt.assistant_id
 				 FROM Truck_Trip tt
 				 JOIN Driver d ON d.id = tt.driver_id
 				 JOIN Worker w ON w.id = d.id
@@ -126,27 +156,80 @@ export abstract class DriverService {
 		);
 		if (verify.rowCount === 0) throw status(403, "Trip not found or not allowed");
 
-		const updated = await client.query<DriverModel.trip>(
-			`UPDATE Truck_Trip
-					SET status = 'Completed',
-							actual_end = NOW()
-				WHERE id = $1
-				RETURNING id, truck_id, route_id, status,
-									to_char(scheduled_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_start,
-									to_char(scheduled_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_end,
-									to_char(actual_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_start,
-									to_char(actual_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_end`,
-			[tripId],
-		);
-		return updated.rows[0];
+		const trip = verify.rows[0];
+
+		// Start a transaction to update trip and worker statuses
+		await client.query('BEGIN');
+		try {
+			// Update trip status
+			const updated = await client.query<DriverModel.trip>(
+				`UPDATE Truck_Trip
+						SET status = 'Completed',
+								actual_end = NOW()
+					WHERE id = $1
+					RETURNING id, truck_id, route_id, status,
+										to_char(scheduled_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_start,
+										to_char(scheduled_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_end,
+										to_char(actual_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_start,
+										to_char(actual_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_end`,
+				[tripId],
+			);
+
+			// Check if driver has any other in-progress or scheduled trips
+			const hasMoreTrips = await client.query(
+				`SELECT COUNT(*) as count
+				 FROM Truck_Trip
+				 WHERE driver_id = $1
+					 AND status IN ('In_Progress', 'Scheduled')
+					 AND id != $2`,
+				[trip.driver_id, tripId],
+			);
+
+			// If no more trips, set driver status to 'Free'
+			if (hasMoreTrips.rows[0]?.count === '0') {
+				await client.query(
+					`UPDATE Worker
+					 SET status = 'Free'
+					 WHERE id = $1`,
+					[trip.driver_id],
+				);
+			}
+
+			// Do the same for assistant if exists
+			if (trip.assistant_id) {
+				const assistantHasMoreTrips = await client.query(
+					`SELECT COUNT(*) as count
+					 FROM Truck_Trip
+					 WHERE assistant_id = $1
+						 AND status IN ('In_Progress', 'Scheduled')
+						 AND id != $2`,
+					[trip.assistant_id, tripId],
+				);
+
+				if (assistantHasMoreTrips.rows[0]?.count === '0') {
+					await client.query(
+						`UPDATE Worker
+						 SET status = 'Free'
+						 WHERE id = $1`,
+						[trip.assistant_id],
+					);
+				}
+			}
+
+			await client.query('COMMIT');
+			return updated.rows[0];
+		} catch (error) {
+			await client.query('ROLLBACK');
+			throw error;
+		}
 	}
 
 	static async cancelTrip(
 		username: string,
 		tripId: string,
 	): Promise<DriverModel.trip> {
-		const verify = await client.query(
-			`SELECT tt.id
+		const verify = await client.query<{ id: string; driver_id: string; assistant_id: string | null }>(
+			`SELECT tt.id, tt.driver_id, tt.assistant_id
 				 FROM Truck_Trip tt
 				 JOIN Driver d ON d.id = tt.driver_id
 				 JOIN Worker w ON w.id = d.id
@@ -159,18 +242,71 @@ export abstract class DriverService {
 		);
 		if (verify.rowCount === 0) throw status(403, "Trip not found or not allowed");
 
-		const updated = await client.query<DriverModel.trip>(
-			`UPDATE Truck_Trip
-					SET status = 'Cancelled'
-				WHERE id = $1
-				RETURNING id, truck_id, route_id, status,
-									to_char(scheduled_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_start,
-									to_char(scheduled_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_end,
-									to_char(actual_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_start,
-									to_char(actual_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_end`,
-			[tripId],
-		);
-		return updated.rows[0];
+		const trip = verify.rows[0];
+
+		// Start a transaction to update trip and worker statuses
+		await client.query('BEGIN');
+		try {
+			// Update trip status
+			const updated = await client.query<DriverModel.trip>(
+				`UPDATE Truck_Trip
+						SET status = 'Cancelled'
+					WHERE id = $1
+					RETURNING id, truck_id, route_id, status,
+										to_char(scheduled_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_start,
+										to_char(scheduled_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as scheduled_end,
+										to_char(actual_start, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_start,
+										to_char(actual_end, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') as actual_end`,
+				[tripId],
+			);
+
+			// Check if driver has any other in-progress or scheduled trips
+			const hasMoreTrips = await client.query(
+				`SELECT COUNT(*) as count
+				 FROM Truck_Trip
+				 WHERE driver_id = $1
+					 AND status IN ('In_Progress', 'Scheduled')
+					 AND id != $2`,
+				[trip.driver_id, tripId],
+			);
+
+			// If no more trips, set driver status to 'Free'
+			if (hasMoreTrips.rows[0]?.count === '0') {
+				await client.query(
+					`UPDATE Worker
+					 SET status = 'Free'
+					 WHERE id = $1`,
+					[trip.driver_id],
+				);
+			}
+
+			// Do the same for assistant if exists
+			if (trip.assistant_id) {
+				const assistantHasMoreTrips = await client.query(
+					`SELECT COUNT(*) as count
+					 FROM Truck_Trip
+					 WHERE assistant_id = $1
+						 AND status IN ('In_Progress', 'Scheduled')
+						 AND id != $2`,
+					[trip.assistant_id, tripId],
+				);
+
+				if (assistantHasMoreTrips.rows[0]?.count === '0') {
+					await client.query(
+						`UPDATE Worker
+						 SET status = 'Free'
+						 WHERE id = $1`,
+						[trip.assistant_id],
+					);
+				}
+			}
+
+			await client.query('COMMIT');
+			return updated.rows[0];
+		} catch (error) {
+			await client.query('ROLLBACK');
+			throw error;
+		}
 	}
 
 	/**

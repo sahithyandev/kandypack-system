@@ -53,6 +53,8 @@ export default function Schedule() {
 		setTrips((prev) => prev.filter((t) => t.id !== tripId));
 		try {
 			await cancelDriverTrip(tripId);
+			// Trigger a page reload to refresh all data including driver status and vehicle info
+			window.location.reload();
 		} catch (err) {
 			setError(err instanceof Error ? err.message : "Failed to cancel trip");
 			// Re-fetch to get the correct state back on failure

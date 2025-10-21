@@ -54,6 +54,8 @@ export default function CurrentTrip({ trip }: CurrentTripProps) {
 		try {
 			await cancelDriverTrip(displayTrip.id);
 			setCurrentTrip(null);
+			// Trigger a page reload to refresh all data including driver status and vehicle info
+			window.location.reload();
 		} catch (err) {
 			setError(err instanceof Error ? err.message : "Failed to cancel trip");
 		}
@@ -64,6 +66,8 @@ export default function CurrentTrip({ trip }: CurrentTripProps) {
 		try {
 			await completeDriverTrip(displayTrip.id);
 			setCurrentTrip(null);
+			// Trigger a page reload to refresh all data including driver status and vehicle info
+			window.location.reload();
 		} catch (err) {
 			setError(err instanceof Error ? err.message : "Failed to complete trip");
 		}
@@ -90,7 +94,7 @@ export default function CurrentTrip({ trip }: CurrentTripProps) {
 	if (!displayTrip) {
 		return (
 			<div className="rounded-md border">
-				<div className="p-3 text-sm text-muted-foreground">Current trip</div>
+				{/* <div className="p-3 text-sm text-muted-foreground">Current trip</div> */}
 				<div className="border-t p-3 text-sm">No current trip</div>
 			</div>
 		);

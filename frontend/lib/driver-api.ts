@@ -90,6 +90,16 @@ export async function getDriverTrips(options?: { status?: DriverTrip["status"]; 
   return res.json();
 }
 
+export async function startDriverTrip(tripId: string, init?: RequestInit): Promise<DriverTrip> {
+  const res = await fetch(`${BACKEND_BASE}/driver/trips/${tripId}/start`, {
+    method: "POST",
+    credentials: "include",
+    ...init,
+  });
+  if (!res.ok) throw new Error(`Failed to start trip (${res.status})`);
+  return res.json();
+}
+
 export async function cancelDriverTrip(tripId: string, init?: RequestInit): Promise<DriverTrip> {
   const res = await fetch(`${BACKEND_BASE}/driver/trips/${tripId}/cancel`, {
     method: "POST",
