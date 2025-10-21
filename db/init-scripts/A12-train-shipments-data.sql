@@ -10,13 +10,13 @@
 -- Future train trips (for train scheduling)
 INSERT INTO train_trip (id, train_id, from_city_id, to_city_id, scheduled_departure, scheduled_arrival, capacity_units, allocated_units) VALUES
     -- Kandy to Colombo routes
-    ('tt-kdy-cmb-001', 'train-001', 'city-kdy', 'city-cmb', CURRENT_TIMESTAMP + INTERVAL '2 days 8 hours', CURRENT_TIMESTAMP + INTERVAL '2 days 12 hours', 300.0, 0.0),
-    ('tt-kdy-cmb-002', 'train-001', 'city-kdy', 'city-cmb', CURRENT_TIMESTAMP + INTERVAL '3 days 8 hours', CURRENT_TIMESTAMP + INTERVAL '3 days 12 hours', 300.0, 0.0),
+    ('tt-kdy-cmb-001', 'train-001', 'city-kdy', 'city-cmb', CURRENT_TIMESTAMP + INTERVAL '2 days 8 hours', CURRENT_TIMESTAMP + INTERVAL '2 days 12 hours', 900.0, 0.0),
+    ('tt-kdy-cmb-002', 'train-001', 'city-kdy', 'city-cmb', CURRENT_TIMESTAMP + INTERVAL '3 days 8 hours', CURRENT_TIMESTAMP + INTERVAL '3 days 12 hours', 900.0, 0.0),
     ('tt-kdy-cmb-003', 'train-005', 'city-kdy', 'city-cmb', CURRENT_TIMESTAMP + INTERVAL '5 days 9 hours', CURRENT_TIMESTAMP + INTERVAL '5 days 13 hours', 450.0, 0.0),
     
     -- Colombo to Galle routes
-    ('tt-cmb-gal-001', 'train-003', 'city-cmb', 'city-gal', CURRENT_TIMESTAMP + INTERVAL '1 day 14 hours', CURRENT_TIMESTAMP + INTERVAL '1 day 18 hours', 300.0, 0.0),
-    ('tt-cmb-gal-002', 'train-003', 'city-cmb', 'city-gal', CURRENT_TIMESTAMP + INTERVAL '4 days 14 hours', CURRENT_TIMESTAMP + INTERVAL '4 days 18 hours', 300.0, 0.0),
+    ('tt-cmb-gal-001', 'train-003', 'city-cmb', 'city-gal', CURRENT_TIMESTAMP + INTERVAL '1 day 14 hours', CURRENT_TIMESTAMP + INTERVAL '1 day 18 hours', 700.0, 0.0),
+    ('tt-cmb-gal-002', 'train-003', 'city-cmb', 'city-gal', CURRENT_TIMESTAMP + INTERVAL '4 days 14 hours', CURRENT_TIMESTAMP + INTERVAL '4 days 18 hours', 700.0, 0.0),
     
     -- Colombo to Jaffna routes
     ('tt-cmb-jaf-001', 'train-004', 'city-cmb', 'city-jaf', CURRENT_TIMESTAMP + INTERVAL '4 days 6 hours', CURRENT_TIMESTAMP + INTERVAL '4 days 16 hours', 600.0, 0.0),
@@ -33,7 +33,7 @@ INSERT INTO train_trip (id, train_id, from_city_id, to_city_id, scheduled_depart
     ('tt-cmb-tri-001', 'train-006', 'city-cmb', 'city-tri', CURRENT_TIMESTAMP + INTERVAL '5 days 8 hours', CURRENT_TIMESTAMP + INTERVAL '5 days 17 hours', 500.0, 0.0),
     
     -- Matara routes
-    ('tt-gal-mat-001', 'train-003', 'city-gal', 'city-mat', CURRENT_TIMESTAMP + INTERVAL '2 days 18 hours', CURRENT_TIMESTAMP + INTERVAL '2 days 20 hours', 300.0, 0.0)
+    ('tt-gal-mat-001', 'train-003', 'city-gal', 'city-mat', CURRENT_TIMESTAMP + INTERVAL '2 days 18 hours', CURRENT_TIMESTAMP + INTERVAL '2 days 20 hours', 700.0, 0.0)
 ON CONFLICT (id) DO NOTHING;
 
 -- =============================================================================
