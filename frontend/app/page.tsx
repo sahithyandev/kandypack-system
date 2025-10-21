@@ -86,9 +86,6 @@ export default function HomePage() {
 						affordable packaged goods — powered by a hybrid rail and road
 						network.
 					</p>
-					<Button className="dark:text-white !py-6 !px-9 rounded-full">
-						Create Account
-					</Button>
 				</motion.div>
 			</section>
 
