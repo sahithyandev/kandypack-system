@@ -3,7 +3,7 @@ import { getToken } from "./auth";
 import type { APIError } from "./types";
 
 export const AXIOS_INSTANCE = axios.create({
-	baseURL: process.env.NEXT_PUBLIC_API_URL_CLIENT || "http://localhost:2000",
+	baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:2000",
 	headers: {
 		"Content-Type": "application/json",
 	},

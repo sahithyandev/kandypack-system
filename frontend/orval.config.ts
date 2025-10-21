@@ -4,7 +4,6 @@ export default defineConfig({
 	backend: {
 		input: "http://localhost:2000/swagger/json",
 		output: {
-			baseUrl: "http://localhost:2000",
 			target: "./lib/api-client.ts",
 			client: "axios-functions",
 			httpClient: "axios",

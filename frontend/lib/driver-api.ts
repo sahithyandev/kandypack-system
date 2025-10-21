@@ -14,7 +14,7 @@ export type DriverProfile = {
   weekly_hours: number;
 };
 
-const BACKEND_BASE = process.env.NEXT_PUBLIC_API_URL_CLIENT || "http://localhost:2000"; // keep consistent with generated client
+const BACKEND_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:2000"; // keep consistent with generated client
 
 export async function getDriverProfile(init?: RequestInit): Promise<DriverProfile> {
   const res = await fetch(`${BACKEND_BASE}/driver/profile`, {
