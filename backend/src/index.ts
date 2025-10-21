@@ -20,9 +20,18 @@ export const app = new Elysia()
 	.use(
 		cors({
 			// Credentialed requests require a specific allowed origin (not "*")
-			origin: ["*"],
+			origin: [
+				"http://localhost:3000",
+				"http://127.0.0.1:3000",
+				"https://kp.sahithyan.dev",
+				"https://fe.kandypack.jaindu.me",
+				/https:\/\/.*\.sahithyan\.dev$/, // Allow all subdomains
+				/https:\/\/.*\.jaindu\.me$/,
+			],
 			credentials: true,
 			exposeHeaders: ["Content-Disposition"],
+			methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+			allowedHeaders: ["Content-Type", "Authorization"],
 		}),
 	)
 	.use(
