@@ -62,6 +62,51 @@ export type GetAuthValidate200Three = {
 	user: GetAuthValidate200ThreeUser;
 };
 
+export type GetAuthMe200One = {
+	username: string;
+	name: string;
+	role: string;
+	workerType?: string;
+};
+
+export type GetAuthMe200Two = {
+	username: string;
+	name: string;
+	role: string;
+	workerType?: string;
+};
+
+export type GetAuthMe200Three = {
+	username: string;
+	name: string;
+	role: string;
+	workerType?: string;
+};
+
+export type GetAuthMe401One = {
+	message: string;
+};
+
+export type GetAuthMe401Two = {
+	message: string;
+};
+
+export type GetAuthMe401Three = {
+	message: string;
+};
+
+export type GetAuthMe404One = {
+	message: string;
+};
+
+export type GetAuthMe404Two = {
+	message: string;
+};
+
+export type GetAuthMe404Three = {
+	message: string;
+};
+
 export type PostAuthSignUpBodyOneType = "Retail" | "Wholesale";
 
 export type PostAuthSignUpBodyOne = {
@@ -2031,7 +2076,18 @@ export const getAuthValidate = (
 	>,
 ) => {
 	return customInstance<GetAuthValidate200One | Blob | GetAuthValidate200Three>(
-		{ url: `http://localhost:2000/auth/validate`, method: "GET" },
+		{ url: `/auth/validate`, method: "GET" },
+		options,
+	);
+};
+
+export const getAuthMe = (
+	options?: SecondParameter<
+		typeof customInstance<GetAuthMe200One | Blob | GetAuthMe200Three>
+	>,
+) => {
+	return customInstance<GetAuthMe200One | Blob | GetAuthMe200Three>(
+		{ url: `/auth/me`, method: "GET" },
 		options,
 	);
 };
@@ -2040,7 +2096,7 @@ export const postAuthSignOut = (
 	options?: SecondParameter<typeof customInstance<void>>,
 ) => {
 	return customInstance<void>(
-		{ url: `http://localhost:2000/auth/sign-out`, method: "POST" },
+		{ url: `/auth/sign-out`, method: "POST" },
 		options,
 	);
 };
@@ -2057,11 +2113,7 @@ export const postAuthSignUp = (
 	>,
 ) => {
 	return customInstance<PostAuthSignUp200One | Blob | PostAuthSignUp200Three>(
-		{
-			url: `http://localhost:2000/auth/sign-up`,
-			method: "POST",
-			data: postAuthSignUpBody,
-		},
+		{ url: `/auth/sign-up`, method: "POST", data: postAuthSignUpBody },
 		options,
 	);
 };
@@ -2078,11 +2130,7 @@ export const postAuthSignIn = (
 	>,
 ) => {
 	return customInstance<PostAuthSignIn200One | Blob | PostAuthSignIn200Three>(
-		{
-			url: `http://localhost:2000/auth/sign-in`,
-			method: "POST",
-			data: postAuthSignInBody,
-		},
+		{ url: `/auth/sign-in`, method: "POST", data: postAuthSignInBody },
 		options,
 	);
 };
@@ -2096,7 +2144,7 @@ export const getDriverVechicles = (
 ) => {
 	return customInstance<
 		GetDriverVechicles200OneItem[] | Blob | GetDriverVechicles200ThreeItem[]
-	>({ url: `http://localhost:2000/driver/vechicles`, method: "GET" }, options);
+	>({ url: `/driver/vechicles`, method: "GET" }, options);
 };
 
 export const getDriverVehicles = (
@@ -2108,7 +2156,7 @@ export const getDriverVehicles = (
 ) => {
 	return customInstance<
 		GetDriverVehicles200OneItem[] | Blob | GetDriverVehicles200ThreeItem[]
-	>({ url: `http://localhost:2000/driver/vehicles`, method: "GET" }, options);
+	>({ url: `/driver/vehicles`, method: "GET" }, options);
 };
 
 export const getDriverVehicle = (
@@ -2120,7 +2168,7 @@ export const getDriverVehicle = (
 ) => {
 	return customInstance<
 		GetDriverVehicle200One | Blob | GetDriverVehicle200Three
-	>({ url: `http://localhost:2000/driver/vehicle`, method: "GET" }, options);
+	>({ url: `/driver/vehicle`, method: "GET" }, options);
 };
 
 export const getDriverProfile = (
@@ -2132,7 +2180,7 @@ export const getDriverProfile = (
 ) => {
 	return customInstance<
 		GetDriverProfile200One | Blob | GetDriverProfile200Three
-	>({ url: `http://localhost:2000/driver/profile`, method: "GET" }, options);
+	>({ url: `/driver/profile`, method: "GET" }, options);
 };
 
 export const getDriverTrips = (
@@ -2145,10 +2193,7 @@ export const getDriverTrips = (
 ) => {
 	return customInstance<
 		GetDriverTrips200OneItem[] | Blob | GetDriverTrips200ThreeItem[]
-	>(
-		{ url: `http://localhost:2000/driver/trips`, method: "GET", params },
-		options,
-	);
+	>({ url: `/driver/trips`, method: "GET", params }, options);
 };
 
 export const postDriverTripsByIdStart = (
@@ -2161,10 +2206,7 @@ export const postDriverTripsByIdStart = (
 ) => {
 	return customInstance<
 		PostDriverTripsByIdStart200One | Blob | PostDriverTripsByIdStart200Three
-	>(
-		{ url: `http://localhost:2000/driver/trips/${id}/start`, method: "POST" },
-		options,
-	);
+	>({ url: `/driver/trips/${id}/start`, method: "POST" }, options);
 };
 
 export const postDriverTripsByIdComplete = (
@@ -2181,13 +2223,7 @@ export const postDriverTripsByIdComplete = (
 		| PostDriverTripsByIdComplete200One
 		| Blob
 		| PostDriverTripsByIdComplete200Three
-	>(
-		{
-			url: `http://localhost:2000/driver/trips/${id}/complete`,
-			method: "POST",
-		},
-		options,
-	);
+	>({ url: `/driver/trips/${id}/complete`, method: "POST" }, options);
 };
 
 export const getIndex = (
@@ -2196,7 +2232,7 @@ export const getIndex = (
 	>,
 ) => {
 	return customInstance<GetIndex200One | Blob | GetIndex200Three>(
-		{ url: `http://localhost:2000/`, method: "GET" },
+		{ url: `/`, method: "GET" },
 		options,
 	);
 };
@@ -2214,10 +2250,7 @@ export const getApiOrdersPending = (
 ) => {
 	return customInstance<
 		GetApiOrdersPending200OneItem[] | Blob | GetApiOrdersPending200ThreeItem[]
-	>(
-		{ url: `http://localhost:2000/api/orders/pending`, method: "GET" },
-		options,
-	);
+	>({ url: `/api/orders/pending`, method: "GET" }, options);
 };
 
 /**
@@ -2234,10 +2267,7 @@ export const getApiTrainTrips = (
 ) => {
 	return customInstance<
 		GetApiTrainTrips200OneItem[] | Blob | GetApiTrainTrips200ThreeItem[]
-	>(
-		{ url: `http://localhost:2000/api/train-trips`, method: "GET", params },
-		options,
-	);
+	>({ url: `/api/train-trips`, method: "GET", params }, options);
 };
 
 /**
@@ -2262,11 +2292,7 @@ export const postApiShipments = (
 	return customInstance<
 		PostApiShipments201One | Blob | PostApiShipments201Three
 	>(
-		{
-			url: `http://localhost:2000/api/shipments`,
-			method: "POST",
-			data: postApiShipmentsBody,
-		},
+		{ url: `/api/shipments`, method: "POST", data: postApiShipmentsBody },
 		options,
 	);
 };
@@ -2289,14 +2315,7 @@ export const getApiShipmentsAtStore = (
 		| GetApiShipmentsAtStore200OneItem[]
 		| Blob
 		| GetApiShipmentsAtStore200ThreeItem[]
-	>(
-		{
-			url: `http://localhost:2000/api/shipments/at-store`,
-			method: "GET",
-			params,
-		},
-		options,
-	);
+	>({ url: `/api/shipments/at-store`, method: "GET", params }, options);
 };
 
 /**
@@ -2312,10 +2331,7 @@ export const getApiResourcesAvailable = (
 ) => {
 	return customInstance<
 		GetApiResourcesAvailable200One | Blob | GetApiResourcesAvailable200Three
-	>(
-		{ url: `http://localhost:2000/api/resources/available`, method: "GET" },
-		options,
-	);
+	>({ url: `/api/resources/available`, method: "GET" }, options);
 };
 
 /**
@@ -2340,11 +2356,7 @@ export const postApiTruckTrips = (
 	return customInstance<
 		PostApiTruckTrips201One | Blob | PostApiTruckTrips201Three
 	>(
-		{
-			url: `http://localhost:2000/api/truck-trips`,
-			method: "POST",
-			data: postApiTruckTripsBody,
-		},
+		{ url: `/api/truck-trips`, method: "POST", data: postApiTruckTripsBody },
 		options,
 	);
 };
@@ -2362,10 +2374,7 @@ export const getApiSchedulesOverview = (
 ) => {
 	return customInstance<
 		GetApiSchedulesOverview200One | Blob | GetApiSchedulesOverview200Three
-	>(
-		{ url: `http://localhost:2000/api/schedules/overview`, method: "GET" },
-		options,
-	);
+	>({ url: `/api/schedules/overview`, method: "GET" }, options);
 };
 
 /**
@@ -2385,13 +2394,7 @@ export const getApiStoresIncomingDeliveries = (
 		| GetApiStoresIncomingDeliveries200OneItem[]
 		| Blob
 		| GetApiStoresIncomingDeliveries200ThreeItem[]
-	>(
-		{
-			url: `http://localhost:2000/api/stores/incoming-deliveries`,
-			method: "GET",
-		},
-		options,
-	);
+	>({ url: `/api/stores/incoming-deliveries`, method: "GET" }, options);
 };
 
 /**
@@ -2411,13 +2414,7 @@ export const getApiTruckTripsScheduledDepartures = (
 		| GetApiTruckTripsScheduledDepartures200OneItem[]
 		| Blob
 		| GetApiTruckTripsScheduledDepartures200ThreeItem[]
-	>(
-		{
-			url: `http://localhost:2000/api/truck-trips/scheduled-departures`,
-			method: "GET",
-		},
-		options,
-	);
+	>({ url: `/api/truck-trips/scheduled-departures`, method: "GET" }, options);
 };
 
 /**
@@ -2438,13 +2435,7 @@ export const postApiTruckTripsByTripIdDispatch = (
 		| PostApiTruckTripsByTripIdDispatch200One
 		| Blob
 		| PostApiTruckTripsByTripIdDispatch200Three
-	>(
-		{
-			url: `http://localhost:2000/api/truck-trips/${tripId}/dispatch`,
-			method: "POST",
-		},
-		options,
-	);
+	>({ url: `/api/truck-trips/${tripId}/dispatch`, method: "POST" }, options);
 };
 
 /**
@@ -2464,10 +2455,7 @@ export const getApiTruckTripsInProgress = (
 		| GetApiTruckTripsInProgress200OneItem[]
 		| Blob
 		| GetApiTruckTripsInProgress200ThreeItem[]
-	>(
-		{ url: `http://localhost:2000/api/truck-trips/in-progress`, method: "GET" },
-		options,
-	);
+	>({ url: `/api/truck-trips/in-progress`, method: "GET" }, options);
 };
 
 /**
@@ -2488,13 +2476,7 @@ export const postApiTruckTripsByTripIdComplete = (
 		| PostApiTruckTripsByTripIdComplete200One
 		| Blob
 		| PostApiTruckTripsByTripIdComplete200Three
-	>(
-		{
-			url: `http://localhost:2000/api/truck-trips/${tripId}/complete`,
-			method: "POST",
-		},
-		options,
-	);
+	>({ url: `/api/truck-trips/${tripId}/complete`, method: "POST" }, options);
 };
 
 /**
@@ -2510,7 +2492,7 @@ export const getApiProducts = (
 ) => {
 	return customInstance<
 		GetApiProducts200OneItem[] | Blob | GetApiProducts200ThreeItem[]
-	>({ url: `http://localhost:2000/api/products`, method: "GET" }, options);
+	>({ url: `/api/products`, method: "GET" }, options);
 };
 
 /**
@@ -2529,11 +2511,7 @@ export const postApiOrders = (
 	>,
 ) => {
 	return customInstance<PostApiOrders201One | Blob | PostApiOrders201Three>(
-		{
-			url: `http://localhost:2000/api/orders`,
-			method: "POST",
-			data: postApiOrdersBody,
-		},
+		{ url: `/api/orders`, method: "POST", data: postApiOrdersBody },
 		options,
 	);
 };
@@ -2551,7 +2529,7 @@ export const getApiOrders = (
 ) => {
 	return customInstance<
 		GetApiOrders200OneItem[] | Blob | GetApiOrders200ThreeItem[]
-	>({ url: `http://localhost:2000/api/orders`, method: "GET" }, options);
+	>({ url: `/api/orders`, method: "GET" }, options);
 };
 
 /**
@@ -2568,10 +2546,7 @@ export const getApiOrdersByOrderId = (
 ) => {
 	return customInstance<
 		GetApiOrdersByOrderId200One | Blob | GetApiOrdersByOrderId200Three
-	>(
-		{ url: `http://localhost:2000/api/orders/${orderId}`, method: "GET" },
-		options,
-	);
+	>({ url: `/api/orders/${orderId}`, method: "GET" }, options);
 };
 
 /**
@@ -2587,10 +2562,7 @@ export const getAdminDashboardStats = (
 ) => {
 	return customInstance<
 		GetAdminDashboardStats200One | Blob | GetAdminDashboardStats200Three
-	>(
-		{ url: `http://localhost:2000/admin/dashboard/stats`, method: "GET" },
-		options,
-	);
+	>({ url: `/admin/dashboard/stats`, method: "GET" }, options);
 };
 
 /**
@@ -2601,7 +2573,7 @@ export const getAdminReportSales = (
 	options?: SecondParameter<typeof customInstance<void>>,
 ) => {
 	return customInstance<void>(
-		{ url: `http://localhost:2000/admin/report/sales`, method: "GET" },
+		{ url: `/admin/report/sales`, method: "GET" },
 		options,
 	);
 };
@@ -2614,10 +2586,7 @@ export const getAdminReportMostOrderedProducts = (
 	options?: SecondParameter<typeof customInstance<void>>,
 ) => {
 	return customInstance<void>(
-		{
-			url: `http://localhost:2000/admin/report/most-ordered-products`,
-			method: "GET",
-		},
+		{ url: `/admin/report/most-ordered-products`, method: "GET" },
 		options,
 	);
 };
@@ -2630,10 +2599,7 @@ export const getAdminReportSalesCityWise = (
 	options?: SecondParameter<typeof customInstance<void>>,
 ) => {
 	return customInstance<void>(
-		{
-			url: `http://localhost:2000/admin/report/sales/city-wise`,
-			method: "GET",
-		},
+		{ url: `/admin/report/sales/city-wise`, method: "GET" },
 		options,
 	);
 };
@@ -2646,10 +2612,7 @@ export const getAdminReportSalesRouteWise = (
 	options?: SecondParameter<typeof customInstance<void>>,
 ) => {
 	return customInstance<void>(
-		{
-			url: `http://localhost:2000/admin/report/sales/route-wise`,
-			method: "GET",
-		},
+		{ url: `/admin/report/sales/route-wise`, method: "GET" },
 		options,
 	);
 };
@@ -2662,7 +2625,7 @@ export const getAdminReportWorkingHours = (
 	options?: SecondParameter<typeof customInstance<void>>,
 ) => {
 	return customInstance<void>(
-		{ url: `http://localhost:2000/admin/report/working-hours`, method: "GET" },
+		{ url: `/admin/report/working-hours`, method: "GET" },
 		options,
 	);
 };
@@ -2675,7 +2638,7 @@ export const getAdminReportTruckUsage = (
 	options?: SecondParameter<typeof customInstance<string>>,
 ) => {
 	return customInstance<string>(
-		{ url: `http://localhost:2000/admin/report/truck-usage`, method: "GET" },
+		{ url: `/admin/report/truck-usage`, method: "GET" },
 		options,
 	);
 };
@@ -2688,16 +2651,16 @@ export const getAdminReportCustomerOrderHistory = (
 	options?: SecondParameter<typeof customInstance<void>>,
 ) => {
 	return customInstance<void>(
-		{
-			url: `http://localhost:2000/admin/report/customer-order-history`,
-			method: "GET",
-		},
+		{ url: `/admin/report/customer-order-history`, method: "GET" },
 		options,
 	);
 };
 
 export type GetAuthValidateResult = NonNullable<
 	Awaited<ReturnType<typeof getAuthValidate>>
+>;
+export type GetAuthMeResult = NonNullable<
+	Awaited<ReturnType<typeof getAuthMe>>
 >;
 export type PostAuthSignOutResult = NonNullable<
 	Awaited<ReturnType<typeof postAuthSignOut>>
